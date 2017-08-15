@@ -1,6 +1,6 @@
 # Database
  
- This is a simple skeleton project for Symfony that includes Plates, Sessions and Monolog.
+A nice PDO extension.
 
 [![Latest Version on Packagist](https://img.shields.io/github/release/odan/database.svg)](https://github.com/odan/database/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
