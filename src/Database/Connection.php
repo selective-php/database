@@ -250,13 +250,23 @@ class Connection extends PDO
         return $result;
     }
 
+    /**
+     * @param $table
+     * @param $row
+     * @return PDOStatement
+     */
     public function insertRow($table, $row)
     {
         $insert = $this->newInsert()->into($table)->cols($row);
-        $stmt = $this->prepare($insert->getStatement());
-        return $stmt->execute($insert->getBindValues());
+        $stmt = $this->executeQuery($insert);
+        return $stmt;
     }
 
+    /**
+     * @param $table
+     * @param $rows
+     * @return int
+     */
     public function insertRows($table, $rows)
     {
         $result = 0;
