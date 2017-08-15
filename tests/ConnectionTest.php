@@ -42,34 +42,34 @@ class ConnectionTest extends BaseTest
     public function testEsc()
     {
         $db = $this->getConnection();
-        $this->assertEquals('NULL', $db->esc(null));
-        $this->assertEquals("'\\0'", $db->esc("\0"));
-        $this->assertEquals("'0'", $db->esc(0));
-        $this->assertEquals("'0'", $db->esc('0'));
-        $this->assertEquals("''", $db->esc(false));
-        $this->assertEquals("'1'", $db->esc(true));
-        $this->assertEquals("'-1'", $db->esc(-1));
-        $this->assertEquals("'abc123'", $db->esc("abc123"));
-        $this->assertEquals("'öäüÖÄÜß'", $db->esc("öäüÖÄÜß"));
-        $this->assertEquals("'?'", $db->esc('?'));
-        $this->assertEquals("':'", $db->esc(':'));
-        $this->assertEquals("'\\''", $db->esc("'"));
-        $this->assertEquals("'\\\"'", $db->esc("\""));
-        $this->assertEquals("'\\\\'", $db->esc("\\"));
-        $this->assertEquals("'\\0'", $db->esc("\x00"));
-        $this->assertEquals("'\\Z'", $db->esc("\x1a"));
-        $this->assertEquals("'\\n'", $db->esc("\n"));
-        $this->assertEquals("'\\r'", $db->esc("\r"));
-        $this->assertEquals("','", $db->esc(","));
-        $this->assertEquals("'\\','", $db->esc("',"));
-        $this->assertEquals("'`'", $db->esc("`"));
-        $this->assertEquals("'%s'", $db->esc("%s"));
-        $this->assertEquals("'Naughty \\' string'", $db->esc("Naughty ' string"));
-        $this->assertEquals("'@þÿ€'", $db->esc("@þÿ€"));
+        $this->assertEquals('NULL', $db->quoteValue(null));
+        $this->assertEquals("'\\0'", $db->quoteValue("\0"));
+        $this->assertEquals("'0'", $db->quoteValue(0));
+        $this->assertEquals("'0'", $db->quoteValue('0'));
+        $this->assertEquals("''", $db->quoteValue(false));
+        $this->assertEquals("'1'", $db->quoteValue(true));
+        $this->assertEquals("'-1'", $db->quoteValue(-1));
+        $this->assertEquals("'abc123'", $db->quoteValue("abc123"));
+        $this->assertEquals("'öäüÖÄÜß'", $db->quoteValue("öäüÖÄÜß"));
+        $this->assertEquals("'?'", $db->quoteValue('?'));
+        $this->assertEquals("':'", $db->quoteValue(':'));
+        $this->assertEquals("'\\''", $db->quoteValue("'"));
+        $this->assertEquals("'\\\"'", $db->quoteValue("\""));
+        $this->assertEquals("'\\\\'", $db->quoteValue("\\"));
+        $this->assertEquals("'\\0'", $db->quoteValue("\x00"));
+        $this->assertEquals("'\\Z'", $db->quoteValue("\x1a"));
+        $this->assertEquals("'\\n'", $db->quoteValue("\n"));
+        $this->assertEquals("'\\r'", $db->quoteValue("\r"));
+        $this->assertEquals("','", $db->quoteValue(","));
+        $this->assertEquals("'\\','", $db->quoteValue("',"));
+        $this->assertEquals("'`'", $db->quoteValue("`"));
+        $this->assertEquals("'%s'", $db->quoteValue("%s"));
+        $this->assertEquals("'Naughty \\' string'", $db->quoteValue("Naughty ' string"));
+        $this->assertEquals("'@þÿ€'", $db->quoteValue("@þÿ€"));
         // Injection patterns
-        $this->assertEquals("'\\' OR \\'\\'=\\''", $db->esc("' OR ''='"));
-        $this->assertEquals("'1\\' or \\'1\\' = \\'1'", $db->esc("1' or '1' = '1"));
-        $this->assertEquals("'1\\' or \\'1\\' = \\'1\\'))/*'", $db->esc("1' or '1' = '1'))/*"));
+        $this->assertEquals("'\\' OR \\'\\'=\\''", $db->quoteValue("' OR ''='"));
+        $this->assertEquals("'1\\' or \\'1\\' = \\'1'", $db->quoteValue("1' or '1' = '1"));
+        $this->assertEquals("'1\\' or \\'1\\' = \\'1\\'))/*'", $db->quoteValue("1' or '1' = '1'))/*"));
     }
 
     /**
@@ -82,29 +82,29 @@ class ConnectionTest extends BaseTest
     {
         $db = $this->getConnection();
 
-        $this->assertEquals("`0`", $db->ident(0));
-        $this->assertEquals("`0`", $db->ident('0'));
-        $this->assertEquals("`1`", $db->ident(true));
-        $this->assertEquals("`-1`", $db->ident(-1));
-        $this->assertEquals("`abc123`", $db->ident("abc123"));
-        $this->assertEquals("`öäüÖÄÜß`", $db->ident("öäüÖÄÜß"));
-        $this->assertEquals("`?`", $db->ident('?'));
-        $this->assertEquals("`:`", $db->ident(':'));
-        $this->assertEquals("`\\'`", $db->ident("'"));
-        $this->assertEquals("`\\\"`", $db->ident("\""));
-        $this->assertEquals("`\\\`", $db->ident("\\"));
-        $this->assertEquals("`\\Z`", $db->ident("\x1a"));
+        $this->assertEquals("`0`", $db->quoteName(0));
+        $this->assertEquals("`0`", $db->quoteName('0'));
+        $this->assertEquals("`1`", $db->quoteName(true));
+        $this->assertEquals("`-1`", $db->quoteName(-1));
+        $this->assertEquals("`abc123`", $db->quoteName("abc123"));
+        $this->assertEquals("`öäüÖÄÜß`", $db->quoteName("öäüÖÄÜß"));
+        $this->assertEquals("`?`", $db->quoteName('?'));
+        $this->assertEquals("`:`", $db->quoteName(':'));
+        $this->assertEquals("`\\'`", $db->quoteName("'"));
+        $this->assertEquals("`\\\"`", $db->quoteName("\""));
+        $this->assertEquals("`\\\`", $db->quoteName("\\"));
+        $this->assertEquals("`\\Z`", $db->quoteName("\x1a"));
 
-        $this->assertEquals("`,`", $db->ident(","));
-        $this->assertEquals("`\\',`", $db->ident("',"));
-        $this->assertEquals("```", $db->ident("`"));
-        $this->assertEquals("`%s`", $db->ident("%s"));
-        $this->assertEquals("`Naughty \\' string`", $db->ident("Naughty ' string"));
-        $this->assertEquals("`@þÿ€`", $db->ident("@þÿ€"));
+        $this->assertEquals("`,`", $db->quoteName(","));
+        $this->assertEquals("`\\',`", $db->quoteName("',"));
+        $this->assertEquals("```", $db->quoteName("`"));
+        $this->assertEquals("`%s`", $db->quoteName("%s"));
+        $this->assertEquals("`Naughty \\' string`", $db->quoteName("Naughty ' string"));
+        $this->assertEquals("`@þÿ€`", $db->quoteName("@þÿ€"));
 
         // With database name
-        $this->assertSame("`dbname`.`tablename`", $db->ident("dbname.tablename"));
-        $this->assertSame("`dbname`.`tablename`.`field`", $db->ident("dbname.tablename.field"));
+        $this->assertSame("`dbname`.`tablename`", $db->quoteName("dbname.tablename"));
+        $this->assertSame("`dbname`.`tablename`.`field`", $db->quoteName("dbname.tablename.field"));
     }
 
     /**
@@ -117,7 +117,7 @@ class ConnectionTest extends BaseTest
     public function testIdentNull()
     {
         $db = $this->getConnection();
-        $db->ident(null);
+        $db->quoteName(null);
     }
 
     /**
@@ -130,7 +130,7 @@ class ConnectionTest extends BaseTest
     public function testIdentNull2()
     {
         $db = $this->getConnection();
-        $this->assertEquals("`\\0`", $db->ident("\x00"));
+        $this->assertEquals("`\\0`", $db->quoteName("\x00"));
     }
 
     /**
@@ -143,7 +143,7 @@ class ConnectionTest extends BaseTest
     public function testIdentNull3()
     {
         $db = $this->getConnection();
-        $this->assertEquals("`\\n`", $db->ident("\n"));
+        $this->assertEquals("`\\n`", $db->quoteName("\n"));
     }
 
     /**
@@ -156,7 +156,7 @@ class ConnectionTest extends BaseTest
     public function testIdentNull4()
     {
         $db = $this->getConnection();
-        $this->assertEquals("`\\r`", $db->ident("\r"));
+        $this->assertEquals("`\\r`", $db->quoteName("\r"));
     }
 
     /**
@@ -169,7 +169,7 @@ class ConnectionTest extends BaseTest
     public function testIdentNull5()
     {
         $db = $this->getConnection();
-        $this->assertEquals("``", $db->ident(false));
+        $this->assertEquals("``", $db->quoteName(false));
     }
 
     /**
@@ -182,6 +182,6 @@ class ConnectionTest extends BaseTest
     public function testIdentNull6()
     {
         $db = $this->getConnection();
-        $this->assertEquals("`\\0`", $db->ident("\0"));
+        $this->assertEquals("`\\0`", $db->quoteName("\0"));
     }
 }

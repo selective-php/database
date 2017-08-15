@@ -10,13 +10,31 @@ use Odan\Database\Encryption;
 class EncryptionTest extends BaseTest
 {
     /**
+     * @var Encryption
+     */
+    protected $encryption;
+
+    /**
+     * Return Data object
+     *
+     * @return Encryption
+     */
+    public function getEncryption()
+    {
+        if ($this->encryption === null) {
+            $this->encryption = new Encryption($this->getConnection());
+        }
+        return $this->encryption;
+    }
+
+    /**
      * Test create object.
      *
      * @return void
      */
     public function testInstance()
     {
-        $object = $this->getConnection()->getEncryption();
+        $object = $this->getEncryption();
         $this->assertInstanceOf(Encryption::class, $object);
     }
 
@@ -30,7 +48,7 @@ class EncryptionTest extends BaseTest
     public function testCompress()
     {
         $db = $this->getConnection();
-        $enc = $db->getEncryption();
+        $enc = $this->getEncryption();
 
         $result = $enc->compress('test');
         $result = strtoupper(bin2hex($result));

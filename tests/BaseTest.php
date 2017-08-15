@@ -2,7 +2,10 @@
 
 namespace Odan\Test;
 
+use Aura\SqlQuery\QueryFactory;
 use Odan\Database\Connection;
+use Odan\Database\Schema;
+use Odan\Database\Table;
 use PHPUnit\Framework\TestCase;
 use PDO;
 
@@ -12,9 +15,24 @@ use PDO;
 abstract class BaseTest extends TestCase
 {
     /**
+     * @var PDO
+     */
+    protected $pdo;
+
+    /**
      * @var Connection
      */
     protected $connection;
+
+    /**
+     * @var Schema
+     */
+    protected $schema;
+
+    /**
+     * @var QueryFactory
+     */
+    protected $query;
 
     /**
      * @return Connection
@@ -39,6 +57,36 @@ abstract class BaseTest extends TestCase
     }
 
     /**
+     * @return Schema
+     */
+    protected function getSchema()
+    {
+        if ($this->schema === null) {
+            $this->schema = new Schema($this->getConnection());
+        }
+        return $this->schema;
+    }
+
+    /**
+     * @return QueryFactory
+     */
+    public function getQuery()
+    {
+        if ($this->query === null) {
+            $this->query = new QueryFactory('mysql');
+        }
+        return $this->query;
+    }
+
+    /**
+     * @return Table
+     */
+    public function getTable()
+    {
+        return new Table($this->getConnection(), $this->getQuery());
+    }
+
+    /**
      * Create test table
      *
      * @return int
@@ -46,9 +94,9 @@ abstract class BaseTest extends TestCase
     protected function createTestTable()
     {
         $db = $this->getConnection();
-        $db->getSchema()->dropTable('test');
-        $db->getSchema()->dropTable('temp');
-        $db->getSchema()->dropTable('test_copy');
+        $this->getSchema()->dropTable('test');
+        $this->getSchema()->dropTable('temp');
+        $this->getSchema()->dropTable('test_copy');
 
         $result = $db->exec("CREATE TABLE `test` (
             `id` int(11) NOT NULL AUTO_INCREMENT,

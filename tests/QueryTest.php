@@ -16,7 +16,7 @@ class QueryTest extends BaseTest
      */
     public function testInstance()
     {
-        $object = $this->getConnection()->getQuery();
+        $object = $this->getQuery();
         $this->assertInstanceOf(QueryFactory::class, $object);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Odan\Database;
 
-use Aura\SqlQuery\QueryFactory;
 use Aura\SqlQuery\QueryInterface;
 use InvalidArgumentException;
 use PDO;
@@ -11,103 +10,6 @@ use PDOStatement;
 
 class Connection extends PDO
 {
-    protected $driver;
-
-    /**
-     * @var QueryFactory
-     */
-    protected $query;
-
-    /**
-     * @var Schema
-     */
-    protected $schema;
-
-    /**
-     * @var Encryption
-     */
-    protected $encryption;
-
-    /**
-     * Connection constructor.
-     *
-     * @param $dsn
-     * @param $username
-     * @param $passwd
-     * @param $options
-     */
-    public function __construct($dsn, $username, $passwd, $options)
-    {
-        parent::__construct($dsn, $username, $passwd, $options);
-        $this->driver = $this->getAttribute(PDO::ATTR_DRIVER_NAME);
-    }
-
-    /**
-     * @return QueryFactory
-     */
-    public function getQuery()
-    {
-        if ($this->query === null) {
-            $this->query = new QueryFactory($this->driver);
-        }
-        return $this->query;
-    }
-
-    /**
-     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface
-     */
-    public function newSelect()
-    {
-        return $this->getQuery()->newSelect();
-    }
-
-    /**
-     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface
-     */
-    public function newDelete()
-    {
-        return $this->getQuery()->newDelete();
-    }
-
-    /**
-     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface
-     */
-    public function newInsert()
-    {
-        return $this->getQuery()->newInsert();
-    }
-
-    /**
-     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface
-     */
-    public function newUpdate()
-    {
-        return $this->getQuery()->newUpdate();
-    }
-
-    /**
-     * @return Schema
-     */
-    public function getSchema()
-    {
-        if ($this->schema === null) {
-            $this->schema = new Schema($this);
-        }
-        return $this->schema;
-    }
-
-    /**
-     * Return Data object
-     *
-     * @return Encryption
-     */
-    public function getEncryption()
-    {
-        if ($this->encryption === null) {
-            $this->encryption = new Encryption($this);
-        }
-        return $this->encryption;
-    }
 
     /**
      * Returns connection status
@@ -130,7 +32,7 @@ class Connection extends PDO
      * @param mixed $value
      * @return string quoted string for use in a query
      */
-    public function esc($value)
+    public function quoteValue($value)
     {
         $quote = "'";
 
@@ -152,7 +54,7 @@ class Connection extends PDO
      * @return string identifier escaped string
      * @throws InvalidArgumentException
      */
-    public function ident($value)
+    public function quoteName($value)
     {
         if ($value === null || strlen(trim($value)) == 0) {
             throw new InvalidArgumentException('Value cannot be null or empty');
@@ -175,18 +77,22 @@ class Connection extends PDO
      */
     public function prepareQuery(QueryInterface $query)
     {
-        $stmt = $this->prepare($query->getStatement());
+        $statement = $this->prepare($query->getStatement());
         foreach ($query->getBindValues() as $param => $value) {
-            $stmt->bindValue($param, $value);
+            $statement->bindValue($param, $value);
         }
-        return $stmt;
+        return $statement;
     }
 
+    /**
+     * @param QueryInterface $query
+     * @return PDOStatement
+     */
     public function executeQuery(QueryInterface $query)
     {
-        $stmt = $this->prepare($query->getStatement());
-        $status = $stmt->execute($query->getBindValues());
-        return $stmt;
+        $statement = $this->prepare($query->getStatement());
+        $statement->execute($query->getBindValues());
+        return $statement;
     }
 
     /**
@@ -248,73 +154,5 @@ class Connection extends PDO
             }
         }
         return $result;
-    }
-
-    /**
-     * @param $table
-     * @param $row
-     * @return PDOStatement
-     */
-    public function insertRow($table, $row)
-    {
-        $insert = $this->newInsert()->into($table)->cols($row);
-        $stmt = $this->executeQuery($insert);
-        return $stmt;
-    }
-
-    /**
-     * @param $table
-     * @param $rows
-     * @return int
-     */
-    public function insertRows($table, $rows)
-    {
-        $result = 0;
-        foreach ($rows as $row) {
-            $this->insertRow($table, $row);
-            $result++;
-        }
-        return $result;
-    }
-
-    /**
-     * Update row
-     *
-     * <code>
-     * $db->updateRow('table_name', array('name' => 'bar'), array('id' => 42));
-     * </code>
-     *
-     * @param string $tableName table
-     * @param array $fields fields
-     * @param array $conditions conditions
-     * @return PDOStatement
-     */
-    public function updateRow($tableName, array $fields, array $conditions = array())
-    {
-        $update = $this->newUpdate()->table($tableName)->cols($fields);
-        foreach ($conditions as $key => $value) {
-            $update->where("$key = ?", $value);
-        }
-        return $this->executeQuery($update);
-    }
-
-    /**
-     * Delete row by condition
-     *
-     * <code>
-     * $db->deleteRow('table_name', array('col2' => 42, 'col5' => 3));
-     * </code>
-     *
-     * @param string $tableName table
-     * @param array $conditions condition
-     * @return PDOStatement
-     */
-    public function deleteRow($tableName, array $conditions = array())
-    {
-        $delete = $this->newDelete()->from($tableName);
-        foreach ($conditions as $key => $value) {
-            $delete->where("$key = ?", $value);
-        }
-        return $this->executeQuery($delete);
     }
 }
