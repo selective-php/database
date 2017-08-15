@@ -109,7 +109,7 @@ class Connection extends PDO
     {
         $result = array();
         $statement = $this->query($sql);
-        foreach ($statement->fetchAll() as $row) {
+        while ($row = $statement->fetch()) {
             $result[] = $row[$key];
         }
         return $result;
@@ -126,8 +126,7 @@ class Connection extends PDO
     public function queryValue($sql, $column, $default = null)
     {
         $result = $default;
-        $row = $this->query($sql)->fetch();
-        if (!empty($row)) {
+        if ($row = $this->query($sql)->fetch()) {
             $result = $row[$column];
         }
         return $result;
@@ -147,11 +146,9 @@ class Connection extends PDO
     public function queryMapColumn($sql, $key)
     {
         $result = array();
-        $rows = $this->query($sql)->fetchAll();
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
-                $result[$row[$key]] = $row;
-            }
+        $statement = $this->query($sql);
+        while ($row = $statement->fetch()) {
+            $result[$row[$key]] = $row;
         }
         return $result;
     }
