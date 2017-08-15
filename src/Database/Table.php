@@ -41,35 +41,43 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface|\Aura\SqlQuery\AbstractQuery
+     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface
      */
     public function newSelect()
     {
-        return $this->getQuery()->newSelect();
+        /* @var $result \Aura\SqlQuery\Mysql\Select */
+        $result =  $this->getQuery()->newSelect();
+        return $result;
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface|\Aura\SqlQuery\AbstractQuery
+     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface
      */
     public function newDelete()
     {
-        return $this->getQuery()->newDelete();
+        /* @var $result \Aura\SqlQuery\Mysql\Delete */
+        $result = $this->getQuery()->newDelete();
+        return $result;
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface|\Aura\SqlQuery\AbstractQuery
+     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface
      */
     public function newInsert()
     {
-        return $this->getQuery()->newInsert();
+        /* @var $result \Aura\SqlQuery\Mysql\Insert */
+        $result = $this->getQuery()->newInsert();
+        return $result;
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface|\Aura\SqlQuery\AbstractQuery
+     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface
      */
     public function newUpdate()
     {
-        return $this->getQuery()->newUpdate();
+        /* @var $result \Aura\SqlQuery\Mysql\Update */
+        $result = $this->getQuery()->newUpdate();
+        return $result;
     }
 
     /**
