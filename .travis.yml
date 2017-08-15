@@ -16,7 +16,6 @@ cache:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
-  - cd config
   - mysql -e 'create database database_test;'
   - cd $TRAVIS_BUILD_DIR
 
