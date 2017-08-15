@@ -25,7 +25,8 @@ composer require odan/database
 
 ## Requirements
 
-* PHP 7.0+, MySQL
+* PHP 7.0+
+* MySQL
 
 ## SQL Query Builder
 
