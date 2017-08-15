@@ -75,16 +75,12 @@ class SchemaTest extends BaseTest
      * @covers ::compareTableSchema
      * @covers \Odan\Database\Connection::queryValue
      * @covers \Odan\Database\Connection::queryValues
-     * @covers \Odan\Database\Connection::insertRows
-     * @covers \Odan\Database\Connection::insertRow
-     * @covers \Odan\Database\Connection::updateRow
-     * @covers \Odan\Database\Connection::deleteRow
+     * @covers \Odan\Database\Table::insertRows
+     * @covers \Odan\Database\Table::insertRow
+     * @covers \Odan\Database\Table::updateRow
+     * @covers \Odan\Database\Table::deleteRow
      * @covers \Odan\Database\Connection::queryMapColumn
      * @covers \Odan\Database\Connection::executeQuery
-     * @covers \Odan\Database\Connection::newUpdate
-     * @covers \Odan\Database\Connection::newSelect
-     * @covers \Odan\Database\Connection::newDelete
-     * @covers \Odan\Database\Connection::newInsert
      */
     public function testTables()
     {
@@ -161,7 +157,7 @@ class SchemaTest extends BaseTest
         // With ON DUPLICATE KEY UPDATE, the affected-rows value per row
         // is 1 if the row is inserted as a new row, and 2 if an existing row is updated.
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
-        $insert =  $this->getQuery()->newInsert()
+        $insert =  $table->newInsert()
             ->into('test')
             ->cols(array(
                 'id' => 1,

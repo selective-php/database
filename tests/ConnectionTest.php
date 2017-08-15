@@ -37,7 +37,7 @@ class ConnectionTest extends BaseTest
      * Test esc method
      *
      * @return void
-     * @covers ::esc
+     * @covers ::quoteValue
      */
     public function testEsc()
     {
@@ -76,7 +76,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      */
     public function testIdent()
     {
@@ -111,7 +111,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull()
@@ -124,7 +124,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull2()
@@ -137,7 +137,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull3()
@@ -150,7 +150,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull4()
@@ -163,7 +163,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull5()
@@ -176,7 +176,7 @@ class ConnectionTest extends BaseTest
      * Test ident method
      *
      * @return void
-     * @covers ::ident
+     * @covers ::quoteName
      * @expectedException InvalidArgumentException
      */
     public function testIdentNull6()
