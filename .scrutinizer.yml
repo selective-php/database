@@ -36,5 +36,3 @@ build:
         memcached: false
         neo4j: false
         rabbitmq: false
-    tests:
-        false
