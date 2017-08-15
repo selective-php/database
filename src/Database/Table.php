@@ -41,7 +41,7 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface
+     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface|\Aura\SqlQuery\AbstractQuery
      */
     public function newSelect()
     {
@@ -49,7 +49,7 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface
+     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface|\Aura\SqlQuery\AbstractQuery
      */
     public function newDelete()
     {
@@ -57,7 +57,7 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface
+     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface|\Aura\SqlQuery\AbstractQuery
      */
     public function newInsert()
     {
@@ -65,7 +65,7 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface
+     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface|\Aura\SqlQuery\AbstractQuery
      */
     public function newUpdate()
     {
