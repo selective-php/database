@@ -186,7 +186,6 @@ class Schema
         $tableNameSource = $this->db->quoteName($tableNameSource);
         $tableNameDestination = $this->db->quoteName($tableNameDestination);
         return $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
-        ;
     }
 
     /**
