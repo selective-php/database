@@ -79,7 +79,7 @@ class Table
      */
     public function insertRow($table, $row)
     {
-        $insert = $this->query->newInsert()->into($table)->cols($row);
+        $insert = $this->newInsert()->into($table)->cols($row);
         $stmt = $this->db->executeQuery($insert);
         return $stmt;
     }
@@ -113,7 +113,7 @@ class Table
      */
     public function updateRow($tableName, array $fields, array $conditions = array())
     {
-        $update = $this->query->newUpdate()->table($tableName)->cols($fields);
+        $update = $this->newUpdate()->table($tableName)->cols($fields);
         foreach ($conditions as $key => $value) {
             $update->where("$key = ?", $value);
         }
@@ -133,7 +133,7 @@ class Table
      */
     public function deleteRow($tableName, array $conditions = array())
     {
-        $delete = $this->query->newDelete()->from($tableName);
+        $delete = $this->newDelete()->from($tableName);
         foreach ($conditions as $key => $value) {
             $delete->where("$key = ?", $value);
         }
