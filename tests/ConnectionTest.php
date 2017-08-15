@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Odan\Test;
 
 use Odan\Database\Connection;
+use PDO;
 
 /**
  * @coversDefaultClass Odan\Database\Connection
@@ -18,6 +19,17 @@ class ConnectionTest extends BaseTest
     {
         $connection = $this->getConnection();
         $this->assertInstanceOf(Connection::class, $connection);
+        $pdo = $this->pdoMethod($connection);
+        $this->assertInstanceOf(PDO::class, $pdo);
+    }
+
+    /**
+     * @param PDO $pdo
+     * @return PDO
+     */
+    protected function pdoMethod(PDO $pdo)
+    {
+        return $pdo;
     }
 
     /**
