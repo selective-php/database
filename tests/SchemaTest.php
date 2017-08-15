@@ -52,7 +52,7 @@ class SchemaTest extends BaseTest
 
         $databases = $schema->getDatabases();
         $this->assertEquals(true, in_array('information_schema', $databases));
-        $this->assertEquals(true, in_array('test', $databases));
+        $this->assertEquals(true, in_array('database_test', $databases));
 
         $databases = $schema->getDatabases('information_sch%');
         $this->assertEquals(true, in_array('information_schema', $databases));
