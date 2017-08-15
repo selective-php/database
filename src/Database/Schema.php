@@ -48,7 +48,7 @@ class Schema
 
         $sql = sprintf($sql, $this->db->esc($dbName));
         $row = $this->db->query($sql)->fetch();
-        return isset($row);
+        return !empty($row['SCHEMA_NAME']);
     }
 
     /**
