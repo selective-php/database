@@ -109,7 +109,7 @@ class SchemaTest extends BaseTest
         $result = $this->createTestTable();
         $this->assertEquals(0, $result);
 
-        $result = $schema->existTable('dbmysql_test.test');
+        $result = $schema->existTable('database_test.test');
         $this->assertEquals(true, $result);
 
         $result = $schema->existTable('notexistingdb.noexistingtable');
@@ -118,13 +118,13 @@ class SchemaTest extends BaseTest
         $result = $schema->getTableSchemaId('test');
         $this->assertEquals('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
 
-        $result = $schema->getTableSchemaId('dbmysql_test.test');
+        $result = $schema->getTableSchemaId('database_test.test');
         $this->assertEquals('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
 
         $result = $schema->compareTableSchema('test', 'test');
         $this->assertSame(true, $result);
 
-        $result = $schema->compareTableSchema('dbmysql_test.test', 'test');
+        $result = $schema->compareTableSchema('database_test.test', 'test');
         $this->assertSame(true, $result);
 
         $result = $schema->compareTableSchema('information_schema.tables', 'information_schema.tables');
@@ -147,7 +147,7 @@ class SchemaTest extends BaseTest
         $this->assertSame('keyvalue', $columns[2]['column_name']);
         $this->assertSame('boolvalue', $columns[3]['column_name']);
 
-        $columns = $schema->getColumns('dbmysql_test.test');
+        $columns = $schema->getColumns('database_test.test');
         $this->assertSame(true, !empty($columns));
         $this->assertSame(10, count($columns));
 
