@@ -31,6 +31,12 @@ build:
         memcached: false
         neo4j: false
         rabbitmq: false
+    dependencies:
+        before:
+            -
+                command: "composer self-update"
+                command: "composer update --no-interaction --prefer-dist"
+                command: "mysql -e 'create database database_test;'"
     tests:
         override:
             -
