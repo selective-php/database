@@ -1,0 +1,38 @@
+{
+  "name": "odan/database",
+  "type": "library",
+  "description": "A sql query builder",
+  "keywords": [
+    "sql",
+    "database",
+    "query",
+    "builder"
+  ],
+  "homepage": "http://github.com/odan/database",
+  "license": "MIT",
+  "require": {
+    "aura/sqlquery": "^2.7"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-coverage": "phpunit --coverage-clover build/logs/clover.xml --coverage-html build/coverage",
+    "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+    "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit -n --no-patch 1 src tests"
+  },
+  "autoload": {
+    "psr-4": {
+      "Odan\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Odan\\Test\\": "tests"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
