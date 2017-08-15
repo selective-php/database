@@ -42,9 +42,9 @@ class SchemaTest extends BaseTest
         $db = $this->getConnection();
         $schema = $db->getSchema();
         $dbName = $schema->getDatabase();
-        if ($schema->existDatabase('test')) {
-            $schema->setDatabase('test');
-            $this->assertEquals('test', $schema->getDatabase());
+        if ($schema->existDatabase('test1')) {
+            $schema->setDatabase('test1');
+            $this->assertEquals('test1', $schema->getDatabase());
         }
 
         $schema->setDatabase($dbName);
