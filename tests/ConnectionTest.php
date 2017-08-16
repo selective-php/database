@@ -33,19 +33,6 @@ class ConnectionTest extends BaseTest
     }
 
     /**
-     * Test ping method
-     *
-     * @return void
-     * @covers ::ping
-     */
-    public function testPing()
-    {
-        $db = $this->getConnection();
-        $result = $db->ping();
-        $this->assertEquals(true, $result);
-    }
-
-    /**
      * Test esc method
      *
      * @return void
@@ -195,5 +182,25 @@ class ConnectionTest extends BaseTest
     {
         $db = $this->getConnection();
         $this->assertEquals("`\\0`", $db->quoteName("\0"));
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::prepareQuery
+     */
+    public function testPrepareQuery()
+    {
+        $db = $this->getConnection();
+        $select = $this->getTable()->newSelect();
+        $select->cols(['TABLE_NAME'])->from('information_schema.TABLES')->where('TABLE_NAME = ?', 'TABLES');
+        $statement = $db->prepareQuery($select);
+        $this->assertInstanceOf(\PDOStatement::class, $statement);
+
+        $statement->execute();
+        $row = $statement->fetch();
+
+        $this->assertTrue(!empty($row['TABLE_NAME']));
+        $this->assertEquals('TABLES', $row['TABLE_NAME']);
     }
 }

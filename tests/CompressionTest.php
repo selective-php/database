@@ -2,29 +2,29 @@
 
 namespace Odan\Test;
 
-use Odan\Database\Encryption;
+use Odan\Database\Compression;
 
 /**
- * @coversDefaultClass \Odan\Database\Encryption
+ * @coversDefaultClass \Odan\Database\Compression
  */
 class EncryptionTest extends BaseTest
 {
     /**
-     * @var Encryption
+     * @var Compression
      */
-    protected $encryption;
+    protected $compression;
 
     /**
      * Return Data object
      *
-     * @return Encryption
+     * @return Compression
      */
-    public function getEncryption()
+    public function getCompression()
     {
-        if ($this->encryption === null) {
-            $this->encryption = new Encryption($this->getConnection());
+        if ($this->compression === null) {
+            $this->compression = new Compression($this->getConnection());
         }
-        return $this->encryption;
+        return $this->compression;
     }
 
     /**
@@ -34,8 +34,8 @@ class EncryptionTest extends BaseTest
      */
     public function testInstance()
     {
-        $object = $this->getEncryption();
-        $this->assertInstanceOf(Encryption::class, $object);
+        $object = $this->getCompression();
+        $this->assertInstanceOf(Compression::class, $object);
     }
 
     /**
@@ -48,7 +48,7 @@ class EncryptionTest extends BaseTest
     public function testCompress()
     {
         $db = $this->getConnection();
-        $enc = $this->getEncryption();
+        $enc = $this->getCompression();
 
         $result = $enc->compress('test');
         $result = strtoupper(bin2hex($result));

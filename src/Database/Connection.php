@@ -5,26 +5,10 @@ namespace Odan\Database;
 use Aura\SqlQuery\QueryInterface;
 use InvalidArgumentException;
 use PDO;
-use PDOException;
 use PDOStatement;
 
 class Connection extends PDO
 {
-
-    /**
-     * Returns connection status
-     *
-     * @return bool
-     */
-    public function ping()
-    {
-        try {
-            $result = !empty($this->getAttribute(PDO::ATTR_CONNECTION_STATUS));
-            return $result && !empty($this->query('SELECT 1;')->fetch());
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
 
     /**
      * Escapes special characters in a string for use in an SQL statement

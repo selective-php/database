@@ -3,8 +3,6 @@
 namespace Odan\Database;
 
 use Aura\SqlQuery\QueryFactory;
-use Aura\SqlQuery\QueryInterface;
-use PDO;
 use PDOStatement;
 
 class Table
@@ -20,16 +18,10 @@ class Table
      */
     protected $query;
 
-    /**
-     * @var string
-     */
-    protected $driver;
-
     public function __construct(Connection $db, QueryFactory $queryFactory)
     {
         $this->db = $db;
         $this->query = $queryFactory;
-        $this->driver = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
     /**
