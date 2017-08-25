@@ -2,10 +2,8 @@
 
 namespace Odan\Database;
 
-use Aura\SqlQuery\QueryInterface;
 use InvalidArgumentException;
 use PDO;
-use PDOStatement;
 
 class Connection extends PDO
 {
@@ -18,15 +16,21 @@ class Connection extends PDO
      */
     public function quoteValue($value)
     {
-        $quote = "'";
-
-        // detect null value
         if ($value === null) {
             return 'NULL';
         }
-        $value = $this->quote($value, PDO::PARAM_STR);
-        $value = $quote . substr($value, 1, -1) . $quote;
-        return $value;
+        return $this->quote($value);
+    }
+
+    public function quoteArray($array)
+    {
+        if (!$array) {
+            return [];
+        }
+        foreach ($array as $key => $value) {
+            $array[$key] = $this->quoteValue($value);
+        }
+        return $array;
     }
 
     /**
@@ -53,30 +57,6 @@ class Connection extends PDO
             $value = $quote . $value . $quote;
         }
         return $value;
-    }
-
-    /**
-     * @param QueryInterface $query
-     * @return PDOStatement
-     */
-    public function prepareQuery(QueryInterface $query)
-    {
-        $statement = $this->prepare($query->getStatement());
-        foreach ($query->getBindValues() as $param => $value) {
-            $statement->bindValue($param, $value);
-        }
-        return $statement;
-    }
-
-    /**
-     * @param QueryInterface $query
-     * @return PDOStatement
-     */
-    public function executeQuery(QueryInterface $query)
-    {
-        $statement = $this->prepare($query->getStatement());
-        $statement->execute($query->getBindValues());
-        return $statement;
     }
 
     /**

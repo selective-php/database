@@ -147,29 +147,31 @@ class SchemaTest extends BaseTest
         $this->assertSame(true, !empty($columns));
         $this->assertSame(10, count($columns));
 
-        $insert = $this->getQuery()->newInsert()->into('test')->cols(array(
+        $insert = $this->getQuery()->insert()->into('test')->values(array(
             'keyname' => 'test',
             'keyvalue' => '123'
         ));
-        $stmt = $db->executeQuery($insert);
+        $stmt = $insert->getStatement();
+        $stmt->execute();
         $this->assertTrue($stmt->rowCount() > 0);
 
         // With ON DUPLICATE KEY UPDATE, the affected-rows value per row
         // is 1 if the row is inserted as a new row, and 2 if an existing row is updated.
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
-        $insert =  $table->newInsert()
+        $insert = $table->insert()
             ->into('test')
-            ->cols(array(
+            ->values(array(
                 'id' => 1,
                 'keyname' => 'test',
                 'keyvalue' => '123',
                 'boolvalue' => 1))
-            ->onDuplicateKeyUpdateCols(array(
+            ->onDuplicateKeyUpdate(array(
                 'id' => 1,
                 'keyname' => 'testx',
                 'keyvalue' => '123',
                 'boolvalue' => 1));
-        $stmt = $db->executeQuery($insert);
+        $stmt = $insert->getStatement();
+        $stmt->execute();
         $result = $stmt->rowCount();
         $this->assertSame(2, $result);
 

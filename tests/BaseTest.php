@@ -2,8 +2,8 @@
 
 namespace Odan\Test;
 
-use Aura\SqlQuery\QueryFactory;
 use Odan\Database\Connection;
+use Odan\Database\QueryFactory;
 use Odan\Database\Schema;
 use Odan\Database\Table;
 use PHPUnit\Framework\TestCase;
@@ -73,7 +73,7 @@ abstract class BaseTest extends TestCase
     public function getQuery()
     {
         if ($this->query === null) {
-            $this->query = new QueryFactory('mysql');
+            $this->query = new QueryFactory($this->getConnection());
         }
         return $this->query;
     }

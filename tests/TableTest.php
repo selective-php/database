@@ -2,9 +2,9 @@
 
 namespace Odan\Test;
 
-use Aura\SqlQuery\Common\DeleteInterface;
-use Aura\SqlQuery\Common\InsertInterface;
-use Aura\SqlQuery\Common\UpdateInterface;
+use Odan\Database\DeleteQuery;
+use Odan\Database\InsertQuery;
+use Odan\Database\UpdateQuery;
 use Odan\Database\Table;
 
 /**
@@ -33,21 +33,20 @@ class TableTest extends BaseTest
     /**
      * Test
      *
-     * @covers ::newSelect
+     * @covers ::select
      * @covers ::getQuery
      */
     public function testNewSelect()
     {
-        $db = $this->getConnection();
+        //$db = $this->getConnection();
         $newRow = array(
             'keyname' => 'test',
             'keyvalue' => '123'
         );
-        $insert = $this->getQuery()->newInsert()->into('test')->cols($newRow);
-        $db->executeQuery($insert);
+        $this->getQuery()->insert()->into('test')->values($newRow)->execute();
 
-        $select = $this->getTable()->newSelect()->cols(['id', 'keyname', 'keyvalue'])->from('test');
-        $row =$db->executeQuery($select)->fetch();
+        $select = $this->getTable()->select()->columns(['id', 'keyname', 'keyvalue'])->from('test');
+        $row = $select->execute()->fetch();
 
         $expected = array(
             'id' => '1',
@@ -60,33 +59,33 @@ class TableTest extends BaseTest
     /**
      * Test
      *
-     * @covers ::newInsert
+     * @covers ::insert
      * @covers ::getQuery
      */
     public function testNewInsert()
     {
-        $this->assertInstanceOf(InsertInterface::class, $this->getTable()->newInsert());
+        $this->assertInstanceOf(InsertQuery::class, $this->getTable()->insert());
     }
 
     /**
      * Test
      *
-     * @covers ::newUpdate
+     * @covers ::update
      * @covers ::getQuery
      */
     public function testNewUpdate()
     {
-        $this->assertInstanceOf(UpdateInterface::class, $this->getTable()->newUpdate());
+        $this->assertInstanceOf(UpdateQuery::class, $this->getTable()->update());
     }
 
     /**
      * Test
      *
-     * @covers ::newDelete
+     * @covers ::delete
      * @covers ::getQuery
      */
     public function testNewDelete()
     {
-        $this->assertInstanceOf(DeleteInterface::class, $this->getTable()->newDelete());
+        $this->assertInstanceOf(DeleteQuery::class, $this->getTable()->delete());
     }
 }

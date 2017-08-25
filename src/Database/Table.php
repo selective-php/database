@@ -2,7 +2,6 @@
 
 namespace Odan\Database;
 
-use Aura\SqlQuery\QueryFactory;
 use PDOStatement;
 
 class Table
@@ -33,43 +32,35 @@ class Table
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Select|\Aura\SqlQuery\Common\SelectInterface
+     * @return SelectQuery
      */
-    public function newSelect()
+    public function select()
     {
-        /* @var $result \Aura\SqlQuery\Mysql\Select */
-        $result =  $this->getQuery()->newSelect();
-        return $result;
+        return $this->getQuery()->select();
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Delete|\Aura\SqlQuery\Common\DeleteInterface
+     * @return DeleteQuery
      */
-    public function newDelete()
+    public function delete()
     {
-        /* @var $result \Aura\SqlQuery\Mysql\Delete */
-        $result = $this->getQuery()->newDelete();
-        return $result;
+        return $this->getQuery()->delete();
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Insert|\Aura\SqlQuery\Common\InsertInterface
+     * @return InsertQuery
      */
-    public function newInsert()
+    public function insert()
     {
-        /* @var $result \Aura\SqlQuery\Mysql\Insert */
-        $result = $this->getQuery()->newInsert();
-        return $result;
+        return $this->getQuery()->insert();
     }
 
     /**
-     * @return \Aura\SqlQuery\Mysql\Update|\Aura\SqlQuery\Common\UpdateInterface
+     * @return UpdateQuery
      */
-    public function newUpdate()
+    public function update()
     {
-        /* @var $result \Aura\SqlQuery\Mysql\Update */
-        $result = $this->getQuery()->newUpdate();
-        return $result;
+        return $this->getQuery()->update();
     }
 
     /**
@@ -79,9 +70,9 @@ class Table
      */
     public function insertRow($table, $row)
     {
-        $insert = $this->newInsert()->into($table)->cols($row);
-        $stmt = $this->db->executeQuery($insert);
-        return $stmt;
+        $statement = $this->insert()->into($table)->values($row);
+        $statement->execute();
+        return $statement;
     }
 
     /**
@@ -107,17 +98,19 @@ class Table
      * </code>
      *
      * @param string $tableName table
-     * @param array $fields fields
+     * @param array $values values
      * @param array $conditions conditions
      * @return PDOStatement
      */
-    public function updateRow($tableName, array $fields, array $conditions = array())
+    public function updateRow($tableName, array $values, array $conditions = array())
     {
-        $update = $this->newUpdate()->table($tableName)->cols($fields);
+        $update = $this->update()->table($tableName)->values($values);
         foreach ($conditions as $key => $value) {
-            $update->where("$key = ?", $value);
+            $update->where($key, '=', $value);
         }
-        return $this->db->executeQuery($update);
+        $statement = $update->getStatement();
+        $statement->execute();
+        return $statement;
     }
 
     /**
@@ -133,10 +126,12 @@ class Table
      */
     public function deleteRow($tableName, array $conditions = array())
     {
-        $delete = $this->newDelete()->from($tableName);
+        $delete = $this->delete()->from($tableName);
         foreach ($conditions as $key => $value) {
-            $delete->where("$key = ?", $value);
+            $delete->where($key, '=', $value);
         }
-        return $this->db->executeQuery($delete);
+        $statement = $delete->getStatement();
+        $statement->execute();
+        return $statement;
     }
 }

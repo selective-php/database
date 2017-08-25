@@ -2,7 +2,7 @@
 
 namespace Odan\Test;
 
-use Aura\SqlQuery\QueryFactory;
+use Odan\Database\QueryFactory;
 
 /**
  * QueryTest

@@ -191,10 +191,13 @@ class ConnectionTest extends BaseTest
      */
     public function testPrepareQuery()
     {
-        $db = $this->getConnection();
-        $select = $this->getTable()->newSelect();
-        $select->cols(['TABLE_NAME'])->from('information_schema.TABLES')->where('TABLE_NAME = ?', 'TABLES');
-        $statement = $db->prepareQuery($select);
+        //$db = $this->getConnection();
+        $select = $this->getTable()->select();
+        $select->columns(['TABLE_NAME'])
+            ->from('information_schema.TABLES')
+            ->where('TABLE_NAME','=', 'TABLES');
+
+        $statement = $select->getStatement();
         $this->assertInstanceOf(\PDOStatement::class, $statement);
 
         $statement->execute();
