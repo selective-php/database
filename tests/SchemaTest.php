@@ -80,7 +80,15 @@ class SchemaTest extends BaseTest
      * @covers \Odan\Database\Table::updateRow
      * @covers \Odan\Database\Table::deleteRow
      * @covers \Odan\Database\Connection::queryMapColumn
-     * @covers \Odan\Database\Connection::executeQuery
+     * @covers \Odan\Database\InsertQuery::into
+     * @covers \Odan\Database\InsertQuery::values
+     * @covers \Odan\Database\InsertQuery::onDuplicateKeyUpdate
+     * @covers \Odan\Database\InsertQuery::execute
+     * @covers \Odan\Database\InsertQuery::getStatement
+     * @covers \Odan\Database\InsertQuery::getSql
+     * @covers \Odan\Database\InsertQuery::getInsertValues
+     * @covers \Odan\Database\InsertQuery::getInsertBulkValues
+     * @covers \Odan\Database\InsertQuery::getInsertQuoteFields
      */
     public function testTables()
     {

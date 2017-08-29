@@ -33,7 +33,7 @@ class ConnectionTest extends BaseTest
     }
 
     /**
-     * Test esc method
+     * Test
      *
      * @return void
      * @covers ::quoteValue
@@ -187,7 +187,21 @@ class ConnectionTest extends BaseTest
     /**
      * Test
      *
-     * @covers ::prepareQuery
+     * @return void
+     * @covers ::quoteArray
+     */
+    public function testQuoteArray()
+    {
+        $db = $this->getConnection();
+        $this->assertEquals([], $db->quoteArray(null));
+
+        $row = ['1', '2', '3', null];
+        $this->assertEquals(["'1'", "'2'", "'3'", 'NULL'], $db->quoteArray($row));
+    }
+
+    /**
+     * Test
+     *
      */
     public function testPrepareQuery()
     {
