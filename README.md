@@ -52,19 +52,19 @@ $password = '';
 $charset = 'utf8';
 $collate = 'utf8_unicode_ci';
 
-$pdo = new Connection("mysql:host=$host;dbname=$dbname;charset=$charset", $username, $password, array(
+$pdo = new Connection("mysql:host=$host;dbname=$dbname;charset=$charset", $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_PERSISTENT => false,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
-    )
+    ]
 );
 
-// Crrate a query factory object
+// Create a query factory object
 $query = new QueryFactory($pdo);
 ```
 
-Build a complex select statement:
+Build a select statement:
 
 ```php
 $select = $query->select()
