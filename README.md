@@ -43,16 +43,17 @@ Create a new database Connection:
 
 use Odan\Database\Connection;
 use Odan\Database\QueryFactory;
+use Odan\Database\RawValue
 use PDO;
 
 $host = '127.0.0.1';
-$dbname = 'test';
+$database = 'test';
 $username = 'root';
 $password = '';
 $charset = 'utf8';
 $collate = 'utf8_unicode_ci';
 
-$pdo = new Connection("mysql:host=$host;dbname=$dbname;charset=$charset", $username, $password, [
+$pdo = new Connection("mysql:host=$host;dbname=$database;charset=$charset", $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_PERSISTENT => false,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -68,6 +69,7 @@ Build a select statement:
 
 ```php
 $select = $query->select()
+    ->distinct()
     ->columns(['id', 'username'])
     ->from('users u')
     ->join('customers c', 'c.created_by', '=', 'u.id')
@@ -83,10 +85,10 @@ $select = $query->select()
     ->orWhere(function(SelectQuery $query) {
         $query->where('1', '<>', '2');
         $query->where('2', '=', null);
-        $query->where('3', '<>', '5');
+        $query->where('3', '>', '5');
         $query->orWhere(function(SelectQuery $query) {
-            $query->Where('a.id', '=', 'b.id');
-            $query->orWhere('c.id', '=', 'u.id');
+            $query->where('a.id', '=', new RawValue('b.id'));
+            $query->orWhere('c.id', '=', new RawValue('u.id'));
         });
     })
     ->where('u.id', '>=', 0)
