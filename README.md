@@ -1,6 +1,6 @@
 # Database
  
-A nice PDO extension.
+A fluent SQL query builder.
 
 [![Latest Version on Packagist](https://img.shields.io/github/release/odan/database.svg)](https://github.com/odan/database/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
@@ -13,9 +13,9 @@ A nice PDO extension.
 ## Features
 
 * Extended PDO connection
-* SQL query builder (Aura.SqlQuery)
-* Table manipulation
-* Encryption and compression
+* SQL query builder (select, insert, update, delete)
+* Table schema informations and manipulation
+* Data compression
 
 ## Installation
 
@@ -28,13 +28,11 @@ composer require odan/database
 * PHP 7.0+
 * MySQL
 
-## SQL Query Builder
-
-This framework comes with [Aura.SqlQuery](https://github.com/auraphp/Aura.SqlQuery) as SQL query builder.
+## Query Builder
 
 The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application, and works on all supported database systems.
 
-For more details how to build queries read the **[documentation](https://github.com/auraphp/Aura.SqlQuery/blob/3.x/docs/index.md)**.
+For more details how to build queries read the **[documentation](docs/index.md)**.
 
 
 ## Testing
