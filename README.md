@@ -34,6 +34,81 @@ The database query builder provides a convenient, fluent interface to creating a
 
 For more details how to build queries read the **[documentation](docs/index.md)**.
 
+## Complex example
+
+Create a new database Connection
+```php
+
+use Odan\Database\Connection;
+use Odan\Database\QueryFactory;
+
+$host = '127.0.0.1';
+$dbname = 'test';
+$username = 'root';
+$password = '';
+$charset = 'utf8';
+$collate = 'utf8_unicode_ci';
+$pdo = new Connection("mysql:host=$host;dbname=$dbname;charset=$charset", $username, $password, array(
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_PERSISTENT => false,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
+        )
+);
+$query = new QueryFactory($pdo);
+```
+
+Build a complex select statement:
+
+```php
+$select = $query->select();
+$select->columns(['id', 'username'])
+        ->from('users u')
+        ->join('customers c', 'c.created_by', '=', 'u.id')
+        ->leftJoin('articles a', 'a.created_by', '=', 'u.id')
+        ->where('u.id', '>=', 1)
+        ->where('u.deleted', '=', 0)
+        ->orWhere('u.username', 'like', "%a'a%")
+        ->orWhere('u.username', 'not like', "%a'b%")
+        ->orWhere('u.id', 'in', [1, 2, 3])
+        ->orWhere('u.id', 'not in', [4, 5, null])
+        ->orWhere('u.id', '=', null)
+        ->orWhere('u.id', '!=', null)
+        ->orWhere(function(SelectQuery $query) {
+            $query->where('1', '<>', '2');
+            $query->where('2', '=', null);
+            $query->where('3', '<>', '5');
+            $query->orWhere(function(SelectQuery $query) {
+                $query->Where('a.id', '=', 'b.id');
+                $query->orWhere('c.id', '=', 'u.id');
+            });
+        })
+        ->where('u.id', '>=', 0)
+        ->orWhere('u.id', 'between', [100, 200])
+        ->groupBy(['id', 'username ASC'])
+        ->having('u.username', '=', '1')
+        ->having('u.username', '=', '2')
+        ->having(function(SelectQuery $query) {
+            $query->having('x', '<>', '2');
+            $query->having('y', '=', null);
+            $query->having('z', '<>', '5');
+            $query->orHaving(function(SelectQuery $query) {
+                $query->having('w.id', '=', new RawValue('p.id'));
+                $query->orHaving('z.id', '=', new RawValue('l.id'));
+            });
+        })
+        ->orderBy(['id ASC', 'username DESC'])
+        ->limit(0, 10)
+;
+
+echo $select->getSql();
+```
+
+Fetch all rows:
+```php
+$rows = $select->execute()->fetchAll();
+print_r($rows);
+```
 
 ## Testing
 
