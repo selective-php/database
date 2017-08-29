@@ -64,13 +64,14 @@ class Table
     }
 
     /**
-     * @param $table
-     * @param $row
+     * @param string $table
+     * @param array $row
      * @return PDOStatement
      */
-    public function insertRow($table, $row)
+    public function insertRow(string $table, array $row): PDOStatement
     {
-        $statement = $this->insert()->into($table)->values($row);
+        $insert = $this->insert()->into($table)->values($row);
+        $statement = $insert->getStatement();
         $statement->execute();
         return $statement;
     }
@@ -78,16 +79,11 @@ class Table
     /**
      * @param $table
      * @param $rows
-     * @return int
+     * @return PDOStatement
      */
-    public function insertRows($table, $rows)
+    public function insertRows(string $table, array $rows): PDOStatement
     {
-        $result = 0;
-        foreach ($rows as $row) {
-            $this->insertRow($table, $row);
-            $result++;
-        }
-        return $result;
+        return $this->insertRow($table, $rows);
     }
 
     /**

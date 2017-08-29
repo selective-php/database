@@ -195,7 +195,7 @@ class ConnectionTest extends BaseTest
         $select = $this->getTable()->select();
         $select->columns(['TABLE_NAME'])
             ->from('information_schema.TABLES')
-            ->where('TABLE_NAME','=', 'TABLES');
+            ->where('TABLE_NAME', '=', 'TABLES');
 
         $statement = $select->getStatement();
         $this->assertInstanceOf(\PDOStatement::class, $statement);

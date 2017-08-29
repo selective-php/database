@@ -2,20 +2,18 @@
 
 namespace Odan\Database;
 
-use PDO;
-
 class QueryFactory
 {
     /**
-     * @var PDO
+     * @var Connection
      */
     protected $pdo;
 
     /**
      * QueryFactory constructor.
-     * @param PDO $pdo
+     * @param Connection $pdo
      */
-    public function __construct(PDO $pdo)
+    public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
     }

@@ -187,19 +187,15 @@ class SchemaTest extends BaseTest
         $result = $db->queryValue("SELECT * FROM `test` WHERE id = 9999999;", 'id');
         $this->assertSame(null, $result);
 
-        $rows = array();
-        $result = $table->insertRows('test', $rows);
-        $this->assertSame(0, $result);
-
         $rows = array(
             0 => array('keyname' => 'test', 'keyvalue' => '123'),
             1 => array('keyname' => 'test2', 'keyvalue' => '1234')
         );
         $result = $table->insertRows('test', $rows);
-        $this->assertSame(2, $result);
+        $this->assertSame(2, $result->rowCount());
 
         $result = $db->lastInsertId();
-        $this->assertSame('3', $result);
+        $this->assertSame('2', $result);
 
         $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
         $this->assertSame('3', $result);
@@ -211,7 +207,7 @@ class SchemaTest extends BaseTest
         $this->assertSame('0', $result);
 
         $result = $table->insertRows('test', $rows);
-        $this->assertSame(2, $result);
+        $this->assertSame(2, $result->rowCount());
 
         $result = $db->queryValues("SELECT id,keyvalue FROM `test`", 'keyvalue');
         $this->assertEquals(array('123', '1234'), $result);
@@ -243,11 +239,11 @@ class SchemaTest extends BaseTest
         $this->assertSame('3', $result);
 
         $rows = array();
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $rows[] = array('keyname' => 'test', 'keyvalue' => 'value-' . $i);
         }
         $result = $table->insertRows('test', $rows);
-        $this->assertSame(1000, $result);
+        $this->assertSame(100, $result->rowCount());
 
         $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll();
         $this->assertSame(true, $rows == $result);
@@ -260,7 +256,7 @@ class SchemaTest extends BaseTest
         //$update = $db->newUpdate()->table('test')->cols($fields)->where('keyname = ?', 'test');
         //$stmt = $db->executeQuery($update);
         $stmt = $table->updateRow('test', $fields, ['keyname' => 'test']);
-        $this->assertSame(1000, $stmt->rowCount());
+        $this->assertSame(100, $stmt->rowCount());
 
         $stmt = $table->deleteRow('test', array('id' => '10'));
         $this->assertSame(1, $stmt->rowCount());

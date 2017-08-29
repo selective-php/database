@@ -41,9 +41,9 @@ class UpdateQuery
         return $this;
     }
 
-    public function where(...$coditions)
+    public function where(...$conditions)
     {
-        $this->where[] = $coditions;
+        $this->where[] = $conditions;
         return $this;
     }
 

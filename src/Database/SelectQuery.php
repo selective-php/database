@@ -2,14 +2,15 @@
 
 namespace Odan\Database;
 
-use PDO;
+use Closure;
 use PDOStatement;
 
 class SelectQuery
 {
     /**
-     * PDO
-     * @var PDO
+     * PDO Connection
+     *
+     * @var Connection
      */
     protected $pdo;
     protected $columns = ['*'];
@@ -132,6 +133,8 @@ class SelectQuery
 
         // ... then put the full set of conditions back into $this->$clause
         $this->$clause = $set;
+
+        return null;
     }
 
     public function orderBy($fields)
@@ -247,13 +250,18 @@ class SelectQuery
                 $whereType = strtoupper($type);
             }
             list($leftField, $operator, $rightField) = $conditions;
-            $rightField = $this->getRightFieldValue($rightField, $operator);
+            list($rightField, $operator) = $this->getRightFieldValue($rightField, $operator);
             $operator = strtoupper($operator);
             $sql[] = sprintf('%s %s %s %s', $whereType, $leftField, $operator, $rightField);
         }
         return $sql;
     }
 
+    /**
+     * @param mixed $rightField
+     * @param mixed $operator
+     * @return array
+     */
     protected function getRightFieldValue($rightField, $operator)
     {
         if ($rightField instanceof RawValue) {
@@ -262,20 +270,20 @@ class SelectQuery
         // https://dev.mysql.com/doc/refman/5.7/en/comparison-operators.html
         if ($operator == 'in' || $operator == 'not in') {
             $rightField = '(' . implode(', ', $this->pdo->quoteArray((array)$rightField)) . ')';
-        } else if ($operator === '=' && $rightField === null) {
+        } elseif ($operator === '=' && $rightField === null) {
             $operator = 'IS';
             $rightField = $this->pdo->quoteValue($rightField);
-        } else if (($operator === '<>' || $operator === '!=') && $rightField === null) {
+        } elseif (($operator === '<>' || $operator === '!=') && $rightField === null) {
             $operator = 'IS NOT';
             $rightField = $this->pdo->quoteValue($rightField);
-        } else if ($operator === 'between') {
+        } elseif ($operator === 'between') {
             $between1 = $this->pdo->quoteValue($rightField[0]);
             $between2 = $this->pdo->quoteValue($rightField[1]);
             $rightField = sprintf('%s AND %s', $between1, $between2);
         } else {
             $rightField = $this->pdo->quoteValue($rightField);
         }
-        return $rightField;
+        return [$rightField, $operator];
     }
 
     protected function getJoinSql($sql, $join)

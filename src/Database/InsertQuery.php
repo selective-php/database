@@ -78,37 +78,50 @@ class InsertQuery
 
         if (array_key_exists(0, $this->values)) {
             // multiple rows
-            foreach ($this->values as $row) {
-                $row = $this->quoteRow($row);
-                // todo
+            // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9)
+            $result = sprintf("INSERT INTO %s (%s) VALUES", $table, $this->getInsertQuoteFields($this->values[0]));
+            foreach ($this->values as $key => $row) {
+                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->getInsertBulkValues($row));
             }
         } else {
             // single row
             $values = $this->getInsertValues($this->values);
             $result = sprintf("INSERT INTO %s SET %s", $table, $values);
-
-            if ($this->duplicateValues) {
-                $values = $this->getInsertValues($this->duplicateValues);
-                $result .= sprintf(' ON DUPLICATE KEY UPDATE %s', $values);
-            }
-            $result .= ';';
         }
+
+        if ($this->duplicateValues) {
+            $values = $this->getInsertValues($this->duplicateValues);
+            $result .= sprintf(' ON DUPLICATE KEY UPDATE %s', $values);
+        }
+        $result .= ';';
+
         return $result;
     }
 
-    protected function getInsertValues($row)
+    protected function getInsertValues($row): string
     {
+        $values = [];
         foreach ($row as $key => $value) {
             $values[] = $this->pdo->quoteName($key) . '=' . $this->pdo->quoteValue($value);
         }
         return implode(', ', $values);
     }
 
-    protected function quoteRow($row)
+    protected function getInsertBulkValues($row): string
     {
+        $values = [];
         foreach ($row as $key => $value) {
-            $row[$this->pdo->quoteName($key)] = $this->pdo->quoteValue($value);
+            $values[] =  $this->pdo->quoteValue($value);
         }
-        return $row;
+        return implode(',', $values);
+    }
+
+    protected function getInsertQuoteFields(array $row): string
+    {
+        $fields = [];
+        foreach (array_keys($row) as $field) {
+            $fields[] =  $this->pdo->quoteName($field);
+        }
+        return implode(', ', $fields);
     }
 }

@@ -88,7 +88,7 @@ class Schema
     }
 
     /**
-     * Split table into dbname and tablename
+     * Split table into dbname and table name
      *
      * @param string $tableName table
      * @return array
@@ -238,7 +238,7 @@ class Schema
     }
 
     /**
-     * Calculate a hashkey (SHA1) using a table schema
+     * Calculate a hash key (SHA1) using a table schema
      * Used to quickly compare table structures or schema versions
      *
      * @param string $tableName
