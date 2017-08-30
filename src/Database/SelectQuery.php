@@ -191,10 +191,10 @@ class SelectQuery
     {
         $sql = [];
         $sql[] = 'SELECT' . (($this->distinct) ? ' DISTINCT' : '');
-        if ($this->columns) {
+        if (!empty($this->columns)) {
             $sql[] = implode(',', (array)$this->columns);
         }
-        if ($this->from) {
+        if (!empty($this->from)) {
             $sql[] = 'FROM ' . trim(implode(" ", (array)$this->from));
         }
         $sql = $this->getJoinSql($sql, $this->join);
