@@ -29,31 +29,31 @@ class UpdateQuery
         $this->pdo = $pdo;
     }
 
-    public function table($table)
+    public function table($table): self
     {
         $this->table = $table;
         return $this;
     }
 
-    public function values(array $values)
+    public function values(array $values): self
     {
         $this->values = $values;
         return $this;
     }
 
-    public function where(...$conditions)
+    public function where(...$conditions): self
     {
         $this->where[] = $conditions;
         return $this;
     }
 
-    public function orderBy($orderBy)
+    public function orderBy($orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
     }
 
-    public function limit($limit)
+    public function limit($limit): self
     {
         $this->limit = $limit;
         return $this;
@@ -62,7 +62,7 @@ class UpdateQuery
     /**
      * @return bool
      */
-    public function execute()
+    public function execute(): bool
     {
         return $this->getStatement()->execute();
     }
@@ -70,7 +70,7 @@ class UpdateQuery
     /**
      * @return PDOStatement
      */
-    public function getStatement()
+    public function getStatement(): PDOStatement
     {
         return $this->pdo->prepare($this->getSql());
     }
@@ -80,6 +80,7 @@ class UpdateQuery
      */
     public function getSql()
     {
+        // @todo
         return 'SELECT 1';
     }
 }

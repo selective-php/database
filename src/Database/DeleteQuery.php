@@ -58,7 +58,7 @@ class DeleteQuery
     /**
      * @return bool
      */
-    public function execute()
+    public function execute(): bool
     {
         return $this->getStatement()->execute();
     }
@@ -66,7 +66,7 @@ class DeleteQuery
     /**
      * @return PDOStatement
      */
-    public function getStatement()
+    public function getStatement(): PDOStatement
     {
         return $this->pdo->prepare($this->getSql());
     }
@@ -76,6 +76,7 @@ class DeleteQuery
      */
     public function getSql()
     {
+        // @todo
         return 'SELECT 1';
     }
 }

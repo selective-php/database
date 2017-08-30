@@ -2,7 +2,7 @@
 
 namespace Odan\Database;
 
-class RawValue
+class RawExp
 {
     protected $value;
 
@@ -12,6 +12,11 @@ class RawValue
     }
 
     public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function __toString()
     {
         return $this->value;
     }

@@ -43,7 +43,7 @@ Create a new database Connection:
 
 use Odan\Database\Connection;
 use Odan\Database\QueryFactory;
-use Odan\Database\RawValue;
+use Odan\Database\RawExp;
 use PDO;
 
 $host = '127.0.0.1';
@@ -87,8 +87,8 @@ $select = $query->select()
         $query->where('2', '=', null);
         $query->where('3', '>', '5');
         $query->orWhere(function(SelectQuery $query) {
-            $query->where('a.id', '=', new RawValue('b.id'));
-            $query->orWhere('c.id', '=', new RawValue('u.id'));
+            $query->where(new RawExp('a.id = b.id'));
+            $query->orWhere(new RawExp('c.id = u.id'));
         });
     })
     ->where('u.id', '>=', 0)
@@ -101,8 +101,8 @@ $select = $query->select()
         $query->having('y', '=', null);
         $query->having('z', '<>', '5');
         $query->orHaving(function(SelectQuery $query) {
-            $query->having('w.id', '=', new RawValue('p.id'));
-            $query->orHaving('z.id', '=', new RawValue('l.id'));
+            $query->having(new RawExp('a.id = b.id'));
+            $query->orHaving(new RawExp('c.id = u.id'));
         });
     })
     ->orderBy(['id ASC', 'username DESC'])
