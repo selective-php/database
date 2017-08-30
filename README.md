@@ -43,7 +43,7 @@ Create a new database Connection:
 
 use Odan\Database\Connection;
 use Odan\Database\QueryFactory;
-use Odan\Database\RawValue
+use Odan\Database\RawValue;
 use PDO;
 
 $host = '127.0.0.1';
@@ -53,7 +53,7 @@ $password = '';
 $charset = 'utf8';
 $collate = 'utf8_unicode_ci';
 
-$pdo = new Connection("mysql:host=$host;dbname=$database;charset=$charset", $username, $password, [
+$connection = new Connection("mysql:host=$host;dbname=$database;charset=$charset", $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_PERSISTENT => false,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -62,7 +62,7 @@ $pdo = new Connection("mysql:host=$host;dbname=$database;charset=$charset", $use
 );
 
 // Create a query factory object
-$query = new QueryFactory($pdo);
+$query = new QueryFactory($connection);
 ```
 
 Build a select statement:
@@ -116,6 +116,16 @@ Fetch all rows:
 ```php
 $rows = $select->execute()->fetchAll();
 print_r($rows);
+```
+
+Fetch all rows, step by step (recommend for hydration):
+
+```php
+$statement = $select->getStatement();
+$statement->execute();
+while($row = $statement->fetch()) {
+    print_r($row);
+}
 ```
 
 Fetch only the first row:
