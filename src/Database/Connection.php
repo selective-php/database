@@ -2,7 +2,6 @@
 
 namespace Odan\Database;
 
-use InvalidArgumentException;
 use PDO;
 
 class Connection extends PDO
@@ -40,29 +39,73 @@ class Connection extends PDO
     }
 
     /**
-     * Escape identifier (column, table) with backtick
+     * Escape identifier (column, table) with backticks
      *
      * @see: http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
      *
-     * @param mixed $value Identifier name
+     * @param string $identifier Identifier name
      * @return string Quoted identifier
-     * @throws InvalidArgumentException
      */
-    public function quoteName($value): string
+    public function quoteName($identifier)
     {
-        if ($value === null || strlen(trim($value)) == 0) {
-            throw new InvalidArgumentException('Value cannot be null or empty');
+        $identifier = trim($identifier);
+        $separators = array(' AS ', ' ', '.');
+        foreach ($separators as $sep) {
+            $pos = strripos($identifier, $sep);
+            if ($pos) {
+                return $this->quoteNameWithSeparator($identifier, $sep, $pos);
+            }
         }
-        $quote = "`";
-        $value = $this->quote($value, PDO::PARAM_STR);
-        $value = substr($value, 1, -1);
-        if (strpos($value, '.') !== false) {
-            $values = explode('.', $value);
-            $value = $quote . implode($quote . '.' . $quote, $values) . $quote;
-        } else {
-            $value = $quote . $value . $quote;
+        return $this->quoteIdentifier($identifier);
+    }
+
+    public function quoteNames($identifiers)
+    {
+        foreach ((array)$identifiers as $key => $identifier) {
+            if ($identifier instanceof RawExp) {
+                continue;
+            }
+            $identifiers[$key] = $this->quoteName($identifier);
         }
-        return $value;
+        return $identifiers;
+    }
+
+    /**
+     * Quotes an identifier that has a separator.
+     *
+     * @param string $spec The identifier name to quote.
+     * @param string $sep The separator, typically a dot or space.
+     * @param int $pos The position of the separator.
+     * @return string The quoted identifier name.
+     */
+    protected function quoteNameWithSeparator($spec, $sep, $pos)
+    {
+        $len = strlen($sep);
+        $part1 = $this->quoteName(substr($spec, 0, $pos));
+        $part2 = $this->quoteIdentifier(substr($spec, $pos + $len));
+        return "{$part1}{$sep}{$part2}";
+    }
+
+    /**
+     * Quotes an identifier name (table, index, etc); ignores empty values and
+     * values of '*'.
+     *
+     * Escape backticks inside by doubling them
+     * Enclose identifier in backticks
+     *
+     * After such formatting, it is safe to insert the $table variable into query.
+     *
+     * @param string $name The identifier name to quote.
+     * @return string The quoted identifier name.
+     * @see quoteName()
+     */
+    public function quoteIdentifier($name)
+    {
+        $name = trim($name);
+        if ($name == '*') {
+            return $name;
+        }
+        return "`" . str_replace("`", "``", $name) . "`";
     }
 
     /**
@@ -121,29 +164,5 @@ class Connection extends PDO
             $result[$row[$key]] = $row;
         }
         return $result;
-    }
-
-    /**
-     * Return the correct pdo data type.
-     *
-     * @param mixed $value The value
-     * @return int PDO::PARAM_*
-     */
-    public function getType($value)
-    {
-        switch (true) {
-            case is_bool($value):
-                $dataType = PDO::PARAM_BOOL;
-                break;
-            case is_int($value):
-                $dataType = PDO::PARAM_INT;
-                break;
-            case is_null($value):
-                $dataType = PDO::PARAM_NULL;
-                break;
-            default:
-                $dataType = PDO::PARAM_STR;
-        }
-        return $dataType;
     }
 }

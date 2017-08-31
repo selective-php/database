@@ -36,7 +36,7 @@ class TableTest extends BaseTest
      * @covers ::select
      * @covers ::getQuery
      * @covers \Odan\Database\SelectQuery::__construct
-     * @covers \Odan\Database\SelectQuery::execute
+     * @covers \Odan\Database\SelectQuery::query
      * @covers \Odan\Database\InsertQuery::execute
      */
     public function testNewSelect()
@@ -49,7 +49,7 @@ class TableTest extends BaseTest
         $this->getQuery()->insert()->into('test')->values($newRow)->execute();
 
         $select = $this->getTable()->select()->columns(['id', 'keyname', 'keyvalue'])->from('test');
-        $row = $select->execute()->fetch();
+        $row = $select->query()->fetch();
 
         $expected = array(
             'id' => '1',

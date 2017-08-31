@@ -72,116 +72,45 @@ class ConnectionTest extends BaseTest
     }
 
     /**
-     * Test ident method
+     * Test
      *
      * @return void
      * @covers ::quoteName
+     * @covers ::quoteNameWithSeparator
+     * @covers ::quoteIdentifier
      */
     public function testIdent()
     {
         $db = $this->getConnection();
 
-        $this->assertEquals("`0`", $db->quoteName(0));
-        $this->assertEquals("`0`", $db->quoteName('0'));
-        $this->assertEquals("`1`", $db->quoteName(true));
-        $this->assertEquals("`-1`", $db->quoteName(-1));
-        $this->assertEquals("`abc123`", $db->quoteName("abc123"));
-        $this->assertEquals("`öäüÖÄÜß`", $db->quoteName("öäüÖÄÜß"));
-        $this->assertEquals("`?`", $db->quoteName('?'));
-        $this->assertEquals("`:`", $db->quoteName(':'));
-        $this->assertEquals("`\\'`", $db->quoteName("'"));
-        $this->assertEquals("`\\\"`", $db->quoteName("\""));
-        $this->assertEquals("`\\\`", $db->quoteName("\\"));
-        $this->assertEquals("`\\Z`", $db->quoteName("\x1a"));
+        $this->assertSame("``", $db->quoteName(''));
+        $this->assertSame("*", $db->quoteName('*'));
 
-        $this->assertEquals("`,`", $db->quoteName(","));
-        $this->assertEquals("`\\',`", $db->quoteName("',"));
-        $this->assertEquals("```", $db->quoteName("`"));
-        $this->assertEquals("`%s`", $db->quoteName("%s"));
-        $this->assertEquals("`Naughty \\' string`", $db->quoteName("Naughty ' string"));
-        $this->assertEquals("`@þÿ€`", $db->quoteName("@þÿ€"));
+        // Table
+        $this->assertSame("`abc123`", $db->quoteName("abc123"));
+        $this->assertSame("`user_roles`", $db->quoteName("user_roles "));
+        $this->assertSame("`öäüÖÄÜß`", $db->quoteName("öäüÖÄÜß"));
+        $this->assertSame("`table`.*", $db->quoteName("table.*"));
+
+        // Table with alias
+        $this->assertSame("`users` `u`", $db->quoteName("users u"));
+        $this->assertSame("`users` AS `u`", $db->quoteName("users AS u"));
 
         // With database name
         $this->assertSame("`dbname`.`tablename`", $db->quoteName("dbname.tablename"));
         $this->assertSame("`dbname`.`tablename`.`field`", $db->quoteName("dbname.tablename.field"));
-    }
+        // Alias.field AS thing
+        $this->assertSame("`dbname`.`tablename`.`field` AS `thing`", $db->quoteName("dbname.tablename.field AS thing"));
 
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull()
-    {
-        $db = $this->getConnection();
-        $db->quoteName(null);
-    }
-
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull2()
-    {
-        $db = $this->getConnection();
-        $this->assertEquals("`\\0`", $db->quoteName("\x00"));
-    }
-
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull3()
-    {
-        $db = $this->getConnection();
-        $this->assertEquals("`\\n`", $db->quoteName("\n"));
-    }
-
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull4()
-    {
-        $db = $this->getConnection();
-        $this->assertEquals("`\\r`", $db->quoteName("\r"));
-    }
-
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull5()
-    {
-        $db = $this->getConnection();
-        $this->assertEquals("``", $db->quoteName(false));
-    }
-
-    /**
-     * Test ident method
-     *
-     * @return void
-     * @covers ::quoteName
-     * @expectedException InvalidArgumentException
-     */
-    public function testIdentNull6()
-    {
-        $db = $this->getConnection();
-        $this->assertEquals("`\\0`", $db->quoteName("\0"));
+        $this->assertSame("`.`", $db->quoteName('.'));
+        $this->assertSame("`?`", $db->quoteName('?'));
+        $this->assertSame("`:`", $db->quoteName(':'));
+        $this->assertSame("`,`", $db->quoteName(","));
+        $this->assertSame("`',`", $db->quoteName("',"));
+        $this->assertSame("````", $db->quoteName("`"));
+        $this->assertSame("`%s`", $db->quoteName("%s"));
+        $this->assertSame("`Naughty-'-string`", $db->quoteName("Naughty-'-string"));
+        $this->assertSame("`@þÿ€`", $db->quoteName("@þÿ€"));
     }
 
     /**
@@ -211,7 +140,7 @@ class ConnectionTest extends BaseTest
             ->from('information_schema.TABLES')
             ->where('TABLE_NAME', '=', 'TABLES');
 
-        $statement = $select->getStatement();
+        $statement = $select->prepare();
         $this->assertInstanceOf(\PDOStatement::class, $statement);
 
         $statement->execute();
