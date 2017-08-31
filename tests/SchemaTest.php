@@ -84,8 +84,8 @@ class SchemaTest extends BaseTest
      * @covers \Odan\Database\InsertQuery::values
      * @covers \Odan\Database\InsertQuery::onDuplicateKeyUpdate
      * @covers \Odan\Database\InsertQuery::execute
-     * @covers \Odan\Database\InsertQuery::getStatement
-     * @covers \Odan\Database\InsertQuery::getSql
+     * @covers \Odan\Database\InsertQuery::prepare
+     * @covers \Odan\Database\InsertQuery::build
      * @covers \Odan\Database\InsertQuery::getInsertValues
      * @covers \Odan\Database\InsertQuery::getInsertBulkValues
      * @covers \Odan\Database\InsertQuery::getInsertQuoteFields
@@ -159,7 +159,7 @@ class SchemaTest extends BaseTest
             'keyname' => 'test',
             'keyvalue' => '123'
         ));
-        $stmt = $insert->getStatement();
+        $stmt = $insert->prepare();
         $stmt->execute();
         $this->assertTrue($stmt->rowCount() > 0);
 
@@ -178,7 +178,7 @@ class SchemaTest extends BaseTest
                 'keyname' => 'testx',
                 'keyvalue' => '123',
                 'boolvalue' => 1));
-        $stmt = $insert->getStatement();
+        $stmt = $insert->prepare();
         $stmt->execute();
         $result = $stmt->rowCount();
         $this->assertSame(2, $result);

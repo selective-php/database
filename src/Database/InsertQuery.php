@@ -56,21 +56,21 @@ class InsertQuery
      */
     public function execute()
     {
-        return $this->getStatement()->execute();
+        return $this->prepare()->execute();
     }
 
     /**
      * @return PDOStatement
      */
-    public function getStatement()
+    public function prepare()
     {
-        return $this->pdo->prepare($this->getSql());
+        return $this->pdo->prepare($this->build());
     }
 
     /**
      * @return string SQL string
      */
-    public function getSql()
+    public function build()
     {
         $table = $this->pdo->quoteName($this->table);
 

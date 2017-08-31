@@ -43,8 +43,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::distinct
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testDistinct()
     {
@@ -58,8 +58,8 @@ class SelectQueryTest extends BaseTest
      *
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testColumns()
     {
@@ -80,8 +80,8 @@ class SelectQueryTest extends BaseTest
      *
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testFrom()
     {
@@ -103,8 +103,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhere()
     {
@@ -156,8 +156,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhereIn()
     {
@@ -178,8 +178,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhereFunction()
     {
@@ -203,8 +203,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhereBetween()
     {
@@ -222,8 +222,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhereLike()
     {
@@ -247,8 +247,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getConditionSql
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testWhereRaw()
     {
@@ -279,8 +279,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::quoteByFields
      * @covers ::columns
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      * @covers \Odan\Database\RawExp::__construct
      * @covers \Odan\Database\RawExp::getValue
      * @covers \Odan\Database\RawExp::__toString
@@ -348,8 +348,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::join
      * @covers ::getJoinSql
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testJoin()
     {
@@ -371,8 +371,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::leftJoin
      * @covers ::getJoinSql
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testLeftJoin()
     {
@@ -395,8 +395,8 @@ class SelectQueryTest extends BaseTest
      * @covers ::getJoinSql
      * @covers ::leftJoin
      * @covers ::from
-     * @covers ::getStatement
-     * @covers ::getSql
+     * @covers ::prepare
+     * @covers ::build
      */
     public function testCrossJoin()
     {
