@@ -121,9 +121,9 @@ print_r($rows);
 Fetch all rows, step by step (recommend for hydration):
 
 ```php
-$statement = $select->getStatement();
-$statement->execute();
-while($row = $statement->fetch()) {
+$stmt = $select->prepare();
+$stmt->query();
+while($row = $stmt->fetch()) {
     print_r($row);
 }
 ```
