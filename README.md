@@ -114,7 +114,7 @@ echo $select->getSql(); // "SELECT ..."
 Fetch all rows:
 
 ```php
-$rows = $select->execute()->fetchAll();
+$rows = $select->query()->fetchAll();
 print_r($rows);
 ```
 
@@ -131,13 +131,13 @@ while($row = $stmt->fetch()) {
 Fetch only the first row:
 
 ```php
-$row = $select->execute()->fetch();
+$row = $select->query()->fetch();
 ```
 
 Fetch only the first value of the first row:
 
 ```php
-$value = $select->execute()->fetchColumn(0);
+$value = $select->query()->fetchColumn(0);
 ```
 
 ## Testing
