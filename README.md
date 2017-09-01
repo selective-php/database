@@ -52,20 +52,21 @@ $username = 'root';
 $password = '';
 $charset = 'utf8';
 $collate = 'utf8_unicode_ci';
+$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_PERSISTENT => false,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
+];
 
-$connection = new Connection("mysql:host=$host;dbname=$database;charset=$charset", $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_PERSISTENT => false,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
-    ]
-);
+$connection = new Connection($dsn, $username, $password, $options);
 
 // Create a query factory object
 $query = new QueryFactory($connection);
 ```
 
-Build a select statement:
+Build a (more complex) select statement:
 
 ```php
 $select = $query->select()
@@ -83,9 +84,9 @@ $select = $query->select()
     ->orWhere('u.id', '=', null)
     ->orWhere('u.id', '!=', null)
     ->orWhere(function(SelectQuery $query) {
-        $query->where('1', '<>', '2');
-        $query->where('2', '=', null);
-        $query->where('3', '>', '5');
+        $query->where('table1.id', '<>', '2');
+        $query->where('table2.field1', '=', null);
+        $query->where('table3.field2', '>', '5');
         $query->orWhere(function(SelectQuery $query) {
             $query->where(new RawExp('a.id = b.id'));
             $query->orWhere(new RawExp('c.id = u.id'));
