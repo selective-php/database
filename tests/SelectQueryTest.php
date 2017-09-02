@@ -11,7 +11,6 @@ use PDOStatement;
  */
 class SelectQueryTest extends BaseTest
 {
-
     protected function setUp()
     {
         parent::setUp();

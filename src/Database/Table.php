@@ -77,8 +77,10 @@ class Table
     }
 
     /**
-     * @param $table
-     * @param $rows
+     * Insert rows.
+     *
+     * @param string $table
+     * @param array $rows
      * @return PDOStatement
      */
     public function insertRows(string $table, array $rows): PDOStatement
@@ -98,7 +100,7 @@ class Table
      * @param array $conditions conditions
      * @return PDOStatement
      */
-    public function updateRow($tableName, array $values, array $conditions = array())
+    public function updateRow(string $tableName, array $values, array $conditions = array()): PDOStatement
     {
         $update = $this->update()->table($tableName)->values($values);
         foreach ($conditions as $key => $value) {
@@ -120,7 +122,7 @@ class Table
      * @param array $conditions condition
      * @return PDOStatement
      */
-    public function deleteRow($tableName, array $conditions = array())
+    public function deleteRow(string $tableName, array $conditions = array()): PDOStatement
     {
         $delete = $this->delete()->from($tableName);
         foreach ($conditions as $key => $value) {

@@ -12,7 +12,6 @@ use Odan\Database\Table;
  */
 class TableTest extends BaseTest
 {
-
     protected function setUp()
     {
         parent::setUp();

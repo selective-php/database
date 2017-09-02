@@ -7,7 +7,6 @@ use PDOStatement;
 
 class SelectQuery extends SelectQueryBuilder
 {
-
     public function distinct()
     {
         $this->distinct = true;

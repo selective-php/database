@@ -9,7 +9,6 @@ use Odan\Database\Schema;
  */
 class SchemaTest extends BaseTest
 {
-
     protected function setUp()
     {
         parent::setUp();

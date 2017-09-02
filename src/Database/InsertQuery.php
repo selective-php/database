@@ -140,7 +140,7 @@ class InsertQuery
      *
      * @return bool Status
      */
-    public function execute()
+    public function execute(): bool
     {
         return $this->prepare()->execute();
     }
@@ -156,11 +156,11 @@ class InsertQuery
     }
 
     /**
-     * Build SQL string.
+     * Build a SQL string.
      *
      * @return string SQL string
      */
-    public function build()
+    public function build(): string
     {
         $table = $this->pdo->quoteName($this->table);
 

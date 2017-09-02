@@ -2,6 +2,20 @@
 
 namespace Odan\Database;
 
+/**
+ * Class SelectQueryBuilder
+ *
+ * https://dev.mysql.com/doc/refman/5.7/en/select.html
+ *
+ * @todo Add support (and methods) for:
+ * - distinctRow [DISTINCT | DISTINCTROW ]
+ * - highPriority [HIGH_PRIORITY]
+ * - straightJoin [STRAIGHT_JOIN]
+ * - smallResult, bigResult [SQL_SMALL_RESULT] [SQL_BIG_RESULT]
+ * - bufferResult [SQL_BUFFER_RESULT]
+ * - calcFoundRows [SQL_CALC_FOUND_ROWS]
+ * - UNION
+ */
 abstract class SelectQueryBuilder
 {
     /**
@@ -20,12 +34,19 @@ abstract class SelectQueryBuilder
     protected $having = [];
     protected $distinct = false;
 
+    /**
+     * Constructor.
+     *
+     * @param Connection $pdo
+     */
     public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
     }
 
     /**
+     * Build a SQL string.
+     *
      * @return string SQL string
      */
     public function build(): string
@@ -44,12 +65,26 @@ abstract class SelectQueryBuilder
         return $result;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @param $distinct
+     * @return array
+     */
     protected function getSelectSql(array $sql, $distinct): array
     {
         $sql[] = 'SELECT' . (($distinct) ? ' DISTINCT' : '');
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @param $columns
+     * @return array
+     */
     protected function getColumnsSql(array $sql, $columns): array
     {
         if (!empty($columns)) {
@@ -58,6 +93,13 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @param $from
+     * @return array
+     */
     protected function getFromSql(array $sql, $from): array
     {
         if (!empty($from)) {
@@ -66,6 +108,13 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $limit
+     * @return array
+     */
     protected function getLimitSql($sql, $limit): array
     {
         if (empty($limit)) {
@@ -79,16 +128,37 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $where
+     * @return array
+     */
     protected function getWhereSql($sql, $where): array
     {
         return $this->getConditionSql($sql, $where, 'WHERE');
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $where
+     * @return array
+     */
     protected function getHavingSql($sql, $where): array
     {
         return $this->getConditionSql($sql, $where, 'HAVING');
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $join
+     * @return array
+     */
     protected function getJoinSql($sql, $join)
     {
         if (empty($join)) {
@@ -105,6 +175,13 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $groupBy
+     * @return array
+     */
     protected function getGroupBySql($sql, $groupBy)
     {
         if (empty($groupBy)) {
@@ -114,6 +191,13 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @param $orderBy
+     * @return array
+     */
     protected function getOrderBySql($sql, $orderBy)
     {
         if (empty($orderBy)) {
@@ -201,6 +285,14 @@ abstract class SelectQueryBuilder
         return [$rightField, strtoupper($comparison)];
     }
 
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @param $where
+     * @param $conditionType
+     * @return array
+     */
     protected function getConditionSql(array $sql, $where, $conditionType): array
     {
         if (empty($where)) {
@@ -230,7 +322,13 @@ abstract class SelectQueryBuilder
         return $sql;
     }
 
-    protected function quoteByFields($identifiers)
+    /**
+     * Get sql.
+     *
+     * @param $identifiers
+     * @return array
+     */
+    protected function quoteByFields($identifiers): array
     {
         foreach ((array)$identifiers as $key => $identifier) {
             if ($identifier instanceof RawExp) {
