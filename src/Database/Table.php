@@ -102,7 +102,7 @@ class Table
      */
     public function updateRow(string $tableName, array $values, array $conditions = array()): PDOStatement
     {
-        $update = $this->update()->table($tableName)->values($values);
+        $update = $this->update()->table($tableName)->set($values);
         foreach ($conditions as $key => $value) {
             $update->where($key, '=', $value);
         }
