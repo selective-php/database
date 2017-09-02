@@ -63,7 +63,7 @@ class TableTest extends BaseTest
      *
      * @covers ::insert
      * @covers ::getQuery
-     * @covers  \Odan\Database\InsertQuery::__construct
+     * @covers \Odan\Database\InsertQuery::__construct
      */
     public function testNewInsert()
     {
@@ -75,7 +75,7 @@ class TableTest extends BaseTest
      *
      * @covers ::update
      * @covers ::getQuery
-     * @covers  \Odan\Database\UpdateQuery::__construct
+     * @covers \Odan\Database\UpdateQuery::__construct
      */
     public function testNewUpdate()
     {
@@ -87,7 +87,7 @@ class TableTest extends BaseTest
      *
      * @covers ::delete
      * @covers ::getQuery
-     * @covers  \Odan\Database\DeleteQuery::__construct
+     * @covers \Odan\Database\DeleteQuery::__construct
      */
     public function testNewDelete()
     {

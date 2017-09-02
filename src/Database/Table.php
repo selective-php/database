@@ -106,7 +106,7 @@ class Table
         foreach ($conditions as $key => $value) {
             $update->where($key, '=', $value);
         }
-        $statement = $update->getStatement();
+        $statement = $update->prepare();
         $statement->execute();
         return $statement;
     }

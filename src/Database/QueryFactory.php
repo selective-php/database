@@ -2,6 +2,9 @@
 
 namespace Odan\Database;
 
+/**
+ * Class QueryFactory
+ */
 class QueryFactory
 {
     /**

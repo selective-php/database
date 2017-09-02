@@ -174,7 +174,6 @@ class InsertQuery
 
         if (array_key_exists(0, $this->values)) {
             // multiple rows
-            // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9)
             $result = sprintf("%s INTO %s (%s) VALUES", $insert, $table, $this->quoteFields($this->values[0]));
             foreach ($this->values as $key => $row) {
                 $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->quoteBulkValues($row));

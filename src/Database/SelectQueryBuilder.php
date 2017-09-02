@@ -30,7 +30,8 @@ abstract class SelectQueryBuilder
     protected $where = [];
     protected $orderBy = [];
     protected $groupBy = [];
-    protected $limit = [];
+    protected $limit;
+    protected $offset;
     protected $having = [];
     protected $distinct = false;
 
@@ -52,15 +53,15 @@ abstract class SelectQueryBuilder
     public function build(): string
     {
         $sql = [];
-        $sql = $this->getSelectSql($sql, $this->distinct);
-        $sql = $this->getColumnsSql($sql, $this->columns);
-        $sql = $this->getFromSql($sql, $this->from);
-        $sql = $this->getJoinSql($sql, $this->join);
-        $sql = $this->getWhereSql($sql, $this->where);
-        $sql = $this->getGroupBySql($sql, $this->groupBy);
-        $sql = $this->getHavingSql($sql, $this->having);
-        $sql = $this->getOrderBySql($sql, $this->orderBy);
-        $sql = $this->getLimitSql($sql, $this->limit);
+        $sql = $this->getSelectSql($sql);
+        $sql = $this->getColumnsSql($sql);
+        $sql = $this->getFromSql($sql);
+        $sql = $this->getJoinSql($sql);
+        $sql = $this->getWhereSql($sql);
+        $sql = $this->getGroupBySql($sql);
+        $sql = $this->getHavingSql($sql);
+        $sql = $this->getOrderBySql($sql);
+        $sql = $this->getLimitSql($sql);
         $result = trim(implode(" ", $sql));
         return $result;
     }
@@ -69,12 +70,11 @@ abstract class SelectQueryBuilder
      * Get sql.
      *
      * @param array $sql
-     * @param $distinct
      * @return array
      */
-    protected function getSelectSql(array $sql, $distinct): array
+    protected function getSelectSql(array $sql): array
     {
-        $sql[] = 'SELECT' . (($distinct) ? ' DISTINCT' : '');
+        $sql[] = 'SELECT' . (($this->distinct) ? ' DISTINCT' : '');
         return $sql;
     }
 
@@ -82,13 +82,12 @@ abstract class SelectQueryBuilder
      * Get sql.
      *
      * @param array $sql
-     * @param $columns
      * @return array
      */
-    protected function getColumnsSql(array $sql, $columns): array
+    protected function getColumnsSql(array $sql): array
     {
-        if (!empty($columns)) {
-            $sql[] = implode(',', $this->pdo->quoteNames($columns));
+        if (!empty($this->columns)) {
+            $sql[] = implode(',', $this->pdo->quoteNames($this->columns));
         }
         return $sql;
     }
@@ -97,13 +96,12 @@ abstract class SelectQueryBuilder
      * Get sql.
      *
      * @param array $sql
-     * @param $from
      * @return array
      */
-    protected function getFromSql(array $sql, $from): array
+    protected function getFromSql(array $sql): array
     {
-        if (!empty($from)) {
-            $sql[] = 'FROM ' . $this->pdo->quoteName($from);
+        if (!empty($this->from)) {
+            $sql[] = 'FROM ' . $this->pdo->quoteName($this->from);
         }
         return $sql;
     }
@@ -112,18 +110,17 @@ abstract class SelectQueryBuilder
      * Get sql.
      *
      * @param $sql
-     * @param $limit
      * @return array
      */
-    protected function getLimitSql($sql, $limit): array
+    protected function getLimitSql(array $sql): array
     {
-        if (empty($limit)) {
+        if (!isset($this->limit)) {
             return $sql;
         }
-        if (isset($limit[1])) {
-            $sql[] = sprintf('LIMIT %s, %s', (int)$limit[0], (int)$limit[1]);
+        if (isset($this->offset)) {
+            $sql[] = sprintf('LIMIT %s OFFSET %s', (float)$this->limit, (float)$this->offset);
         } else {
-            $sql[] = sprintf('LIMIT %s', (int)$limit[0]);
+            $sql[] = sprintf('LIMIT %s', (float)$this->limit);
         }
         return $sql;
     }
@@ -132,39 +129,36 @@ abstract class SelectQueryBuilder
      * Get sql.
      *
      * @param $sql
-     * @param $where
      * @return array
      */
-    protected function getWhereSql($sql, $where): array
+    protected function getWhereSql(array $sql): array
     {
-        return $this->getConditionSql($sql, $where, 'WHERE');
+        return $this->getConditionSql($sql, $this->where, 'WHERE');
     }
 
     /**
      * Get sql.
      *
-     * @param $sql
-     * @param $where
+     * @param array $sql
      * @return array
      */
-    protected function getHavingSql($sql, $where): array
+    protected function getHavingSql(array $sql): array
     {
-        return $this->getConditionSql($sql, $where, 'HAVING');
+        return $this->getConditionSql($sql, $this->having, 'HAVING');
     }
 
     /**
      * Get sql.
      *
-     * @param $sql
-     * @param $join
+     * @param array $sql
      * @return array
      */
-    protected function getJoinSql($sql, $join)
+    protected function getJoinSql(array $sql): array
     {
-        if (empty($join)) {
+        if (empty($this->join)) {
             return $sql;
         }
-        foreach ($join as $item) {
+        foreach ($this->join as $item) {
             list($type, $table, $leftField, $operator, $rightField) = $item;
             $joinType = strtoupper($type) . ' JOIN';
             $table = $this->pdo->quoteName($table);
@@ -178,32 +172,30 @@ abstract class SelectQueryBuilder
     /**
      * Get sql.
      *
-     * @param $sql
-     * @param $groupBy
+     * @param array $sql
      * @return array
      */
-    protected function getGroupBySql($sql, $groupBy)
+    protected function getGroupBySql(array $sql): array
     {
-        if (empty($groupBy)) {
+        if (empty($this->groupBy)) {
             return $sql;
         }
-        $sql[] = 'GROUP BY ' . implode(', ', $this->quoteByFields($groupBy));
+        $sql[] = 'GROUP BY ' . implode(', ', $this->quoteByFields($this->groupBy));
         return $sql;
     }
 
     /**
      * Get sql.
      *
-     * @param $sql
-     * @param $orderBy
+     * @param array $sql
      * @return array
      */
-    protected function getOrderBySql($sql, $orderBy)
+    protected function getOrderBySql(array $sql): array
     {
-        if (empty($orderBy)) {
+        if (empty($this->orderBy)) {
             return $sql;
         }
-        $sql[] = 'ORDER BY ' . implode(', ', $this->quoteByFields($orderBy));
+        $sql[] = 'ORDER BY ' . implode(', ', $this->quoteByFields($this->orderBy));
         return $sql;
     }
 

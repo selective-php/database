@@ -4,6 +4,7 @@ namespace Odan\Test;
 
 use Odan\Database\Connection;
 use PDO;
+use PDOStatement;
 
 /**
  * @coversDefaultClass Odan\Database\Connection
@@ -122,7 +123,7 @@ class ConnectionTest extends BaseTest
     public function testQuoteArray()
     {
         $db = $this->getConnection();
-        $this->assertEquals([], $db->quoteArray(null));
+        $this->assertEquals([], $db->quoteArray([]));
 
         $row = ['1', '2', '3', null];
         $this->assertEquals(["'1'", "'2'", "'3'", 'NULL'], $db->quoteArray($row));
@@ -134,14 +135,13 @@ class ConnectionTest extends BaseTest
      */
     public function testPrepareQuery()
     {
-        //$db = $this->getConnection();
         $select = $this->getTable()->select();
         $select->columns(['TABLE_NAME'])
             ->from('information_schema.TABLES')
             ->where('TABLE_NAME', '=', 'TABLES');
 
         $statement = $select->prepare();
-        $this->assertInstanceOf(\PDOStatement::class, $statement);
+        $this->assertInstanceOf(PDOStatement::class, $statement);
 
         $statement->execute();
         $row = $statement->fetch();

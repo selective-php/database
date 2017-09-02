@@ -268,6 +268,7 @@ class SelectQueryTest extends BaseTest
      * @covers ::groupBy
      * @covers ::orderBy
      * @covers ::limit
+     * @covers ::offset
      * @covers ::getLimitSql
      * @covers ::addClauseCondClosure
      * @covers ::getRightFieldValue
@@ -329,10 +330,11 @@ class SelectQueryTest extends BaseTest
             })
             ->groupBy(['id', 'username'])
             ->orderBy(['id ASC', 'username DESC'])
-            ->limit(0, 10);
+            ->limit(10)
+            ->offset(0);
 
         $sql = $select->build();
-        $expected = '7cbc457234cd1d8affb93fccaa240f14208b9254';
+        $expected = 'e0d4b71b69514d735722ff18c30a030166bd7eaa';
         $actual = sha1($sql);
         if ($expected != $actual) {
             echo "\nSQL: $sql\n";

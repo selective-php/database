@@ -64,21 +64,21 @@ class UpdateQuery
      */
     public function execute(): bool
     {
-        return $this->getStatement()->execute();
+        return $this->prepare()->execute();
     }
 
     /**
      * @return PDOStatement
      */
-    public function getStatement(): PDOStatement
+    public function prepare(): PDOStatement
     {
-        return $this->pdo->prepare($this->getSql());
+        return $this->pdo->prepare($this->build());
     }
 
     /**
      * @return string SQL string
      */
-    public function getSql()
+    public function build()
     {
         // @todo
         return 'SELECT 1';

@@ -27,7 +27,7 @@ class Connection extends PDO
      * @param array|null $array
      * @return array
      */
-    public function quoteArray(?array $array): array
+    public function quoteArray(array $array): array
     {
         if (!$array) {
             return [];
@@ -46,7 +46,7 @@ class Connection extends PDO
      * @param string $identifier Identifier name
      * @return string Quoted identifier
      */
-    public function quoteName($identifier)
+    public function quoteName(string $identifier): string
     {
         $identifier = trim($identifier);
         $separators = array(' AS ', ' ', '.');
@@ -59,7 +59,13 @@ class Connection extends PDO
         return $this->quoteIdentifier($identifier);
     }
 
-    public function quoteNames($identifiers)
+    /**
+     * Quote array of names.
+     *
+     * @param array $identifiers
+     * @return array
+     */
+    public function quoteNames(array $identifiers): array
     {
         foreach ((array)$identifiers as $key => $identifier) {
             if ($identifier instanceof RawExp) {
@@ -78,7 +84,7 @@ class Connection extends PDO
      * @param int $pos The position of the separator.
      * @return string The quoted identifier name.
      */
-    protected function quoteNameWithSeparator($spec, $sep, $pos)
+    protected function quoteNameWithSeparator(string $spec, string $sep, int $pos): string
     {
         $len = strlen($sep);
         $part1 = $this->quoteName(substr($spec, 0, $pos));
@@ -99,7 +105,7 @@ class Connection extends PDO
      * @return string The quoted identifier name.
      * @see quoteName()
      */
-    public function quoteIdentifier($name)
+    public function quoteIdentifier(string $name): string
     {
         $name = trim($name);
         if ($name == '*') {
@@ -118,7 +124,7 @@ class Connection extends PDO
      * @param string $key
      * @return array
      */
-    public function queryValues($sql, $key): array
+    public function queryValues(string $sql, string $key): array
     {
         $result = [];
         $statement = $this->query($sql);
@@ -136,7 +142,7 @@ class Connection extends PDO
      * @param mixed $default
      * @return mixed|null
      */
-    public function queryValue($sql, $column, $default = null)
+    public function queryValue(string $sql, string $column, $default = null)
     {
         $result = $default;
         if ($row = $this->query($sql)->fetch()) {
@@ -156,9 +162,9 @@ class Connection extends PDO
      * @param string $key Column name to map as index
      * @return array
      */
-    public function queryMapColumn($sql, $key)
+    public function queryMapColumn(string $sql, string $key): array
     {
-        $result = array();
+        $result = [];
         $statement = $this->query($sql);
         while ($row = $statement->fetch()) {
             $result[$row[$key]] = $row;

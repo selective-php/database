@@ -8,6 +8,8 @@ use PDOStatement;
  * Class DeleteQuery
  *
  * https://dev.mysql.com/doc/refman/5.7/en/delete.html
+ *
+ * @todo Add flags [LOW_PRIORITY] [QUICK] [IGNORE]
  */
 class DeleteQuery
 {
@@ -18,11 +20,31 @@ class DeleteQuery
      */
     protected $pdo;
 
+    /**
+     * @var string Table name
+     */
     protected $table;
+
+    /**
+     * @var array Conditions
+     */
     protected $where = [];
+
+    /**
+     * @var array Order by
+     */
     protected $orderBy = [];
+
+    /**
+     * @var int|array Limit
+     */
     protected $limit;
 
+    /**
+     * constructor.
+     *
+     * @param Connection $pdo
+     */
     public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
@@ -52,29 +74,26 @@ class DeleteQuery
         return $this;
     }
 
-    // @todo Add flags
-    // LOW_PRIORITY] [QUICK] [IGNORE
-
     /**
      * @return bool
      */
     public function execute(): bool
     {
-        return $this->getStatement()->execute();
+        return $this->prepare()->execute();
     }
 
     /**
      * @return PDOStatement
      */
-    public function getStatement(): PDOStatement
+    public function prepare(): PDOStatement
     {
-        return $this->pdo->prepare($this->getSql());
+        return $this->pdo->prepare($this->build());
     }
 
     /**
      * @return string SQL string
      */
-    public function getSql()
+    public function build(): string
     {
         // @todo
         return 'SELECT 1';
