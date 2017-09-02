@@ -7,7 +7,7 @@ use Odan\Database\Compression;
 /**
  * @coversDefaultClass \Odan\Database\Compression
  */
-class EncryptionTest extends BaseTest
+class CompressionTest extends BaseTest
 {
     /**
      * @var Compression

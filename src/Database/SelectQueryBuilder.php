@@ -180,7 +180,6 @@ abstract class SelectQueryBuilder
      */
     protected function getRightFieldValue($rightField, $comparison): array
     {
-        // https://dev.mysql.com/doc/refman/5.7/en/comparison-operators.html
         if ($comparison == 'in' || $comparison == 'not in') {
             $rightField = '(' . implode(', ', $this->pdo->quoteArray((array)$rightField)) . ')';
         } elseif ($comparison == 'greatest' || $comparison == 'interval' || $comparison === 'strcmp') {

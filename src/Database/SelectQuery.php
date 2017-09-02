@@ -117,5 +117,4 @@ class SelectQuery extends SelectQueryBuilder
     {
         return $this->pdo->prepare($this->build());
     }
-
 }

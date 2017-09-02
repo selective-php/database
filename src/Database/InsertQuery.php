@@ -18,41 +18,127 @@ class InsertQuery
      */
     protected $pdo;
 
+    /**
+     * @var string Table name
+     */
     protected $table;
 
+    /**
+     * @var array Value list
+     */
     protected $values;
 
+    /**
+     * @var array Assignment list
+     */
     protected $duplicateValues;
 
+    /**
+     * @var string Priority modifier
+     */
+    protected $priority;
+
+    /**
+     * Errors that occur while executing the INSERT statement are ignored
+     *
+     * @var string Ignore modifier
+     */
+    protected $ignore;
+
+    /**
+     * Constructor.
+     *
+     * @param Connection $pdo
+     */
     public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
     }
 
-    public function into($table)
+    /**
+     * Table name.
+     *
+     * @param string $table Table name
+     * @return self
+     */
+    public function into(string $table): self
     {
         $this->table = $table;
         return $this;
     }
 
-    public function values(array $values)
+    /**
+     * Value list.
+     *
+     * @param array $values Value list
+     * @return self
+     */
+    public function values(array $values): self
     {
         $this->values = $values;
         return $this;
     }
 
-    // @todo
-    // [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]
-    // [ON DUPLICATE KEY UPDATE assignment_list]
+    /**
+     * Priority modifier.
+     *
+     * @return self
+     */
+    public function lowPriority(): self
+    {
+        $this->priority = 'LOW_PRIORITY';
+        return $this;
+    }
 
-    public function onDuplicateKeyUpdate($values)
+    /**
+     * Priority modifier
+     *
+     * @return self
+     */
+    public function delayed(): self
+    {
+        $this->priority = 'DELAYED';
+        return $this;
+    }
+
+    /**
+     * Priority modifier
+     *
+     * @return self
+     */
+    public function heighPriority(): self
+    {
+        $this->priority = 'HIGH_PRIORITY';
+        return $this;
+    }
+
+    /**
+     * Ignore errors modifier
+     *
+     * @return self
+     */
+    public function ignore(): self
+    {
+        $this->ignore = 'IGNORE';
+        return $this;
+    }
+
+    /**
+     * On Duplicate Key Update.
+     *
+     * @param $values Value list
+     * @return self
+     */
+    public function onDuplicateKeyUpdate($values): self
     {
         $this->duplicateValues = $values;
         return $this;
     }
 
     /**
-     * @return bool
+     * Execute.
+     *
+     * @return bool Status
      */
     public function execute()
     {
@@ -60,6 +146,8 @@ class InsertQuery
     }
 
     /**
+     * Prepare statement.
+     *
      * @return PDOStatement
      */
     public function prepare()
@@ -68,29 +156,36 @@ class InsertQuery
     }
 
     /**
+     * Build SQL string.
+     *
      * @return string SQL string
      */
     public function build()
     {
         $table = $this->pdo->quoteName($this->table);
 
-        $result = '';
+        $insert = 'INSERT';
+        if (!empty($this->priority)) {
+            $insert .= ' ' . $this->priority;
+        }
+        if (!empty($this->ignore)) {
+            $insert .= ' ' . $this->ignore;
+        }
 
         if (array_key_exists(0, $this->values)) {
             // multiple rows
             // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9)
-            $result = sprintf("INSERT INTO %s (%s) VALUES", $table, $this->getInsertQuoteFields($this->values[0]));
+            $result = sprintf("%s INTO %s (%s) VALUES", $insert, $table, $this->quoteFields($this->values[0]));
             foreach ($this->values as $key => $row) {
-                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->getInsertBulkValues($row));
+                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->quoteBulkValues($row));
             }
         } else {
             // single row
-            $values = $this->getInsertValues($this->values);
-            $result = sprintf("INSERT INTO %s SET %s", $table, $values);
+            $result = sprintf("%s INTO %s SET %s", $insert, $table, $this->quoteSetValues($this->values));
         }
 
         if ($this->duplicateValues) {
-            $values = $this->getInsertValues($this->duplicateValues);
+            $values = $this->quoteSetValues($this->duplicateValues);
             $result .= sprintf(' ON DUPLICATE KEY UPDATE %s', $values);
         }
         $result .= ';';
@@ -98,7 +193,13 @@ class InsertQuery
         return $result;
     }
 
-    protected function getInsertValues($row): string
+    /**
+     * Quote Set values.
+     *
+     * @param array $row A row
+     * @return string Sql string
+     */
+    protected function quoteSetValues(array $row): string
     {
         $values = [];
         foreach ($row as $key => $value) {
@@ -107,20 +208,32 @@ class InsertQuery
         return implode(', ', $values);
     }
 
-    protected function getInsertBulkValues($row): string
+    /**
+     * Quote bulk values.
+     *
+     * @param array $row A row
+     * @return string Sql string
+     */
+    protected function quoteBulkValues(array $row): string
     {
         $values = [];
         foreach ($row as $key => $value) {
-            $values[] =  $this->pdo->quoteValue($value);
+            $values[] = $this->pdo->quoteValue($value);
         }
         return implode(',', $values);
     }
 
-    protected function getInsertQuoteFields(array $row): string
+    /**
+     * Quote fields values.
+     *
+     * @param array $row A row
+     * @return string Sql string
+     */
+    protected function quoteFields(array $row): string
     {
         $fields = [];
         foreach (array_keys($row) as $field) {
-            $fields[] =  $this->pdo->quoteName($field);
+            $fields[] = $this->pdo->quoteName($field);
         }
         return implode(', ', $fields);
     }
