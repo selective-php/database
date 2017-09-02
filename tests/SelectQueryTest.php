@@ -2,6 +2,7 @@
 
 namespace Odan\Test;
 
+use Odan\Database\Condition;
 use Odan\Database\RawExp;
 use Odan\Database\SelectQuery;
 use PDOStatement;
@@ -96,10 +97,10 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -149,10 +150,10 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -171,10 +172,10 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -196,10 +197,10 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -215,10 +216,10 @@ class SelectQueryTest extends BaseTest
      * Test Simple pattern matching
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -240,10 +241,10 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -270,13 +271,13 @@ class SelectQueryTest extends BaseTest
      * @covers ::limit
      * @covers ::offset
      * @covers ::getLimitSql
-     * @covers ::addClauseCondClosure
-     * @covers ::getRightFieldValue
-     * @covers ::getWhereSql
-     * @covers ::getConditionSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
      * @covers ::getOrderBySql
      * @covers ::getGroupBySql
-     * @covers ::quoteByFields
+     * @covers \Odan\Database\Quoter::quoteByFields
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare

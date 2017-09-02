@@ -9,7 +9,7 @@ use PDOStatement;
  *
  * https://dev.mysql.com/doc/refman/5.7/en/insert.html
  */
-class InsertQuery
+class InsertQuery implements QueryInterface
 {
     /**
      * Connection
@@ -17,6 +17,11 @@ class InsertQuery
      * @var Connection
      */
     protected $pdo;
+
+    /**
+     * @var Quoter
+     */
+    protected $quoter;
 
     /**
      * @var string Table name
@@ -53,6 +58,7 @@ class InsertQuery
     public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
+        $this->quoter = $pdo->getQuoter();
     }
 
     /**
@@ -106,7 +112,7 @@ class InsertQuery
      *
      * @return self
      */
-    public function heighPriority(): self
+    public function highPriority(): self
     {
         $this->priority = 'HIGH_PRIORITY';
         return $this;
@@ -126,7 +132,7 @@ class InsertQuery
     /**
      * On Duplicate Key Update.
      *
-     * @param $values Value list
+     * @param array $values Value list
      * @return self
      */
     public function onDuplicateKeyUpdate($values): self
@@ -162,7 +168,7 @@ class InsertQuery
      */
     public function build(): string
     {
-        $table = $this->pdo->quoteName($this->table);
+        $table = $this->quoter->quoteName($this->table);
 
         $insert = 'INSERT';
         if (!empty($this->priority)) {
@@ -174,66 +180,21 @@ class InsertQuery
 
         if (array_key_exists(0, $this->values)) {
             // multiple rows
-            $result = sprintf("%s INTO %s (%s) VALUES", $insert, $table, $this->quoteFields($this->values[0]));
+            $result = sprintf("%s INTO %s (%s) VALUES", $insert, $table, $this->quoter->quoteFields($this->values[0]));
             foreach ($this->values as $key => $row) {
-                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->quoteBulkValues($row));
+                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->quoter->quoteBulkValues($row));
             }
         } else {
             // single row
-            $result = sprintf("%s INTO %s SET %s", $insert, $table, $this->quoteSetValues($this->values));
+            $result = sprintf("%s INTO %s SET %s", $insert, $table, $this->quoter->quoteSetValues($this->values));
         }
 
         if ($this->duplicateValues) {
-            $values = $this->quoteSetValues($this->duplicateValues);
+            $values = $this->quoter->quoteSetValues($this->duplicateValues);
             $result .= sprintf(' ON DUPLICATE KEY UPDATE %s', $values);
         }
         $result .= ';';
 
         return $result;
-    }
-
-    /**
-     * Quote Set values.
-     *
-     * @param array $row A row
-     * @return string Sql string
-     */
-    protected function quoteSetValues(array $row): string
-    {
-        $values = [];
-        foreach ($row as $key => $value) {
-            $values[] = $this->pdo->quoteName($key) . '=' . $this->pdo->quoteValue($value);
-        }
-        return implode(', ', $values);
-    }
-
-    /**
-     * Quote bulk values.
-     *
-     * @param array $row A row
-     * @return string Sql string
-     */
-    protected function quoteBulkValues(array $row): string
-    {
-        $values = [];
-        foreach ($row as $key => $value) {
-            $values[] = $this->pdo->quoteValue($value);
-        }
-        return implode(',', $values);
-    }
-
-    /**
-     * Quote fields values.
-     *
-     * @param array $row A row
-     * @return string Sql string
-     */
-    protected function quoteFields(array $row): string
-    {
-        $fields = [];
-        foreach (array_keys($row) as $field) {
-            $fields[] = $this->pdo->quoteName($field);
-        }
-        return implode(', ', $fields);
     }
 }

@@ -85,9 +85,9 @@ class SchemaTest extends BaseTest
      * @covers \Odan\Database\InsertQuery::execute
      * @covers \Odan\Database\InsertQuery::prepare
      * @covers \Odan\Database\InsertQuery::build
-     * @covers \Odan\Database\InsertQuery::quoteSetValues
-     * @covers \Odan\Database\InsertQuery::quoteBulkValues
-     * @covers \Odan\Database\InsertQuery::quoteFields
+     * @covers \Odan\Database\Quoter::quoteSetValues
+     * @covers \Odan\Database\Quoter::quoteBulkValues
+     * @covers \Odan\Database\Quoter::quoteFields
      */
     public function testTables()
     {

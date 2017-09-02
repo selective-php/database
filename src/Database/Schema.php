@@ -8,9 +8,15 @@ class Schema
     /** @var Connection */
     protected $db = null;
 
+    /**
+     * @var Quoter
+     */
+    protected $quoter;
+
     public function __construct(Connection $db)
     {
         $this->db = $db;
+        $this->quoter = $db->getQuoter();
     }
 
     /**
@@ -21,7 +27,7 @@ class Schema
      */
     public function setDatabase($dbName)
     {
-        return $this->db->exec('USE ' . $this->db->quoteName($dbName) . ';');
+        return $this->db->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
     }
 
     /**
@@ -46,7 +52,7 @@ class Schema
             FROM INFORMATION_SCHEMA.SCHEMATA
             WHERE SCHEMA_NAME = %s;";
 
-        $sql = sprintf($sql, $this->db->quoteValue($dbName));
+        $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
         $row = $this->db->query($sql)->fetch();
         return !empty($row['SCHEMA_NAME']);
     }
@@ -61,7 +67,7 @@ class Schema
     {
         $sql = 'SHOW DATABASES;';
         if ($like !== null) {
-            $sql = sprintf('SHOW DATABASES WHERE `database` LIKE %s;', $this->db->quoteValue($like));
+            $sql = sprintf('SHOW DATABASES WHERE `database` LIKE %s;', $this->quoter->quoteValue($like));
         }
         return $this->db->queryValues($sql, 'Database');
     }
@@ -82,7 +88,7 @@ class Schema
             $sql = sprintf("SELECT table_name
                 FROM information_schema.tables
                 WHERE table_schema = database()
-                AND table_name LIKE %s;", $this->db->quoteValue($like));
+                AND table_name LIKE %s;", $this->quoter->quoteValue($like));
         };
         return $this->db->queryValues($sql, 'table_name');
     }
@@ -98,10 +104,10 @@ class Schema
         $dbName = 'database()';
         if (strpos($tableName, '.') !== false) {
             $parts = explode('.', $tableName);
-            $dbName = $this->db->quoteValue($parts[0]);
-            $tableName = $this->db->quoteValue($parts[1]);
+            $dbName = $this->quoter->quoteValue($parts[0]);
+            $tableName = $this->quoter->quoteValue($parts[1]);
         } else {
-            $tableName = $this->db->quoteValue($tableName);
+            $tableName = $this->quoter->quoteValue($tableName);
         }
         return array($dbName, $tableName);
     }
@@ -134,7 +140,7 @@ class Schema
      */
     public function dropTable($tableName)
     {
-        return $this->db->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->db->quoteName($tableName)));
+        return $this->db->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
     }
 
     /**
@@ -145,7 +151,7 @@ class Schema
      */
     public function clearTable($tableName)
     {
-        return $this->db->exec(sprintf('DELETE FROM %s;', $this->db->quoteName($tableName)));
+        return $this->db->exec(sprintf('DELETE FROM %s;', $this->quoter->quoteName($tableName)));
     }
 
     /**
@@ -157,7 +163,7 @@ class Schema
      */
     public function truncateTable($tableName)
     {
-        return $this->db->exec(sprintf('TRUNCATE TABLE %s;', $this->db->quoteName($tableName)));
+        return $this->db->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
     }
 
     /**
@@ -169,8 +175,8 @@ class Schema
      */
     public function renameTable($tableSource, $tableTarget)
     {
-        $tableSource = $this->db->quoteName($tableSource);
-        $tableTarget = $this->db->quoteName($tableTarget);
+        $tableSource = $this->quoter->quoteName($tableSource);
+        $tableTarget = $this->quoter->quoteName($tableTarget);
         return $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $tableSource, $tableTarget));
     }
 
@@ -183,8 +189,8 @@ class Schema
      */
     public function copyTable($tableNameSource, $tableNameDestination)
     {
-        $tableNameSource = $this->db->quoteName($tableNameSource);
-        $tableNameDestination = $this->db->quoteName($tableNameDestination);
+        $tableNameSource = $this->quoter->quoteName($tableNameSource);
+        $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
         return $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
     }
 
@@ -246,7 +252,7 @@ class Schema
      */
     public function getTableSchemaId($tableName)
     {
-        $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->db->quoteName($tableName));
+        $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
         $rows = $this->db->query($sql)->fetchAll();
         return sha1(json_encode($rows));
     }

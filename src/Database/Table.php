@@ -128,7 +128,7 @@ class Table
         foreach ($conditions as $key => $value) {
             $delete->where($key, '=', $value);
         }
-        $statement = $delete->getStatement();
+        $statement = $delete->prepare();
         $statement->execute();
         return $statement;
     }

@@ -2,13 +2,12 @@
 
 namespace Odan\Database;
 
-use Closure;
 use PDOStatement;
 
 /**
  * Class SelectQuery
  */
-class SelectQuery extends SelectQueryBuilder
+class SelectQuery extends SelectQueryBuilder implements QueryInterface
 {
     /**
      * Distinct
@@ -51,7 +50,7 @@ class SelectQuery extends SelectQueryBuilder
      * @param string $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
-     * @param $rightField Value of the right field
+     * @param mixed $rightField Value of the right field
      * @return self
      */
     public function join(string $table, string $leftField, string $comparison, $rightField): self
@@ -66,7 +65,7 @@ class SelectQuery extends SelectQueryBuilder
      * @param string $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
-     * @param $rightField Value of the right field
+     * @param mixed $rightField Value of the right field
      * @return self
      */
     public function leftJoin(string $table, string $leftField, string $comparison, $rightField): self
@@ -81,7 +80,7 @@ class SelectQuery extends SelectQueryBuilder
      * @param string $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
-     * @param $rightField Value of the right field
+     * @param mixed $rightField Value of the right field
      * @return self
      */
     public function crossJoin(string $table, string $leftField, string $comparison, $rightField): self
@@ -100,11 +99,7 @@ class SelectQuery extends SelectQueryBuilder
      */
     public function where(...$conditions): self
     {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('where', 'AND', $conditions[0]);
-            return $this;
-        }
-        $this->where[] = ['and', $conditions];
+        $this->condition->where($conditions);
         return $this;
     }
 
@@ -118,11 +113,7 @@ class SelectQuery extends SelectQueryBuilder
      */
     public function orWhere(...$conditions): self
     {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('where', 'OR', $conditions[0]);
-            return $this;
-        }
-        $this->where[] = ['or', $conditions];
+        $this->condition->orWhere($conditions);
         return $this;
     }
 
@@ -160,11 +151,7 @@ class SelectQuery extends SelectQueryBuilder
      */
     public function having(...$conditions): self
     {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('having', 'AND', $conditions[0]);
-            return $this;
-        }
-        $this->having[] = ['and', $conditions];
+        $this->condition->having($conditions);
         return $this;
     }
 
@@ -178,11 +165,7 @@ class SelectQuery extends SelectQueryBuilder
      */
     public function orHaving(...$conditions): self
     {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('having', 'OR', $conditions[0]);
-            return $this;
-        }
-        $this->having[] = ['or', $conditions];
+        $this->condition->orHaving($conditions);
         return $this;
     }
 
