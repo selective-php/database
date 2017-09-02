@@ -253,10 +253,6 @@ class Condition
                 $sql[] = $whereType . ' ' . $conditions[0]->getValue();
                 continue;
             }
-            if (!isset($conditions[1])) {
-                var_dump($conditions);
-                exit;
-            }
             list($leftField, $operator, $rightField) = $conditions;
             $leftField = $this->quoter->quoteName($leftField);
             list($rightField, $operator) = $this->getRightFieldValue($rightField, $operator);
