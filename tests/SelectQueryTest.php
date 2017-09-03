@@ -90,7 +90,7 @@ class SelectQueryTest extends BaseTest
         $this->assertEquals("SELECT `id` FROM `test`", $select->build());
 
         $select = $this->select()->columns(['id'])->from('test AS t');
-        $this->assertEquals("SELECT `id` FROM `test` AS `t`", $select->query()->fetch(\PDO::FETCH_CLASS));
+        $this->assertEquals("SELECT `id` FROM `test` AS `t`", $select->build());
     }
 
     /**
