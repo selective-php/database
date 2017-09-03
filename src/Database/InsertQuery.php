@@ -79,7 +79,7 @@ class InsertQuery implements QueryInterface
      * @param array $values Value list
      * @return self
      */
-    public function values(array $values): self
+    public function set(array $values): self
     {
         $this->values = $values;
         return $this;

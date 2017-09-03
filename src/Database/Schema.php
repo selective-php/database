@@ -171,13 +171,14 @@ class Schema
      *
      * @param string $tableSource
      * @param string $tableTarget
-     * @return int
+     * @return bool Status
      */
     public function renameTable($tableSource, $tableTarget)
     {
         $tableSource = $this->quoter->quoteName($tableSource);
         $tableTarget = $this->quoter->quoteName($tableTarget);
-        return $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $tableSource, $tableTarget));
+        $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $tableSource, $tableTarget));
+        return true;
     }
 
     /**
@@ -185,13 +186,14 @@ class Schema
      *
      * @param string $tableNameSource source table name
      * @param string $tableNameDestination new table name
-     * @return bool
+     * @return bool Status
      */
     public function copyTable($tableNameSource, $tableNameDestination)
     {
         $tableNameSource = $this->quoter->quoteName($tableNameSource);
         $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
-        return $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
+        $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
+        return true;
     }
 
     /**

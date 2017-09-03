@@ -80,7 +80,7 @@ class SchemaTest extends BaseTest
      * @covers \Odan\Database\Table::deleteRow
      * @covers \Odan\Database\Connection::queryMapColumn
      * @covers \Odan\Database\InsertQuery::into
-     * @covers \Odan\Database\InsertQuery::values
+     * @covers \Odan\Database\InsertQuery::set
      * @covers \Odan\Database\InsertQuery::onDuplicateKeyUpdate
      * @covers \Odan\Database\InsertQuery::execute
      * @covers \Odan\Database\InsertQuery::prepare
@@ -154,7 +154,7 @@ class SchemaTest extends BaseTest
         $this->assertSame(true, !empty($columns));
         $this->assertSame(10, count($columns));
 
-        $insert = $this->getQuery()->insert()->into('test')->values(array(
+        $insert = $this->getQuery()->insert()->into('test')->set(array(
             'keyname' => 'test',
             'keyvalue' => '123'
         ));
@@ -167,7 +167,7 @@ class SchemaTest extends BaseTest
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
         $insert = $table->insert()
             ->into('test')
-            ->values(array(
+            ->set(array(
                 'id' => 1,
                 'keyname' => 'test',
                 'keyvalue' => '123',
@@ -255,8 +255,6 @@ class SchemaTest extends BaseTest
         $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll();
         $this->assertSame(true, $rows == $result);
 
-        return;
-
         $fields = array(
             'keyname' => 'test-new',
             'keyvalue' => 'value-new'
@@ -275,13 +273,13 @@ class SchemaTest extends BaseTest
         $this->assertSame(0, $stmt->rowCount());
 
         $result = $schema->renameTable('test', 'temp');
-        $this->assertSame(0, $result);
+        $this->assertSame(true, $result);
 
         $result = $schema->renameTable('temp', 'test');
-        $this->assertSame(0, $result);
+        $this->assertSame(true, $result);
 
         $result = $schema->copyTable('test', 'test_copy');
-        $this->assertSame(0, $result);
+        $this->assertSame(true, $result);
 
         $result = $schema->existTable('test_copy');
         $this->assertSame(true, $result);
@@ -290,7 +288,7 @@ class SchemaTest extends BaseTest
 
         // With data
         $result = $schema->copyTable('test', 'test_copy');
-        $this->assertSame(0, $result);
+        $this->assertSame(true, $result);
 
         $result = $schema->existTable('test_copy');
         $this->assertSame(true, $result);
@@ -310,5 +308,33 @@ class SchemaTest extends BaseTest
         $result = $schema->getColumnNames('test');
         $this->assertTrue(isset($result['id']));
         $this->assertTrue(isset($result['keyname']));
+    }
+
+    /**
+     * Test.
+     *
+     * @return void
+     * @covers ::renameTable
+     */
+    public function testRenameTable()
+    {
+        $schema = $this->getSchema();
+        $this->assertTrue($schema->renameTable('test', 'test_copy'));
+        $this->assertTrue($schema->existTable('test_copy'));
+        $this->assertFalse($schema->existTable('test'));
+    }
+
+    /**
+     * Test.
+     *
+     * @return void
+     * @covers ::copyTable
+     */
+    public function testCopyTable()
+    {
+        $schema = $this->getSchema();
+        $this->assertTrue($schema->copyTable('test', 'test_copy'));
+        $this->assertTrue($schema->existTable('test_copy'));
+        $this->assertTrue($schema->existTable('test'));
     }
 }

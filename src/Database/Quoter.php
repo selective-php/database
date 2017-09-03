@@ -46,7 +46,7 @@ class Quoter
      */
     public function quoteArray(array $array): array
     {
-        if (!$array) {
+        if (empty($array)) {
             return [];
         }
         foreach ($array as $key => $value) {

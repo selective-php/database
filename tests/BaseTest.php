@@ -94,9 +94,10 @@ abstract class BaseTest extends TestCase
     protected function createTestTable()
     {
         $db = $this->getConnection();
-        $this->getSchema()->dropTable('test');
-        $this->getSchema()->dropTable('temp');
-        $this->getSchema()->dropTable('test_copy');
+        $schema = $this->getSchema();
+        foreach ($schema->getTables() as $table) {
+            $schema->dropTable($table);
+        }
 
         $result = $db->exec("CREATE TABLE `test` (
             `id` int(11) NOT NULL AUTO_INCREMENT,

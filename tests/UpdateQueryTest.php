@@ -2,7 +2,6 @@
 
 namespace Odan\Test;
 
-use Odan\Database\RawExp;
 use Odan\Database\UpdateQuery;
 use PDOStatement;
 

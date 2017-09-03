@@ -45,7 +45,7 @@ class TableTest extends BaseTest
             'keyname' => 'test',
             'keyvalue' => '123'
         );
-        $this->getQuery()->insert()->into('test')->values($newRow)->execute();
+        $this->getQuery()->insert()->into('test')->set($newRow)->execute();
 
         $select = $this->getTable()->select()->columns(['id', 'keyname', 'keyvalue'])->from('test');
         $row = $select->query()->fetch();

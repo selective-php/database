@@ -70,7 +70,7 @@ class Table
      */
     public function insertRow(string $table, array $row): PDOStatement
     {
-        $insert = $this->insert()->into($table)->values($row);
+        $insert = $this->insert()->into($table)->set($row);
         $statement = $insert->prepare();
         $statement->execute();
         return $statement;
