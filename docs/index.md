@@ -1,5 +1,12 @@
 # Documentation
 
+* [Connection](#connection)
+* [Select](#select)
+* [Insert](#insert)
+* [Update](#update)
+* [Delete](##delete)
+* [Schema](#schema)
+
 ## Introduction
 
 The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application and works on all supported database systems.
