@@ -52,9 +52,4 @@ class QueryFactory
     {
         return new DeleteQuery($this->pdo);
     }
-
-    public function fun()
-    {
-        return null;
-    }
 }

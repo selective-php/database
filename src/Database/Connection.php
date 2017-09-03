@@ -11,6 +11,11 @@ class Connection extends PDO
      */
     protected $quoter;
 
+    /**
+     * Get quoter.
+     *
+     * @return Quoter
+     */
     public function getQuoter()
     {
         if (!$this->quoter) {

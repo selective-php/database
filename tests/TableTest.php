@@ -93,4 +93,27 @@ class TableTest extends BaseTest
     {
         $this->assertInstanceOf(DeleteQuery::class, $this->getTable()->delete());
     }
+
+    /**
+     * Test
+     *
+     * @covers ::updateRow
+     */
+    public function testUpdateRow()
+    {
+        $table = $this->getTable();
+        $this->assertTrue($table->updateRow('test', ['id' => 1], ['keyname' => 'value'])->execute());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::deleteRow
+     */
+    public function testDeleteRow()
+    {
+        $table = $this->getTable();
+        $this->assertTrue($table->deleteRow('test')->execute());
+        $this->assertTrue($table->deleteRow('test', ['id' => 1])->execute());
+    }
 }

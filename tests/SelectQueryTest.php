@@ -417,4 +417,24 @@ class SelectQueryTest extends BaseTest
         $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id` LEFT JOIN `table3` AS `t3` ON `t3`.`id` = `test`.`user_id`";
         $this->assertEquals($expected, $select->build());
     }
+
+    /**
+     * Test
+     *
+     * @covers ::limit
+     * @covers ::getLimitSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
+     * @covers ::columns
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testLimit()
+    {
+        $select = $this->select()->columns(['id'])->from('test')->limit(10);
+        $this->assertEquals("SELECT `id` FROM `test` LIMIT 10", $select->build());
+    }
 }

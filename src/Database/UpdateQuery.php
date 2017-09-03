@@ -99,7 +99,6 @@ class UpdateQuery implements QueryInterface
         return $this;
     }
 
-
     /**
      * Table name
      *

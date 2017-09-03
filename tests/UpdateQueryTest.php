@@ -41,6 +41,24 @@ class UpdateQueryTest extends BaseTest
      *
      * @covers ::table
      * @covers ::set
+     * @covers ::getUpdateSql
+     * @covers ::prepare
+     * @covers ::build
+     * @covers ::execute
+     */
+    public function testFrom()
+    {
+        $update = $this->update()->table('test')->set(['keyname' => 'admin'])->where('id', '=', '1');
+        $this->assertEquals("UPDATE `test` SET `keyname`='admin' WHERE `id` = '1';", $update->build());
+        $this->assertInstanceOf(PDOStatement::class, $update->prepare());
+        $this->assertTrue($update->execute());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::table
+     * @covers ::set
      * @covers ::lowPriority
      * @covers ::getUpdateSql
      * @covers ::prepare
@@ -49,7 +67,6 @@ class UpdateQueryTest extends BaseTest
     public function testLowPriority()
     {
         $update = $this->update()->lowPriority()->table('test')->set(['username' => 'admin']);
-        $this->assertInstanceOf(PDOStatement::class, $update->prepare());
         $this->assertEquals("UPDATE LOW_PRIORITY `test` SET `username`='admin';", $update->build());
     }
 
