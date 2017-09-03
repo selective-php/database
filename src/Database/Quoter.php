@@ -84,7 +84,7 @@ class Quoter
      */
     public function quoteNames(array $identifiers): array
     {
-        foreach ((array)$identifiers as $key => $identifier) {
+        foreach ($identifiers as $key => $identifier) {
             if ($identifier instanceof RawExp) {
                 $identifiers[$key] = $identifier->getValue();
                 continue;

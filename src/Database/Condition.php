@@ -22,7 +22,7 @@ class Condition
     /**
      * PDO Connection
      *
-     * @var SelectQuery
+     * @var QueryInterface
      */
     protected $query;
 
