@@ -170,7 +170,7 @@ $users = $this->select()
     ->fetchAll();
 ```
 
-### Advanced Join Clauses
+#### Advanced Join Clauses
 
 You may also specify more advanced join clauses. 
 To get started, pass a Closure as the second argument into 
@@ -187,7 +187,7 @@ union method to union it with a second query:
 
 * todo
 
-### Where Clauses
+#### Where Clauses
 
 Simple Where Clauses
 
@@ -214,7 +214,7 @@ $users = $query->select()->from('users')->where('votes', '<>', 100)->query()->fe
 $users = $query->select()->from('users')->where('name', 'like', 'D%')->query()->fetchAll();
 ```
 
-You may also pass an multiple AND conditions:
+You may also pass multiple AND conditions:
 
 ```php
 $users = $query->select()->from('users')
@@ -289,11 +289,13 @@ $users = $query->select()->from('users')
 
 #### Where Column
 
+```php
 $users = $query->select()->from('users')
     ->where('users.id', '=', new RawExp('posts.user_ud'))
     ->query()->fetchAll();
+```
 
-### Order By
+#### Order By
 
 ```php
 $users = $query->select()->from('users')
@@ -301,7 +303,7 @@ $users = $query->select()->from('users')
     ->query()->fetchAll();
 ```
 
-### Group By
+#### Group By
 
 ```php
 $users = $query->select()->from('users')
@@ -309,7 +311,7 @@ $users = $query->select()->from('users')
     ->query()->fetchAll();
 ```
 
-### Limit and Offset
+#### Limit and Offset
 
 ```php
 $users = $query->select()->from('users')
@@ -324,7 +326,7 @@ $users = $query->select()->from('users')
     ->query()->fetchAll();
 ```
 
-### Having
+#### Having
 
 ```php
 $users = $query->select()
