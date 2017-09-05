@@ -23,12 +23,12 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Columns
      *
-     * @param string|array $fields
+     * @param array $fields
      * @return self
      */
-    public function columns($fields): self
+    public function columns(...$columns): self
     {
-        $this->columns = (array)$fields;
+        $this->columns = array_unique(array_merge($this->columns, $columns));;
         return $this;
     }
 
