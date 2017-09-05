@@ -23,7 +23,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Columns
      *
-     * @param array $fields field1, field2, field3, ...
+     * @param array ...$columns field1, field2, field3, ...
      * @return self
      */
     public function columns(...$columns): self
@@ -120,10 +120,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Order by.
      *
-     * @param array $fields Column name(s)
+     * @param array ...$fields Column name(s)
      * @return self
      */
-    public function orderBy(array $fields): self
+    public function orderBy(...$fields): self
     {
         $this->orderBy = $fields;
         return $this;
@@ -132,10 +132,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Group by.
      *
-     * @param array $fields
+     * @param array ...$fields
      * @return self
      */
-    public function groupBy(array $fields): self
+    public function groupBy(...$fields): self
     {
         $this->groupBy = $fields;
         return $this;

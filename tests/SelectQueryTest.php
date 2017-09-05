@@ -317,7 +317,7 @@ class SelectQueryTest extends BaseTest
             })
             ->where('u.id', '>=', 0)
             ->orWhere('u.id', 'between', [100, 200])
-            ->groupBy(['id', 'username ASC'])
+            ->groupBy('id', 'username ASC')
             ->having('u.username', '=', '1')
             ->having('u.username', '=', '2')
             ->having(function (SelectQuery $query) {
@@ -329,8 +329,8 @@ class SelectQueryTest extends BaseTest
                     $query->orHaving(new RawExp('c.id = u.id'));
                 });
             })
-            ->groupBy(['id', 'username'])
-            ->orderBy(['id ASC', 'username DESC'])
+            ->groupBy('id', 'username')
+            ->orderBy('id ASC', 'username DESC')
             ->limit(10)
             ->offset(0);
 
