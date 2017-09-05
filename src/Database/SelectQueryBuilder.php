@@ -99,9 +99,9 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected function getColumnsSql(array $sql): array
     {
         if (empty($this->columns)) {
-             $sql[] = '*';
+            $sql[] = '*';
         } else {
-             $sql[] = implode(',', $this->quoter->quoteNames($this->columns));
+            $sql[] = implode(',', $this->quoter->quoteNames($this->columns));
         }
         return $sql;
     }
