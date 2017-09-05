@@ -314,7 +314,7 @@ $users = $query->select()->from('users')
 
 ```php
 $users = $query->select()->from('users')
-    ->orderBy(['updated_at ASC'])
+    ->orderBy('updated_at ASC')
     ->query()->fetchAll();
 ```
 
@@ -322,7 +322,7 @@ $users = $query->select()->from('users')
 
 ```php
 $users = $query->select()->from('users')
-    ->groupBy(['role'])
+    ->groupBy('role')
     ->query()->fetchAll();
 ```
 
@@ -346,7 +346,7 @@ $users = $query->select()->from('users')
 ```php
 $users = $query->select()
     ->from('users')
-    ->groupBy(['id', 'username ASC'])
+    ->groupBy('id', 'username ASC')
     ->having('u.username', '=', 'admin')
     ->query()
     ->fetchAll();
