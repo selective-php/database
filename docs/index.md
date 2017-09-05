@@ -305,7 +305,7 @@ $users = $query->select()->from('users')
 #### Complex Where Conditions
 
 ```php
-$select = $query->select()
+$users = $query->select()
     ->columns('id', 'username')
     ->from('users u')
     ->join('customers c', 'c.created_by', '=', 'u.id')
