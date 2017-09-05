@@ -30,7 +30,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      */
     protected $quoter;
 
-    protected $columns = ['*'];
+    protected $columns = [];
     protected $from = '';
     protected $join = [];
 
@@ -98,8 +98,10 @@ abstract class SelectQueryBuilder implements QueryInterface
      */
     protected function getColumnsSql(array $sql): array
     {
-        if (!empty($this->columns)) {
-            $sql[] = implode(',', $this->quoter->quoteNames($this->columns));
+        if (empty($this->columns)) {
+             $sql[] = '*';
+        } else {
+             $sql[] = implode(',', $this->quoter->quoteNames($this->columns));
         }
         return $sql;
     }
