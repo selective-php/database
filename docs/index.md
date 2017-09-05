@@ -302,6 +302,39 @@ $users = $query->select()->from('users')
     ->query()->fetchAll();
 ```
 
+#### Complex Where Conditions
+
+```php
+$select = $query->select()
+    ->columns('id', 'username')
+    ->from('users u')
+    ->join('customers c', 'c.created_by', '=', 'u.id')
+    ->leftJoin('articles a', 'a.created_by', '=', 'u.id')
+    ->where('u.id', '>=', 1)
+    ->where('u.deleted', '=', 0)
+    ->orWhere('u.username', 'like', "%a'a%")
+    ->orWhere('u.username', 'not like', "%a'b%")
+    ->orWhere('u.id', 'in', [1, 2, 3])
+    ->orWhere('u.id', 'not in', [4, 5, null])
+    ->orWhere('u.id', '=', null)
+    ->orWhere('u.id', '!=', null)
+    ->where(function (SelectQuery $query) {
+        $query->where('t2.field', '=', '1');
+        $query->where('t2.field2', '>', '1');
+    })
+    ->orWhere(function (SelectQuery $query) {
+        $query->where('t.a', '<>', '2');
+        $query->where('t.b', '=', null);
+        $query->where('t.c', '>', '5');
+        $query->orWhere(function (SelectQuery $query) {
+            $query->where(new RawExp('a.id = b.id'));
+            $query->orWhere(new RawExp('c.id = u.id'));
+        });
+    })
+    ->query()
+    ->fetchAll();
+```
+
 #### Where Raw
 
 ```php
