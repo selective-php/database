@@ -47,7 +47,7 @@ class TableTest extends BaseTest
         );
         $this->getQuery()->insert()->into('test')->set($newRow)->execute();
 
-        $select = $this->getTable()->select()->columns(['id', 'keyname', 'keyvalue'])->from('test');
+        $select = $this->getTable()->select()->columns('id', 'keyname', 'keyvalue')->from('test');
         $row = $select->query()->fetch();
 
         $expected = array(
