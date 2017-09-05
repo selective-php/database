@@ -4,7 +4,7 @@
 * [Select](#selects)
 * [Insert](#inserts)
 * [Update](#updates)
-* [Delete](##deletes)
+* [Delete](#deletes)
 * [Schema](#schema)
 
 ## Introduction
@@ -537,8 +537,32 @@ $query->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users
 
 ## Table
 
-* todo
+```php
+$table = new \Odan\Database\Table($connection);
+```
+
+```php
+$table = new \Odan\Database\Table($connection);
+```
+
+Todo: Write more documentation
 
 ## Schema
 
-* todo
+```php
+$schema = new \Odan\Database\Schema($connection);
+```
+
+### Current database
+
+```php
+$database = $schema->getDatabase();
+```
+
+### Change database
+
+```php
+$schema->setDatabase('my_database');
+```
+
+Todo: Write more documentation

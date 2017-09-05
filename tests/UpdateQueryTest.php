@@ -160,7 +160,7 @@ class UpdateQueryTest extends BaseTest
      *
      * @covers ::table
      * @covers ::increment
-     *  @covers ::increment
+     * @covers ::increment
      * @covers ::where
      * @covers ::orWhere
      * @covers ::prepare
