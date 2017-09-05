@@ -40,7 +40,7 @@ class ConnectionTest extends BaseTest
     public function testPrepareQuery()
     {
         $select = $this->getTable()->select();
-        $select->columns(['TABLE_NAME'])
+        $select->columns('TABLE_NAME')
             ->from('information_schema.TABLES')
             ->where('TABLE_NAME', '=', 'TABLES');
 
