@@ -48,8 +48,44 @@ class InsertQueryTest extends BaseTest
     {
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
         $this->assertEquals("INSERT INTO `test` SET `keyname`='admin-007';", $insert->build());
-        $this->assertInstanceOf(PDOStatement::class, $insert->prepare());
-        $this->assertTrue($insert->execute());
+        $stmt = $insert->prepare();
+        $this->assertInstanceOf(PDOStatement::class, $stmt);
+        $this->assertTrue($stmt->execute());
+        $this->assertEquals(1, $stmt->rowCount());
+        $this->assertEquals(1, $this->getConnection()->lastInsertId());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::into
+     * @covers ::set
+     * @covers ::lastInsertId
+     * @covers ::prepare
+     * @covers ::build
+     * @covers ::execute
+     */
+    public function testLastInsertId()
+    {
+        $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
+        $insert->execute();
+        $this->assertEquals(1, $insert->lastInsertId());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::into
+     * @covers ::set
+     * @covers ::insertGetId
+     * @covers ::prepare
+     * @covers ::build
+     * @covers ::execute
+     */
+    public function testInsertGetId()
+    {
+        $insertGetId = $this->insert()->into('test')->insertGetId(['keyname' => 'admin-007']);
+        $this->assertEquals(1, $insertGetId);
     }
 
     /**

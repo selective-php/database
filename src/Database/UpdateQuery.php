@@ -66,6 +66,17 @@ class UpdateQuery implements QueryInterface
     protected $limit;
 
     /**
+     * @var array Increment
+     */
+    protected $increment = [];
+
+    /**
+     * @var array Decrement
+     */
+    protected $decrement = [];
+
+
+    /**
      * Constructor.
      *
      * @param Connection $pdo
@@ -176,6 +187,32 @@ class UpdateQuery implements QueryInterface
     }
 
     /**
+     * Incrementing or decrementing the value of a given column.
+     *
+     * @param string $column The column to modify
+     * @param $amount [optional] The amount by which the column should be incremented
+     * @return self
+     */
+    public function increment(string $column, $amount = 1): self
+    {
+        $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '+' . $this->quoter->quoteValue($amount));
+        return $this;
+    }
+
+    /**
+     * Decrementing the value of a given column.
+     *
+     * @param string $column The column to modify
+     * @param $amount [optional] The amount by which the column should be decrement
+     * @return self
+     */
+    public function decrement(string $column, $amount = 1): self
+    {
+        $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '-' . $this->quoter->quoteValue($amount));
+        return $this;
+    }
+
+    /**
      * Executes a prepared statement.
      *
      * @return bool
@@ -237,10 +274,10 @@ class UpdateQuery implements QueryInterface
      * @param array $sql
      * @return array
      */
-    public function getSetSql(array $sql):array
+    public function getSetSql(array $sql): array
     {
         // single row
-        $sql[] =  'SET ' . $this->quoter->quoteSetValues($this->values);
+        $sql[] = 'SET ' . $this->quoter->quoteSetValues($this->values);
         return $sql;
     }
 

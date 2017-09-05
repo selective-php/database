@@ -2,6 +2,7 @@
 
 namespace Odan\Test;
 
+use Odan\Database\RawExp;
 use Odan\Database\UpdateQuery;
 use PDOStatement;
 
@@ -152,5 +153,40 @@ class UpdateQueryTest extends BaseTest
         ->where('test.id', '=', 1)
         ->orWhere('db.test.id', '>', 2);
         $this->assertEquals("UPDATE `test` SET `username`='admin' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::table
+     * @covers ::increment
+     *  @covers ::increment
+     * @covers ::where
+     * @covers ::orWhere
+     * @covers ::prepare
+     * @covers ::build
+     * @covers ::getUpdateSql
+     * @covers ::getSetSql
+     * @covers ::getOrderBySql
+     * @covers ::getLimitSql
+     * @covers ::getUpdateSql
+     */
+    public function testIncrementDecrement()
+    {
+        $update = $this->update()->table('users')->increment('voted');
+        $this->assertEquals("UPDATE `users` SET `voted`=`voted`+'1';", $update->build());
+
+        $update = $this->update()->table('users')->increment('voted', '1')
+            ->where('test.id', '=', 1)
+            ->orWhere('db.test.id', '>', 2);
+        $this->assertEquals("UPDATE `users` SET `voted`=`voted`+'1' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());
+
+        $update = $this->update()->table('users')->decrement('voted', '10')
+            ->where('test.id', '=', 1)
+            ->orWhere('db.test.id', '>', 2);
+        $this->assertEquals("UPDATE `users` SET `voted`=`voted`-'10' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());
+
+        $update = $this->update()->table('users')->set(['votes' => new RawExp('votes+1')])->where('id', '=', '1');
+        $this->assertEquals("UPDATE `users` SET `votes`=votes+1 WHERE `id` = '1';", $update->build());
     }
 }

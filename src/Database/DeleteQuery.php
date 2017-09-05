@@ -61,6 +61,11 @@ class DeleteQuery implements QueryInterface
     protected $limit;
 
     /**
+     * @var bool Truncate
+     */
+    protected $truncate;
+
+    /**
      * Constructor.
      *
      * @param Connection $pdo
@@ -180,6 +185,18 @@ class DeleteQuery implements QueryInterface
     }
 
     /**
+     * Truncate the entire table.
+     *
+     * @return self
+     */
+    public function truncate(): self
+    {
+        $this->truncate = true;
+        return $this;
+    }
+
+
+    /**
      * Executes a prepared statement.
      *
      * @return bool
@@ -206,6 +223,9 @@ class DeleteQuery implements QueryInterface
      */
     public function build(): string
     {
+        if ($this->truncate === true) {
+            return $this->getTruncateSql();
+        }
         $sql = [];
         $sql = $this->getDeleteSql($sql);
         $sql = $this->condition->getWhereSql($sql);
@@ -216,11 +236,11 @@ class DeleteQuery implements QueryInterface
     }
 
     /**
-     * Get sql.
-     *
-     * @param array $sql
-     * @return array
-     */
+ * Get sql.
+ *
+ * @param array $sql
+ * @return array
+ */
     public function getDeleteSql(array $sql)
     {
         $delete = 'DELETE';
@@ -235,6 +255,16 @@ class DeleteQuery implements QueryInterface
         }
         $sql[] = $delete . ' FROM ' . $this->quoter->quoteName($this->table);
         return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @return string
+     */
+    public function getTruncateSql()
+    {
+        return 'TRUNCATE TABLE ' . $this->quoter->quoteName($this->table) . ';';
     }
 
     /**

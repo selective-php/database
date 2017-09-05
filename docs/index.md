@@ -1,10 +1,10 @@
 # Documentation
 
 * [Connection](#connection)
-* [Select](#select)
-* [Insert](#insert)
-* [Update](#update)
-* [Delete](##delete)
+* [Select](#selects)
+* [Insert](#inserts)
+* [Update](#updates)
+* [Delete](##deletes)
 * [Schema](#schema)
 
 ## Introduction
@@ -45,7 +45,7 @@ $connection = new Connection($dsn, $username, $password, $options);
 $query = new QueryFactory($connection);
 ```
 
-## Select
+## Selects
 
 ### Retrieving Results
 
@@ -406,17 +406,134 @@ $users = $query->select()
     ->fetchAll();
 ```
 
-## Insert
+## Inserts
 
-* todo
+### Insert A Single Row
 
-## Update
+The query builder also provides an insert method for inserting 
+records into the database table. 
 
-* todo
+The insert method accepts an array of column names and values:
 
-## Delete
+```php
+$query->insert()->into('test')
+    ->set(['email' => 'john@example.com', 'votes' => 0])
+    ->execute();
+```
 
-* todo
+You may even insert several records into the table with a single call 
+to insert by passing an array of arrays. Each array represents a 
+row to be inserted into the table:
+
+```php
+$query->insert()->into('test')->set([
+        ['email' => 'daniel@example.com', 'votes' => 0],
+        ['email' => 'john@example.com', 'votes' => 0]
+    ])->execute();
+```
+
+### Auto-Incrementing IDs
+
+If the table has an auto-incrementing id, 
+use the insertGetId method to insert a record and then retrieve the ID:
+
+```php
+$userId = $this->insert()->into('test')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
+```
+
+Another way to get the last inserted ID:
+
+```php
+$insert = $this->insert()->into('users')->set(['email' => 'john@example.com', 'votes' => 0]);
+$insert->execute();
+$userId = $insert->lastInsertId();
+```
+
+Sometimes you need more then just the last inserted ID, for example the number of affected rows.
+You can find all this informations in the PDO connection object:
+
+```php
+$query->insert()
+    ->into('users')
+    ->set(['email' => 'john@example.com', 'votes' => 0])
+    ->execute();
+
+// Use the connection object 
+$newId = $connection->lastInsertId(); // 1
+$rowCount = $connection->rowCount(); // 1
+```
+
+
+## Updates
+
+Of course, in addition to inserting records into the database, 
+the query builder can also update existing records using the update method. 
+
+The update method, like the insert method, accepts an array of column 
+and value pairs containing the columns to be updated. 
+
+You may constrain the update query using where clauses:
+
+```php
+$query->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->execute();
+```
+
+### Get number of affected rows:
+
+```php
+$stmt = $query->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->prepare();
+$stmt->execute();
+$affectedRowCount = $stmt->rowCount();
+```
+
+### Increment & Decrement
+
+The query builder also provides convenient methods for incrementing or 
+decrementing the value of a given column. This is simply a shortcut, 
+providing a more expressive and terse interface compared to manually 
+writing the update statement.
+
+Both of these methods accept at least one argument: the column to modify. 
+A second argument may optionally be passed to control the amount by 
+which the column should be incremented or decremented:
+
+```php
+$query->update()->table('users')->increment('voted')->execute();
+$query->update()->table('users')->increment('voted', 10)->execute();
+$query->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->execute();
+```
+
+```php
+$query->update()->table('users')->decrement('voted', 1)->where('id', '=', 0)->execute();
+```
+
+```php
+$query->update()
+    ->table('users')
+    ->set(['votes' => new RawExp('votes+1')])
+    ->where('id', '=', '1')
+    ->execute();
+```
+
+## Deletes
+
+The query builder may also be used to delete records from the 
+table via the delete method. You may constrain delete 
+statements by adding where clauses before calling the delete method:
+
+
+```php
+$query->delete()->from('users')->execute(); // DELETE FROM `users`
+$query->delete()->from('users')->where('votes', '>', 00)->execute(); // DELETE FROM `users` WHERE `votes` > '100'
+```
+
+If you wish to truncate the entire table, which will remove 
+all rows and reset the auto-incrementing ID to zero, 
+you may use the truncate method:
+
+```php
+$query->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users`; 
+```
 
 ## Table
 

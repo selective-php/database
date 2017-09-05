@@ -167,4 +167,19 @@ class DeleteQueryTest extends BaseTest
             ->orWhere('db.test.id', '>', 2);
         $this->assertEquals("DELETE FROM `test` WHERE `id` = '1' AND `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $delete->build());
     }
+
+    /**
+     * Test
+     *
+     * @covers ::from
+     * @covers ::truncate
+     * @covers ::getTruncateSql
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testTruncate()
+    {
+        $delete = $this->delete()->from('test')->truncate();
+        $this->assertEquals("TRUNCATE TABLE `test`;", $delete->build());
+    }
 }

@@ -142,6 +142,10 @@ class Quoter
     {
         $values = [];
         foreach ($row as $key => $value) {
+            if ($value instanceof RawExp) {
+                $values[] = $this->quoteName($key) . '=' . $value->getValue();
+                continue;
+            }
             $values[] = $this->quoteName($key) . '=' . $this->quoteValue($value);
         }
         return implode(', ', $values);

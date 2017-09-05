@@ -152,6 +152,30 @@ class InsertQuery implements QueryInterface
     }
 
     /**
+     * Returns the ID of the last inserted row or sequence value.
+     *
+     * @param string $name [optional] Name of the sequence object from which the ID should be returned.
+     * @return string Last inserted Id
+     */
+    public function lastInsertId($name = null): string
+    {
+        return $this->pdo->lastInsertId($name);
+    }
+
+    /**
+     * Insert new row(s) and return new Id.
+     *
+     * @param array $values Values
+     * @return string Last inserted Id
+     */
+    public function insertGetId(array $values): string
+    {
+        $stmt = $this->set($values)->prepare();
+        $stmt->execute();
+        return $this->pdo->lastInsertId();
+    }
+
+    /**
      * Prepare statement.
      *
      * @return PDOStatement
