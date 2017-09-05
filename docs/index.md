@@ -541,10 +541,6 @@ $query->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users
 $table = new \Odan\Database\Table($connection);
 ```
 
-```php
-$table = new \Odan\Database\Table($connection);
-```
-
 Todo: Write more documentation
 
 ## Schema
