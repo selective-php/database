@@ -25,7 +25,7 @@ composer require odan/database
 
 ## Requirements
 
-* PHP 7.0+
+* PHP 7.x
 * MySQL
 
 ## Query Builder
@@ -33,12 +33,6 @@ composer require odan/database
 The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application, and works on all supported database systems.
 
 For more details how to build queries read the **[documentation](docs/index.md)**.
-
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Security
 
