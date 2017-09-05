@@ -298,7 +298,15 @@ $users = $query->select()->from('users')
 
 ```php
 $users = $query->select()->from('users')
-    ->where('users.id', '=', new RawExp('posts.user_ud'))
+    ->where('users.id', '=', new RawExp('posts.user_id'))
+    ->query()->fetchAll();
+```
+
+#### Where Raw
+
+```php
+$users = $query->select()->from('users')
+    ->where(new RawExp('users.id = posts.user_id'))
     ->query()->fetchAll();
 ```
 
