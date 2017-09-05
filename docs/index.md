@@ -58,7 +58,7 @@ the query and then finally get the results using the get method:
 
 ```php
 $stmt = $query->select()
-    ->columns(['id', 'username', 'email'])
+    ->columns('id', 'username', 'email')
     ->from('users')
     ->query();
     
@@ -93,7 +93,7 @@ $value = $select->query()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$select = $query->select()->distinct()->columns(['id'])->from('users');
+$select = $query->select()->distinct()->columns('id')->from('users');
 ```
 
 #### Raw Expressions
@@ -106,7 +106,7 @@ To create a raw expression, you may use the RawExp value object:
 
 ```php
 $users = $query->select()
-    ->columns([new RawExp('count(*) as user_count'), 'status'])
+    ->columns(new RawExp('count(*) as user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
     ->groupBy('status')
@@ -123,7 +123,7 @@ You may call any of these methods after constructing your query:
 
 ```php
 $payments = $query->select()
-    ->columns([new RawExp('MAX(amount)'), new RawExp('MIN(amount)')])
+    ->columns(new RawExp('MAX(amount)'), new RawExp('MIN(amount)'))
     ->from('payments')
     ->query()
     ->fetchAll();
@@ -143,7 +143,7 @@ multiple tables in a single query:
 
 ```php
 $users = $this->select()
-    ->columns(['users.*', 'contacts.phone', 'orders.price'])
+    ->columns('users.*', 'contacts.phone', 'orders.price')
     ->from('users')
     ->join('contacts', 'users.id', '=', 'contacts.user_id')
     ->join('orders', 'users.id', '=', 'orders.user_id')
