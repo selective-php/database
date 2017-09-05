@@ -6,6 +6,7 @@
 * [Update](#updates)
 * [Delete](#deletes)
 * [Schema](#schema)
+* [Compression](#compression)
 
 ## Introduction
 
@@ -562,3 +563,24 @@ $schema->setDatabase('my_database');
 ```
 
 Todo: Write more documentation
+
+
+## Compression
+
+The compress and uncompress methods are compatible with MySQL COMPRESS.
+
+```php
+$compression = new \Odan\Database\Compression($connection);
+```
+
+### Compress
+
+```php
+$compressed = $compression->compress('data');
+```
+
+### Uncompress
+
+```php
+$uncompressed = $compression->uncompress('compressed data');
+```
