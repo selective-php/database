@@ -23,7 +23,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Columns
      *
-     * @param array $fields
+     * @param array $fields field1, field2, field3, ...
      * @return self
      */
     public function columns(...$columns): self
