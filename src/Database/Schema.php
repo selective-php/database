@@ -2,6 +2,11 @@
 
 namespace Odan\Database;
 
+use PDO;
+
+/**
+ * Class Schema
+ */
 class Schema
 {
 
@@ -53,7 +58,7 @@ class Schema
             WHERE SCHEMA_NAME = %s;";
 
         $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
-        $row = $this->db->query($sql)->fetch();
+        $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
         return !empty($row['SCHEMA_NAME']);
     }
 
@@ -128,7 +133,7 @@ class Schema
             AND table_name = %s;";
 
         $sql = sprintf($sql, $dbName, $tableName);
-        $row = $this->db->query($sql)->fetch();
+        $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
         return (isset($row['table_name']));
     }
 
@@ -226,7 +231,7 @@ class Schema
 
         list($dbName, $tableName) = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
-        return $this->db->query($sql)->fetchAll();
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -255,7 +260,7 @@ class Schema
     public function getTableSchemaId($tableName)
     {
         $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
-        $rows = $this->db->query($sql)->fetchAll();
+        $rows = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return sha1(json_encode($rows));
     }
 

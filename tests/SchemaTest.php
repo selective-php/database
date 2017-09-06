@@ -3,6 +3,7 @@
 namespace Odan\Test;
 
 use Odan\Database\Schema;
+use PDO;
 
 /**
  * @coversDefaultClass \Odan\Database\Schema
@@ -185,7 +186,7 @@ class SchemaTest extends BaseTest
         $result = $db->lastInsertId();
         $this->assertEquals(1, $result);
 
-        $result = $db->query("SELECT COUNT(*) AS count FROM `test`")->fetchAll();
+        $result = $db->query("SELECT COUNT(*) AS count FROM `test`")->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEquals(array(0 => array('count' => 1)), $result);
 
         $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
@@ -252,7 +253,7 @@ class SchemaTest extends BaseTest
         $result = $table->insertRows('test', $rows);
         $this->assertSame(100, $result->rowCount());
 
-        $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll();
+        $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll(PDO::FETCH_ASSOC);
         $this->assertSame(true, $rows == $result);
 
         $fields = array(

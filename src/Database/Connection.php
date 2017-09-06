@@ -38,7 +38,7 @@ class Connection extends PDO
     {
         $result = [];
         $statement = $this->query($sql);
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result[] = $row[$key];
         }
         return $result;
@@ -55,7 +55,7 @@ class Connection extends PDO
     public function queryValue(string $sql, string $column, $default = null)
     {
         $result = $default;
-        if ($row = $this->query($sql)->fetch()) {
+        if ($row = $this->query($sql)->fetch(PDO::FETCH_ASSOC)) {
             $result = $row[$column];
         }
         return $result;
@@ -76,7 +76,7 @@ class Connection extends PDO
     {
         $result = [];
         $statement = $this->query($sql);
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result[$row[$key]] = $row;
         }
         return $result;

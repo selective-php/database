@@ -6,6 +6,7 @@ use Odan\Database\DeleteQuery;
 use Odan\Database\InsertQuery;
 use Odan\Database\UpdateQuery;
 use Odan\Database\Table;
+use PDO;
 
 /**
  * @coversDefaultClass \Odan\Database\Table
@@ -48,7 +49,7 @@ class TableTest extends BaseTest
         $this->getQuery()->insert()->into('test')->set($newRow)->execute();
 
         $select = $this->getTable()->select()->columns('id', 'keyname', 'keyvalue')->from('test');
-        $row = $select->query()->fetch();
+        $row = $select->query()->fetch(PDO::FETCH_ASSOC);
 
         $expected = array(
             'id' => '1',
