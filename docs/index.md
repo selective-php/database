@@ -591,7 +591,7 @@ order specified by the clause. This is useful primarily in conjunction with LIMI
 ```php
 $query->delete()->from('some_logs')
     ->where('username', '=', 'jcole')
-    ->orderBy('createt_at') 
+    ->orderBy('created_at') 
     ->limit(1)
     ->execute();
 ```
