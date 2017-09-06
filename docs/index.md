@@ -185,7 +185,9 @@ To get started, pass a Closure as the second argument into
 the join method. The Closure will receive a JoinClause object 
 which allows you to specify constraints on the join clause:
 
-* todo
+```
+Not supported
+```
 
 ### Unions
 
@@ -193,7 +195,9 @@ The query builder also provides a quick way to "union" two queries together.
 For example, you may create an initial query and use the 
 union method to union it with a second query:
 
-* todo
+```
+Supported in the next version.
+```
 
 #### Where Clauses
 
