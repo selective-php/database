@@ -479,6 +479,14 @@ You may constrain the update query using where clauses:
 $query->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->execute();
 ```
 
+```php
+$query->update()->table('users')
+    ->set(['votes' => '1'])
+    ->where('id', '=', '1')
+    ->orWhere('id', '=', '2')
+    ->execute();
+```
+
 ### Get number of affected rows:
 
 ```php
@@ -508,12 +516,51 @@ $query->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->ex
 $query->update()->table('users')->decrement('voted', 1)->where('id', '=', 0)->execute();
 ```
 
+Incrementing without the convenient methods:
+
 ```php
 $query->update()
     ->table('users')
     ->set(['votes' => new RawExp('votes+1')])
     ->where('id', '=', '1')
     ->execute();
+```
+
+### Update Limit
+
+The `limit` clause places a limit on the number of rows that can be updated.
+
+```php
+$query->update()->table('users')->set(['votes' => '1'])->limit(10)->execute();
+```
+
+### Update Low Priority
+
+With the `LOW_PRIORITY ` modifier, execution of the UPDATE is delayed until no 
+other clients are reading from the table. This affects only storage engines 
+that use only table-level locking (such as MyISAM, MEMORY, and MERGE).
+
+```php
+$query->update()->table('users')->set(['votes' => '1'])->lowPriority()->execute();
+```
+
+### Update and ignore errors
+
+With the `IGNORE` modifier, the update statement does not abort 
+even if errors occur during the update. Rows for which duplicate-key 
+conflicts occur on a unique key value are not updated. 
+
+```php
+$query->update()->table('users')->set(['votes' => '1'])->ignore()->execute();
+```
+
+### Update with order by
+
+If an UPDATE statement includes an ORDER BY clause, 
+the rows are updated in the order specified by the clause. 
+
+```php
+$query->update()->table('users')->set(['votes' => '1'])->orderBy('created_at DESC', 'id DESC')->execute();
 ```
 
 ## Deletes
@@ -525,7 +572,7 @@ statements by adding where clauses before calling the delete method:
 
 ```php
 $query->delete()->from('users')->execute(); // DELETE FROM `users`
-$query->delete()->from('users')->where('votes', '>', 00)->execute(); // DELETE FROM `users` WHERE `votes` > '100'
+$query->delete()->from('users')->where('votes', '>', 100)->execute(); // DELETE FROM `users` WHERE `votes` > '100'
 ```
 
 If you wish to truncate the entire table, which will remove 
@@ -534,6 +581,74 @@ you may use the truncate method:
 
 ```php
 $query->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users`; 
+```
+
+### Order of Deletion
+
+If the DELETE statement includes an ORDER BY clause, rows are deleted in the 
+order specified by the clause. This is useful primarily in conjunction with LIMIT. 
+
+```php
+$query->delete()->from('some_logs')
+    ->where('username', '=', 'jcole')
+    ->orderBy('createt_at') 
+    ->limit(1)
+    ->execute();
+```
+
+ORDER BY also helps to delete rows in an order required to avoid referential integrity violations.
+
+You cannot use ORDER BY or LIMIT in a multiple-table DELETE.
+
+### Delete Limit
+
+The LIMIT clause places a limit on the number of rows that can be deleted. 
+These clauses apply to single-table deletes, but not multi-table deletes.
+
+```php
+$query->delete()->from('users')->limit(10)->execute();
+```
+
+### Delete Low Priority
+
+If you specify `LOW_PRIORITY`, the server delays execution of the 
+DELETE until no other clients are reading from the table. 
+
+This affects only storage engines that use only table-level 
+locking (such as MyISAM, MEMORY, and MERGE).
+
+```php
+$query->delete()->from('users')->lowPriority()->execute();
+```
+
+### Delete and ignore errors
+
+The `IGNORE` modifier causes MySQL to ignore errors during the process of deleting rows. 
+
+(Errors encountered during the parsing stage are processed in the usual manner.) 
+
+Errors that are ignored due to the use of IGNORE are returned as warnings.
+
+```php
+$query->delete()->from('users')->ignore()->execute();
+```
+
+### Delete Quick modifier
+
+For MyISAM tables, if you use the QUICK modifier, the storage engine 
+does not merge index leaves during delete, which may speed up some kinds of delete operations.
+
+```php
+$query->delete()->from('users')->quick()->execute();
+```
+
+### Multi-Table Deletes
+
+You can specify multiple tables in a DELETE statement to delete rows 
+from one or more tables depending on the condition in the WHERE clause.
+
+```
+Not supported
 ```
 
 ## Table

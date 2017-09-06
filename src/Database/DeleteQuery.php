@@ -163,10 +163,10 @@ class DeleteQuery implements QueryInterface
     /**
      * Order by.
      *
-     * @param array $fields Column name(s)
+     * @param array ...$fields Column name(s)
      * @return self
      */
-    public function orderBy(array $fields): self
+    public function orderBy(...$fields): self
     {
         $this->orderBy = $fields;
         return $this;
