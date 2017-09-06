@@ -4,9 +4,10 @@
   "description": "A sql query builder",
   "keywords": [
     "sql",
-    "database",
+    "mysql",
     "query",
-    "builder"
+    "builder",
+    "database"
   ],
   "homepage": "http://github.com/odan/database",
   "license": "MIT",
