@@ -476,8 +476,11 @@ Sometimes you need more then just the last inserted ID, for example the number o
 You can find this information in the Statement object:
 
 ```php
-$insert = $this->insert()->into('users')->set(['email' => 'john@example.com', 'votes' => 0]);
-$stmt = $insert->prepare();
+$stmt = $this->insert()
+    ->into('users')
+    ->set(['email' => 'john@example.com', 'votes' => 0])
+    ->prepare();
+    
 $stmt->execute();
 $rowCount = $stmt->rowCount(); // 1
 ```
