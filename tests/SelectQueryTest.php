@@ -264,6 +264,7 @@ class SelectQueryTest extends BaseTest
      *
      * @covers ::where
      * @covers ::whereColumn
+     * @covers ::orWhereColumn
      * @covers \Odan\Database\Condition::addClauseCondClosure
      * @covers \Odan\Database\Condition::getRightFieldValue
      * @covers \Odan\Database\Condition::getWhereSql
