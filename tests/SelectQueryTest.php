@@ -263,6 +263,37 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::where
+     * @covers ::whereColumn
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
+     * @covers ::columns
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testWhereColumn()
+    {
+        $select = $this->select()->from('users')->whereColumn('first_name', '=', 'last_name');
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name`", $select->build());
+
+        $select = $select->orWhereColumn('votes', '>=', 'vote_max');
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`", $select->build());
+
+        $select = $this->select()->from('users')->whereColumn('users.email', '=', 'table2.email');
+        $this->assertEquals("SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`", $select->build());
+
+        $select = $this->select()->from('users')
+            ->whereColumn('first_name', '=', 'last_name')
+            ->whereColumn('updated_at', '=', 'created_at');
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::where
      * @covers ::orWhere
      * @covers ::having
      * @covers ::orHaving

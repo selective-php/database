@@ -118,6 +118,36 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * The whereColumn method may be used to verify that two columns are equal.
+     *
+     * @param string $column Name of the first column
+     * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
+     * @param string $secondColumn Name of the second column
+     * @return self
+     */
+    public function whereColumn(string $column, string $comparison, string $secondColumn): self
+    {
+        $secondColumn = $this->quoter->quoteName($secondColumn);
+        $this->condition->where([$column, $comparison, new RawExp($secondColumn)]);
+        return $this;
+    }
+
+    /**
+     * The whereColumn method may be used to verify that two columns are equal.
+     *
+     * @param string $column Name of the first column
+     * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
+     * @param string $secondColumn Name of the second column
+     * @return self
+     */
+    public function orWhereColumn(string $column, string $comparison, string $secondColumn): self
+    {
+        $secondColumn = $this->quoter->quoteName($secondColumn);
+        $this->condition->orWhere([$column, $comparison, new RawExp($secondColumn)]);
+        return $this;
+    }
+
+    /**
      * Order by.
      *
      * @param array ...$fields Column name(s)

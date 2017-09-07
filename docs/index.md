@@ -301,10 +301,26 @@ $users = $query->select()->from('users')
 
 #### Where Column
 
+The whereColumn method may be used to verify that two columns are equal:
+
 ```php
-$users = $query->select()->from('users')
-    ->where('users.id', '=', new RawExp('posts.user_id'))
-    ->query()->fetchAll();
+$users = $query->select()
+    ->from('users')
+    ->whereColumn('users.id', '=', 'posts.user_id')
+    ->query()
+    ->fetchAll();
+```
+
+The whereColumn method can also be called multiple times to add multiple conditions. 
+These conditions will be joined using the and operator:
+
+```php
+$users = $query->select()
+    ->from('users')
+    ->whereColumn('first_name', '=', 'last_name')
+    ->whereColumn('updated_at', '=', 'created_at')
+    ->query()
+    ->fetchAll();
 ```
 
 #### Complex Where Conditions

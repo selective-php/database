@@ -219,6 +219,8 @@ class Condition
             $between1 = $this->quoter->quoteValue($rightField[0]);
             $between2 = $this->quoter->quoteValue($rightField[1]);
             $rightField = sprintf('%s AND %s', $between1, $between2);
+        } elseif ($rightField instanceof RawExp) {
+            $rightField = $rightField->getValue();
         } else {
             $rightField = $this->quoter->quoteValue($rightField);
         }
