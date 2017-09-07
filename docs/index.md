@@ -470,20 +470,17 @@ $insert->execute();
 $userId = $insert->lastInsertId();
 ```
 
+### Number of rows affected by the last statement
+
 Sometimes you need more then just the last inserted ID, for example the number of affected rows.
-You can find all this informations in the PDO connection object:
+You can find this information in the Statement object:
 
 ```php
-$query->insert()
-    ->into('users')
-    ->set(['email' => 'john@example.com', 'votes' => 0])
-    ->execute();
-
-// Use the connection object 
-$newId = $connection->lastInsertId(); // 1
-$rowCount = $connection->rowCount(); // 1
+$insert = $this->insert()->into('users')->set(['email' => 'john@example.com', 'votes' => 0]);
+$stmt = $insert->prepare();
+$stmt->execute();
+$rowCount = $stmt->rowCount(); // 1
 ```
-
 
 ## Updates
 
