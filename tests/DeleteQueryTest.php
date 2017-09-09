@@ -123,12 +123,11 @@ class DeleteQueryTest extends BaseTest
         $delete = $this->delete()->from('test')->where('id', '=', '1')->orderBy('id DESC');
         $this->assertEquals("DELETE FROM `test` WHERE `id` = '1' ORDER BY `id` DESC;", $delete->build());
 
-        // @todo
-        //$delete = $this->update()->from('test')->where('id', '=', '1')->orderBy('test.id ASC');
-        //$this->assertEquals("DELETE FROM `test` WHERE `id` = '1' ORDER BY `test`.`id` ASC;", $delete->build());
+        $delete = $this->delete()->from('test')->where('id', '=', '1')->orderBy('test.id ASC');
+        $this->assertEquals("DELETE FROM `test` WHERE `id` = '1' ORDER BY `test`.`id` ASC;", $delete->build());
 
-        //$delete = $this->update()->from('test')->where('id', '=', '1')->orderBy('db.test.id ASC');
-        //$this->assertEquals("DELETE FROM `test` WHERE `id` = '1' ORDER BY `db`.`test`.`id` ASC;", $delete->build());
+        $delete = $this->delete()->from('test')->where('id', '=', '1')->orderBy('db.test.id ASC');
+        $this->assertEquals("DELETE FROM `test` WHERE `id` = '1' ORDER BY `db`.`test`.`id` ASC;", $delete->build());
     }
 
     /**
