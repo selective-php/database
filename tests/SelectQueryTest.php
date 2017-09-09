@@ -61,6 +61,21 @@ class SelectQueryTest extends BaseTest
     /**
      * Test
      *
+     * @covers ::straightJoin
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testStraightJoin()
+    {
+        $select = $this->select()->straightJoin()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT STRAIGHT_JOIN * FROM `users`", $select->build());
+    }
+
+    /**
+     * Test
+     *
      * @covers ::highPriority
      * @covers ::from
      * @covers ::prepare
@@ -137,15 +152,20 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::columns
+     * @covers ::getColumnsSql
      * @covers ::from
      * @covers ::prepare
      * @covers ::build
      */
     public function testColumns()
     {
+        $select = $this->select()->from('users');
+        $this->assertEquals("SELECT * FROM `users`", $select->build());
+
         $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertEquals("SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`", $select->build());
+
 
         // queries without table
         $select = $this->select()->columns(new RawExp("ISNULL(1+1)"));
@@ -463,13 +483,13 @@ class SelectQueryTest extends BaseTest
                     $query->orHaving(new RawExp('c.id = u.id'));
                 });
             })
-            ->groupBy('id', 'username')
-            ->orderBy('id ASC', 'username DESC')
+            ->groupBy('id', 'username', new RawExp('`role`'))
+            ->orderBy('id ASC', 'username DESC', new RawExp('`role` ASC'))
             ->limit(10)
             ->offset(0);
 
         $sql = $select->build();
-        $expected = 'e0d4b71b69514d735722ff18c30a030166bd7eaa';
+        $expected = '2ff24c6b776b03bb930965d4ad889a4e2e766b83';
         $actual = sha1($sql);
         if ($expected != $actual) {
             echo "\nSQL: $sql\n";

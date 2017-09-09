@@ -89,6 +89,7 @@ class SchemaTest extends BaseTest
      * @covers \Odan\Database\Quoter::quoteSetValues
      * @covers \Odan\Database\Quoter::quoteBulkValues
      * @covers \Odan\Database\Quoter::quoteFields
+     * @covers \Odan\Database\RawExp::__toString
      */
     public function testTables()
     {

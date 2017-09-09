@@ -159,7 +159,7 @@ class UpdateQueryTest extends BaseTest
      *
      * @covers ::table
      * @covers ::increment
-     * @covers ::increment
+     * @covers ::decrement
      * @covers ::where
      * @covers ::orWhere
      * @covers ::prepare
@@ -169,6 +169,7 @@ class UpdateQueryTest extends BaseTest
      * @covers ::getOrderBySql
      * @covers ::getLimitSql
      * @covers ::getUpdateSql
+     * @covers \Odan\Database\Quoter::quoteSetValues
      */
     public function testIncrementDecrement()
     {
