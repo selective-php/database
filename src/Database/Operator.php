@@ -32,7 +32,6 @@ class Operator
     public const NOT_REGEXP = 'not regexp';
     public const BINARY = 'binary';
     public const CASE = 'case';
-
     public const PLUS = '+';
     public const MINUS = '-';
     public const MULTIPLY = '*';
@@ -40,7 +39,6 @@ class Operator
     public const DIV = 'div';
     public const RIGHT_SHIFT = '>>';
     public const LEFT_SHIFT = '<<';
-
     public const MOD = 'mod';
     public const AND = 'and';
     public const OR = 'or';
