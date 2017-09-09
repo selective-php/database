@@ -16,7 +16,84 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function distinct(): self
     {
-        $this->distinct = true;
+        $this->distinct = 'DISTINCT';
+        return $this;
+    }
+
+    /**
+     * Distinct row
+     *
+     * @return self
+     */
+    public function distinctRow(): self
+    {
+        $this->distinct = 'DISTINCTROW';
+        return $this;
+    }
+
+    /**
+     * Distinct row
+     *
+     * @return self
+     */
+    public function straightJoin(): self
+    {
+        $this->straightJoin = 'STRAIGHT_JOIN';
+        return $this;
+    }
+
+    /**
+     * High Priority
+     *
+     * @return self
+     */
+    public function highPriority(): self
+    {
+        $this->highPriority = 'HIGH_PRIORITY';
+        return $this;
+    }
+
+    /**
+     * Small Result
+     *
+     * @return self
+     */
+    public function smallResult(): self
+    {
+        $this->resultSize = 'SQL_SMALL_RESULT';
+        return $this;
+    }
+
+    /**
+     * Big Result
+     *
+     * @return self
+     */
+    public function bigResult(): self
+    {
+        $this->resultSize = 'SQL_BIG_RESULT';
+        return $this;
+    }
+
+    /**
+     * Buffer Result
+     *
+     * @return self
+     */
+    public function bufferResult(): self
+    {
+        $this->bufferResult = 'SQL_BUFFER_RESULT';
+        return $this;
+    }
+
+    /**
+     * Calc Found Rows
+     *
+     * @return self
+     */
+    public function calcFoundRows(): self
+    {
+        $this->calcFoundRows = 'SQL_CALC_FOUND_ROWS';
         return $this;
     }
 

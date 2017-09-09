@@ -41,6 +41,7 @@ class SelectQueryTest extends BaseTest
      * Test
      *
      * @covers ::distinct
+     * @covers ::distinctRow
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -51,6 +52,85 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->distinct()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertEquals("SELECT DISTINCT `id` FROM `test`", $select->build());
+
+        $select = $this->select()->distinctRow()->columns('id')->from('test');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT DISTINCTROW `id` FROM `test`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::highPriority
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testHighPriority()
+    {
+        $select = $this->select()->highPriority()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT HIGH_PRIORITY * FROM `users`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::smallResult
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testSmallResult()
+    {
+        $select = $this->select()->smallResult()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT SQL_SMALL_RESULT * FROM `users`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::bigResult
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testBigResult()
+    {
+        $select = $this->select()->bigResult()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT SQL_BIG_RESULT * FROM `users`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::bufferResult
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testBufferResult()
+    {
+        $select = $this->select()->bufferResult()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT SQL_BUFFER_RESULT * FROM `users`", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::calcFoundRows
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testCalcFoundRows()
+    {
+        $select = $this->select()->calcFoundRows()->from('users');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertEquals("SELECT SQL_CALC_FOUND_ROWS * FROM `users`", $select->build());
     }
 
     /**

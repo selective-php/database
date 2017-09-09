@@ -8,12 +8,6 @@ namespace Odan\Database;
  * https://dev.mysql.com/doc/refman/5.7/en/select.html
  *
  * @todo Add support (and methods) for:
- * - distinctRow [DISTINCT | DISTINCTROW ]
- * - highPriority [HIGH_PRIORITY]
- * - straightJoin [STRAIGHT_JOIN]
- * - smallResult, bigResult [SQL_SMALL_RESULT] [SQL_BIG_RESULT]
- * - bufferResult [SQL_BUFFER_RESULT]
- * - calcFoundRows [SQL_CALC_FOUND_ROWS]
  * - UNION
  */
 abstract class SelectQueryBuilder implements QueryInterface
@@ -43,7 +37,12 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected $groupBy = [];
     protected $limit;
     protected $offset;
-    protected $distinct = false;
+    protected $distinct = '';
+    protected $calcFoundRows = '';
+    protected $bufferResult = '';
+    protected $resultSize = '';
+    protected $straightJoin = '';
+    protected $highPriority = '';
 
     /**
      * Constructor.
@@ -86,7 +85,14 @@ abstract class SelectQueryBuilder implements QueryInterface
      */
     protected function getSelectSql(array $sql): array
     {
-        $sql[] = 'SELECT' . (($this->distinct) ? ' DISTINCT' : '');
+        $sql[] = trim('SELECT ' . trim(implode(' ', [
+                $this->distinct,
+                $this->highPriority,
+                $this->straightJoin,
+                $this->resultSize,
+                $this->bufferResult,
+                $this->calcFoundRows,
+            ])));
         return $sql;
     }
 
