@@ -2,7 +2,7 @@
 
 namespace Odan\Test;
 
-use Odan\Database\Condition;
+use Odan\Database\Operator;
 use Odan\Database\RawExp;
 use Odan\Database\SelectQuery;
 use PDOStatement;
@@ -235,6 +235,28 @@ class SelectQueryTest extends BaseTest
 
         $select = $this->select()->columns('id')->from('test')->where('first_name', 'not like', "%a'1%");
         $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` NOT LIKE '%a\'1%'", $select->build());
+    }
+
+    /**
+     * Test Simple pattern matching
+     *
+     * @covers ::where
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
+     * @covers ::columns
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testWhereRegexp()
+    {
+        $select = $this->select()->from('users')->where('username', Operator::REGEXP, '^[a-d]');
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP '^[a-d]'", $select->build());
+
+        $select = $this->select()->from('users')->where('username', Operator::REGEXP, "new\\*.\\*line");
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP 'new\\\\*.\\\\*line'", $select->build());
     }
 
     /**
