@@ -102,18 +102,17 @@ class UpdateQueryTest extends BaseTest
      */
     public function testOrderBy()
     {
-        $update = $this->update()->table('test')->set(['username' => 'admin'])->orderBy('id');
-        $this->assertEquals("UPDATE `test` SET `username`='admin' ORDER BY `id`;", $update->build());
+        $update = $this->update()->table('users')->set(['username' => 'admin'])->orderBy('id');
+        $this->assertEquals("UPDATE `users` SET `username`='admin' ORDER BY `id`;", $update->build());
 
-        $update = $this->update()->table('test')->set(['username' => 'admin'])->orderBy('id DESC');
-        $this->assertEquals("UPDATE `test` SET `username`='admin' ORDER BY `id` DESC;", $update->build());
+        $update = $this->update()->table('users')->set(['username' => 'admin'])->orderBy('id DESC');
+        $this->assertEquals("UPDATE `users` SET `username`='admin' ORDER BY `id` DESC;", $update->build());
 
-        // @todo
-        //$update = $this->update()->table('test')->set(['username' => 'admin'])->orderBy('test.id ASC');
-        //$this->assertEquals("UPDATE `test` SET `username`='admin' ORDER BY `test`.`id` ASC;", $update->build());
+        $update = $this->update()->table('users')->set(['username' => 'admin'])->orderBy('users.id ASC');
+        $this->assertEquals("UPDATE `users` SET `username`='admin' ORDER BY `users`.`id` ASC;", $update->build());
 
-        //$update = $this->update()->table('test')->set(['username' => 'admin'])->orderBy('db.test.id ASC');
-        //$this->assertEquals("UPDATE `test` SET `username`='admin' ORDER BY `db`.`test`.`id` ASC;", $update->build());
+        $update = $this->update()->table('users')->set(['username' => 'admin'])->orderBy('db.users.id ASC');
+        $this->assertEquals("UPDATE `users` SET `username`='admin' ORDER BY `db`.`users`.`id` ASC;", $update->build());
     }
 
     /**

@@ -195,9 +195,8 @@ class Quoter
                 continue;
             }
             // table.id ASC
-            // @todo Fix it
             if (preg_match('/^([\w-\.]+)(\s)*(.*)$/', $identifier, $match)) {
-                $identifiers[$key] = $this->quoteIdentifier($match[1]) . $match[2] . $match[3];
+                $identifiers[$key] = $this->quoteName($match[1]) . $match[2] . $match[3];
                 continue;
             }
             $identifiers[$key] = $this->quoteName($identifier);
