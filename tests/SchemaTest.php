@@ -75,7 +75,6 @@ class SchemaTest extends BaseTest
      * @covers ::compareTableSchema
      * @covers \Odan\Database\Connection::queryValue
      * @covers \Odan\Database\Connection::queryValues
-     * @covers \Odan\Database\Repository::insertRows
      * @covers \Odan\Database\Repository::insert
      * @covers \Odan\Database\Repository::update
      * @covers \Odan\Database\Repository::delete

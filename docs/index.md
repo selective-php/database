@@ -249,7 +249,8 @@ $users = $db->select()
     ->from('users')
     ->where('status', '=', 1)
     ->where('subscribed', '<>', 1)
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Or Statements
