@@ -6,7 +6,7 @@
 * [Update](#updates)
 * [Delete](#deletes)
 * [Repository](repository.md)
-* [Schema](schem.md)
+* [Schema](schema.md)
 * [Compression](compression.md)
 
 ## Introduction
@@ -604,7 +604,7 @@ $db->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->execu
 ```
 
 ```php
-$db->update()->table('users')->decrement('voted', 1)->where('id', '=', 0)->execute();
+$db->update()->table('users')->decrement('voted', 1)->where('id', '=', 1)->execute();
 ```
 
 Incrementing without the convenient methods:
