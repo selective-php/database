@@ -5,9 +5,9 @@
 * [Insert](#inserts)
 * [Update](#updates)
 * [Delete](#deletes)
-* [Repository](#repository)
-* [Schema](#schema)
-* [Compression](#compression)
+* [Repository](repository.md)
+* [Schema](schem.md)
+* [Compression](compression.md)
 
 ## Introduction
 
@@ -751,55 +751,3 @@ from one or more tables depending on the condition in the WHERE clause.
 Not supported
 ```
 
-## Repository
-
-This is a repository base class which provides some standard CRUD and finder methods. 
-
-```php
-$repository = new \Odan\Database\Repository($db);
-```
-
-Todo: Write more documentation
-
-## Schema
-
-This class is a utility to modify database and table schemas. 
-
-```php
-$schema = new \Odan\Database\Schema($db);
-```
-
-### Get Current database
-
-```php
-$database = $schema->getDatabase();
-```
-
-### Change database
-
-```php
-$schema->setDatabase('my_database');
-```
-
-Todo: Write more documentation
-
-
-## Compression
-
-The compress and uncompress methods are compatible with MySQL COMPRESS.
-
-```php
-$compression = new \Odan\Database\Compression($db);
-```
-
-### Compress
-
-```php
-$compressed = $compression->compress('data');
-```
-
-### Uncompress
-
-```php
-$uncompressed = $compression->uncompress('compressed data');
-```
