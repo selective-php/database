@@ -66,7 +66,7 @@ class Quoter
     public function quoteName(string $identifier): string
     {
         $identifier = trim($identifier);
-        $separators = array(' AS ', ' ', '.');
+        $separators = [' AS ', ' ', '.'];
         foreach ($separators as $sep) {
             $pos = strripos($identifier, $sep);
             if ($pos) {

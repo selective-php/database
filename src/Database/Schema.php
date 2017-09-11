@@ -114,7 +114,7 @@ class Schema
         } else {
             $tableName = $this->quoter->quoteValue($tableName);
         }
-        return array($dbName, $tableName);
+        return [$dbName, $tableName];
     }
 
     /**
@@ -242,7 +242,7 @@ class Schema
      */
     public function getColumnNames($tableName)
     {
-        $result = array();
+        $result = [];
         foreach ($this->getColumns($tableName) as $value) {
             $field = $value['column_name'];
             $result[$field] = $field;

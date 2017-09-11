@@ -35,7 +35,7 @@ abstract class Repository implements RepositoryInterface
      * Insert a row or multiple rows.
      *
      * <code>
-     * $db->insert(array('username' => 'admin'))->prepare()->execute();
+     * $db->insert(['username' => 'admin'])->prepare()->execute();
      * </code>
      *
      * @param array $row
@@ -50,7 +50,7 @@ abstract class Repository implements RepositoryInterface
      * Update row
      *
      * <code>
-     * $db->update(array('name' => 'bar'), array('id' => 42))->prepare()->execute();
+     * $db->update(['name' => 'bar'], ['id' => 42])->prepare()->execute();
      * </code>
      *
      * @param array $values values
@@ -70,7 +70,7 @@ abstract class Repository implements RepositoryInterface
      * Delete row(s)
      *
      * <code>
-     * $db->delete(array('col2' => 42, 'col5' => 3))->prepare()->execute();
+     * $db->delete(['id' => 1])->prepare()->execute();
      * </code>
      *
      * @param array $conditions condition
