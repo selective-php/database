@@ -12,6 +12,38 @@ class Connection extends PDO
     protected $quoter;
 
     /**
+     * @return SelectQuery
+     */
+    public function select()
+    {
+        return new SelectQuery($this);
+    }
+
+    /**
+     * @return InsertQuery
+     */
+    public function insert()
+    {
+        return new InsertQuery($this);
+    }
+
+    /**
+     * @return UpdateQuery
+     */
+    public function update()
+    {
+        return new UpdateQuery($this);
+    }
+
+    /**
+     * @return DeleteQuery
+     */
+    public function delete()
+    {
+        return new DeleteQuery($this);
+    }
+
+    /**
      * Get quoter.
      *
      * @return Quoter
