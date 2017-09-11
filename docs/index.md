@@ -24,7 +24,6 @@ Create a new database Connection:
 use Odan\Database\Connection;
 use Odan\Database\QueryFactory;
 use Odan\Database\RawExp;
-use PDO;
 
 $host = '127.0.0.1';
 $database = 'test';
@@ -40,13 +39,29 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
 ];
 
-$connection = new Connection($dsn, $username, $password, $options);
-
-// Create a query factory object
-$query = new QueryFactory($connection);
+$db = new Connection($dsn, $username, $password, $options);
 ```
 
 ## Selects
+
+Create a select query object with the connection object.
+
+```php
+$statement = $db->select()->from('users')->query();
+```
+
+Using the factory:
+
+```php
+$query = new \Odan\Database\QueryFactory($db);
+$select = $db->select();
+```
+
+Creating a object manually:
+
+```php
+$select = new \Odan\Database\SelectQuery($db);
+```
 
 ### Retrieving Results
 
@@ -58,7 +73,7 @@ the given table, allowing you to chain more constraints onto
 the query and then finally get the results using the get method:
 
 ```php
-$stmt = $query->select()
+$stmt = $db->select()
     ->columns('id', 'username', 'email')
     ->from('users')
     ->query();
@@ -94,7 +109,7 @@ $value = $select->query()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$select = $query->select()->distinct()->columns('id')->from('users');
+$select = $db->select()->distinct()->columns('id')->from('users');
 ```
 
 #### Raw Expressions
@@ -106,7 +121,7 @@ so be careful not to create any SQL injection points!
 To create a raw expression, you may use the RawExp value object:
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->columns(new RawExp('count(*) as user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
@@ -123,7 +138,7 @@ such as count, max, min, avg, and sum.
 You may call any of these methods after constructing your query:
 
 ```php
-$payments = $query->select()
+$payments = $db->select()
     ->columns(new RawExp('MAX(amount)'), new RawExp('MIN(amount)'))
     ->from('payments')
     ->query()
@@ -215,21 +230,21 @@ For example, here is a query that verifies the value
 of the "votes" column is equal to 100:
 
 ```php
-$users = $query->select()->from('users')->where('votes', '=', 100)->query()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '=', 100)->query()->fetchAll();
 ```
 
 Of course, you may use a variety of other operators when writing a where clause:
 
 ```php
-$users = $query->select()->from('users')->where('votes', '>=', 100)->query()->fetchAll();
-$users = $query->select()->from('users')->where('votes', '<>', 100)->query()->fetchAll();
-$users = $query->select()->from('users')->where('name', 'like', 'D%')->query()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '>=', 100)->query()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '<>', 100)->query()->fetchAll();
+$users = $db->select()->from('users')->where('name', 'like', 'D%')->query()->fetchAll();
 ```
 
 You may also pass multiple AND conditions:
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('status', '=', 1)
     ->where('subscribed', '<>', 1)
     ->query()->fetchAll();
@@ -241,7 +256,7 @@ ou may chain where constraints together as well as add OR clauses to the query.
 The orWhere method accepts the same arguments as the where method:
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('votes', '>', 100)
     ->orWhere('name', '=', 'John')
     ->query()->fetchAll();
@@ -252,13 +267,13 @@ $users = $query->select()->from('users')
 ##### Between and not between
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('votes', 'between', [1, 100])
     ->query()->fetchAll();
 ```
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('votes', 'not between', [1, 100])
     ->query()->fetchAll();
 ```
@@ -266,13 +281,13 @@ $users = $query->select()->from('users')
 ##### In and not in
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('id', 'in', [1, 2, 3])
     ->query()->fetchAll();
 ```
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('votes', 'not in', [1, 2, 3])
     ->query()->fetchAll();
 ```
@@ -280,13 +295,13 @@ $users = $query->select()->from('users')
 ##### Is null and is not null
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('updated_at', 'is', null)
     ->query()->fetchAll();
 ```
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('updated_at', 'is not', null)
     ->query()->fetchAll();
 ```
@@ -294,7 +309,7 @@ $users = $query->select()->from('users')
 If you use the '=' or '<>' for comparison and pass a null value you get the same result.
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where('updated_at', '=', null) // IS NULL
     ->query()->fetchAll();
 ```
@@ -304,7 +319,7 @@ $users = $query->select()->from('users')
 The whereColumn method may be used to verify that two columns are equal:
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->from('users')
     ->whereColumn('users.id', '=', 'posts.user_id')
     ->query()
@@ -315,7 +330,7 @@ The whereColumn method can also be called multiple times to add multiple conditi
 These conditions will be joined using the and operator:
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->from('users')
     ->whereColumn('first_name', '=', 'last_name')
     ->whereColumn('updated_at', '=', 'created_at')
@@ -326,7 +341,7 @@ $users = $query->select()
 #### Complex Where Conditions
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->columns('id', 'username')
     ->from('users u')
     ->join('customers c', 'c.created_by', '=', 'u.id')
@@ -340,16 +355,16 @@ $users = $query->select()
     ->orWhere('u.id', '=', null)
     ->orWhere('u.id', '!=', null)
     ->where(function (SelectQuery $query) {
-        $query->where('t2.field', '=', '1');
-        $query->where('t2.field2', '>', '1');
+        $db->where('t2.field', '=', '1');
+        $db->where('t2.field2', '>', '1');
     })
     ->orWhere(function (SelectQuery $query) {
-        $query->where('t.a', '<>', '2');
-        $query->where('t.b', '=', null);
-        $query->where('t.c', '>', '5');
-        $query->orWhere(function (SelectQuery $query) {
-            $query->where(new RawExp('a.id = b.id'));
-            $query->orWhere(new RawExp('c.id = u.id'));
+        $db->where('t.a', '<>', '2');
+        $db->where('t.b', '=', null);
+        $db->where('t.c', '>', '5');
+        $db->orWhere(function (SelectQuery $query) {
+            $db->where(new RawExp('a.id = b.id'));
+            $db->orWhere(new RawExp('c.id = u.id'));
         });
     })
     ->query()
@@ -359,7 +374,7 @@ $users = $query->select()
 #### Where Raw
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->where(new RawExp('users.id = posts.user_id'))
     ->query()->fetchAll();
 ```
@@ -367,7 +382,7 @@ $users = $query->select()->from('users')
 #### Order By
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->orderBy('updated_at ASC')
     ->query()->fetchAll();
 ```
@@ -375,7 +390,7 @@ $users = $query->select()->from('users')
 #### Group By
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->groupBy('role')
     ->query()->fetchAll();
 ```
@@ -383,13 +398,13 @@ $users = $query->select()->from('users')
 #### Limit and Offset
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->limit(10)
     ->query()->fetchAll();
 ```
 
 ```php
-$users = $query->select()->from('users')
+$users = $db->select()->from('users')
     ->limit(10)
     ->offset(25)
     ->query()->fetchAll();
@@ -398,7 +413,7 @@ $users = $query->select()->from('users')
 #### Having
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->from('users')
     ->groupBy('id', 'username ASC')
     ->having('u.username', '=', 'admin')
@@ -409,18 +424,18 @@ $users = $query->select()
 Complex having conditions:
 
 ```php
-$users = $query->select()
+$users = $db->select()
     ->from('users')
     ->groupBy(['id', 'username ASC'])
     ->having('u.username', '=', 'admin')
     ->having('u.username', '=', 'max')
     ->having(function(SelectQuery $query) {
-        $query->having('x', '<>', '2');
-        $query->having('y', '=', null);
-        $query->having('z', '<>', '5');
-        $query->orHaving(function(SelectQuery $query) {
-            $query->having(new RawExp('a.id = b.id'));
-            $query->orHaving(new RawExp('c.id = u.id'));
+        $db->having('x', '<>', '2');
+        $db->having('y', '=', null);
+        $db->having('z', '<>', '5');
+        $db->orHaving(function(SelectQuery $query) {
+            $db->having(new RawExp('a.id = b.id'));
+            $db->orHaving(new RawExp('c.id = u.id'));
         });
     })
     ->query()
@@ -428,6 +443,15 @@ $users = $query->select()
 ```
 
 ## Inserts
+
+Create a insert object:
+
+```php
+use Odan\Database\Connection;
+
+$db = new Connection($dsn, $username, $password, $options);
+$db->insert()->into('users')->...;
+```
 
 ### Insert A Single Row
 
@@ -437,7 +461,7 @@ records into the database table.
 The insert method accepts an array of column names and values:
 
 ```php
-$query->insert()->into('test')
+$db->insert()->into('test')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
 ```
@@ -447,7 +471,7 @@ to insert by passing an array of arrays. Each array represents a
 row to be inserted into the table:
 
 ```php
-$query->insert()->into('test')->set([
+$db->insert()->into('test')->set([
         ['email' => 'daniel@example.com', 'votes' => 0],
         ['email' => 'john@example.com', 'votes' => 0]
     ])->execute();
@@ -487,6 +511,15 @@ $rowCount = $stmt->rowCount(); // 1
 
 ## Updates
 
+Create a update object:
+
+```php
+use Odan\Database\Connection;
+
+$db = new Connection($dsn, $username, $password, $options);
+$db->update()->table('users')->...;
+```
+
 Of course, in addition to inserting records into the database, 
 the query builder can also update existing records using the update method. 
 
@@ -496,11 +529,11 @@ and value pairs containing the columns to be updated.
 You may constrain the update query using where clauses:
 
 ```php
-$query->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->execute();
+$db->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->execute();
 ```
 
 ```php
-$query->update()->table('users')
+$db->update()->table('users')
     ->set(['votes' => '1'])
     ->where('id', '=', '1')
     ->orWhere('id', '=', '2')
@@ -510,7 +543,7 @@ $query->update()->table('users')
 ### Get number of affected rows:
 
 ```php
-$stmt = $query->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->prepare();
+$stmt = $db->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->prepare();
 $stmt->execute();
 $affectedRowCount = $stmt->rowCount();
 ```
@@ -527,19 +560,19 @@ A second argument may optionally be passed to control the amount by
 which the column should be incremented or decremented:
 
 ```php
-$query->update()->table('users')->increment('voted')->execute();
-$query->update()->table('users')->increment('voted', 10)->execute();
-$query->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->execute();
+$db->update()->table('users')->increment('voted')->execute();
+$db->update()->table('users')->increment('voted', 10)->execute();
+$db->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->execute();
 ```
 
 ```php
-$query->update()->table('users')->decrement('voted', 1)->where('id', '=', 0)->execute();
+$db->update()->table('users')->decrement('voted', 1)->where('id', '=', 0)->execute();
 ```
 
 Incrementing without the convenient methods:
 
 ```php
-$query->update()
+$db->update()
     ->table('users')
     ->set(['votes' => new RawExp('votes+1')])
     ->where('id', '=', '1')
@@ -551,7 +584,7 @@ $query->update()
 The `limit` clause places a limit on the number of rows that can be updated.
 
 ```php
-$query->update()->table('users')->set(['votes' => '1'])->limit(10)->execute();
+$db->update()->table('users')->set(['votes' => '1'])->limit(10)->execute();
 ```
 
 ### Update Low Priority
@@ -561,7 +594,7 @@ other clients are reading from the table. This affects only storage engines
 that use only table-level locking (such as MyISAM, MEMORY, and MERGE).
 
 ```php
-$query->update()->table('users')->set(['votes' => '1'])->lowPriority()->execute();
+$db->update()->table('users')->set(['votes' => '1'])->lowPriority()->execute();
 ```
 
 ### Update and ignore errors
@@ -571,7 +604,7 @@ even if errors occur during the update. Rows for which duplicate-key
 conflicts occur on a unique key value are not updated. 
 
 ```php
-$query->update()->table('users')->set(['votes' => '1'])->ignore()->execute();
+$db->update()->table('users')->set(['votes' => '1'])->ignore()->execute();
 ```
 
 ### Update with order by
@@ -580,10 +613,19 @@ If an UPDATE statement includes an ORDER BY clause,
 the rows are updated in the order specified by the clause. 
 
 ```php
-$query->update()->table('users')->set(['votes' => '1'])->orderBy('created_at DESC', 'id DESC')->execute();
+$db->update()->table('users')->set(['votes' => '1'])->orderBy('created_at DESC', 'id DESC')->execute();
 ```
 
 ## Deletes
+
+Create a delete object:
+
+```php
+use Odan\Database\Connection;
+
+$db = new Connection($dsn, $username, $password, $options);
+$db->delete()->from('users')->...;
+```
 
 The query builder may also be used to delete records from the 
 table via the delete method. You may constrain delete 
@@ -591,8 +633,8 @@ statements by adding where clauses before calling the delete method:
 
 
 ```php
-$query->delete()->from('users')->execute(); // DELETE FROM `users`
-$query->delete()->from('users')->where('votes', '>', 100)->execute(); // DELETE FROM `users` WHERE `votes` > '100'
+$db->delete()->from('users')->execute(); // DELETE FROM `users`
+$db->delete()->from('users')->where('votes', '>', 100)->execute(); // DELETE FROM `users` WHERE `votes` > '100'
 ```
 
 If you wish to truncate the entire table, which will remove 
@@ -600,7 +642,7 @@ all rows and reset the auto-incrementing ID to zero,
 you may use the truncate method:
 
 ```php
-$query->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users`; 
+$db->delete()->from('users')->truncate()->execute(); // TRUNCATE TABLE `users`; 
 ```
 
 ### Order of Deletion
@@ -609,7 +651,7 @@ If the DELETE statement includes an ORDER BY clause, rows are deleted in the
 order specified by the clause. This is useful primarily in conjunction with LIMIT. 
 
 ```php
-$query->delete()->from('some_logs')
+$db->delete()->from('some_logs')
     ->where('username', '=', 'jcole')
     ->orderBy('created_at') 
     ->limit(1)
@@ -626,7 +668,7 @@ The LIMIT clause places a limit on the number of rows that can be deleted.
 These clauses apply to single-table deletes, but not multi-table deletes.
 
 ```php
-$query->delete()->from('users')->limit(10)->execute();
+$db->delete()->from('users')->limit(10)->execute();
 ```
 
 ### Delete Low Priority
@@ -638,7 +680,7 @@ This affects only storage engines that use only table-level
 locking (such as MyISAM, MEMORY, and MERGE).
 
 ```php
-$query->delete()->from('users')->lowPriority()->execute();
+$db->delete()->from('users')->lowPriority()->execute();
 ```
 
 ### Delete and ignore errors
@@ -650,7 +692,7 @@ The `IGNORE` modifier causes MySQL to ignore errors during the process of deleti
 Errors that are ignored due to the use of IGNORE are returned as warnings.
 
 ```php
-$query->delete()->from('users')->ignore()->execute();
+$db->delete()->from('users')->ignore()->execute();
 ```
 
 ### Delete Quick modifier
@@ -659,7 +701,7 @@ For MyISAM tables, if you use the QUICK modifier, the storage engine
 does not merge index leaves during delete, which may speed up some kinds of delete operations.
 
 ```php
-$query->delete()->from('users')->quick()->execute();
+$db->delete()->from('users')->quick()->execute();
 ```
 
 ### Multi-Table Deletes
