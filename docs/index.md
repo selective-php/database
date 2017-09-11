@@ -5,6 +5,7 @@
 * [Insert](#inserts)
 * [Update](#updates)
 * [Delete](#deletes)
+* [Repository](#repository)
 * [Schema](#schema)
 * [Compression](#compression)
 
@@ -744,6 +745,8 @@ Not supported
 
 ## Repository
 
+This is a repository base class which provides some standard CRUD and finder methods. 
+
 ```php
 $repository = new \Odan\Database\Repository($db);
 ```
@@ -751,6 +754,8 @@ $repository = new \Odan\Database\Repository($db);
 Todo: Write more documentation
 
 ## Schema
+
+This class is a utility to modify database and table schemas. 
 
 ```php
 $schema = new \Odan\Database\Schema($db);

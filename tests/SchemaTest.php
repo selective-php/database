@@ -75,10 +75,10 @@ class SchemaTest extends BaseTest
      * @covers ::compareTableSchema
      * @covers \Odan\Database\Connection::queryValue
      * @covers \Odan\Database\Connection::queryValues
-     * @covers \Odan\Database\Table::insertRows
-     * @covers \Odan\Database\Table::insertRow
-     * @covers \Odan\Database\Table::updateRow
-     * @covers \Odan\Database\Table::deleteRow
+     * @covers \Odan\Database\Repository::insertRows
+     * @covers \Odan\Database\Repository::insert
+     * @covers \Odan\Database\Repository::update
+     * @covers \Odan\Database\Repository::delete
      * @covers \Odan\Database\Connection::queryMapColumn
      * @covers \Odan\Database\InsertQuery::into
      * @covers \Odan\Database\InsertQuery::set
@@ -95,7 +95,7 @@ class SchemaTest extends BaseTest
     {
         $db = $this->getConnection();
         $schema = $this->getSchema();
-        $table = $this->getTable();
+        $table = $this->getRepository();
 
         if ($schema->existTable('test')) {
             $result = $schema->dropTable('test');
@@ -167,18 +167,17 @@ class SchemaTest extends BaseTest
         // With ON DUPLICATE KEY UPDATE, the affected-rows value per row
         // is 1 if the row is inserted as a new row, and 2 if an existing row is updated.
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
-        $insert = $table->insert()
-            ->into('test')
-            ->set(array(
-                'id' => 1,
-                'keyname' => 'test',
-                'keyvalue' => '123',
-                'boolvalue' => 1))
-            ->onDuplicateKeyUpdate(array(
+        $insert = $table->insert(array(
+            'id' => 1,
+            'keyname' => 'test',
+            'keyvalue' => '123',
+            'boolvalue' => 1
+        ))->onDuplicateKeyUpdate(array(
                 'id' => 1,
                 'keyname' => 'testx',
                 'keyvalue' => '123',
-                'boolvalue' => 1));
+                'boolvalue' => 1
+            ));
         $stmt = $insert->prepare();
         $stmt->execute();
         $result = $stmt->rowCount();
@@ -200,7 +199,8 @@ class SchemaTest extends BaseTest
             0 => array('keyname' => 'test', 'keyvalue' => '123'),
             1 => array('keyname' => 'test2', 'keyvalue' => '1234')
         );
-        $result = $table->insertRows('test', $rows);
+        $result = $table->insert($rows)->prepare();
+        $result->execute();
         $this->assertSame(2, $result->rowCount());
 
         $result = $db->lastInsertId();
@@ -215,7 +215,8 @@ class SchemaTest extends BaseTest
         $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
         $this->assertSame('0', $result);
 
-        $result = $table->insertRows('test', $rows);
+        $result = $table->insert($rows)->prepare();
+        $result->execute();
         $this->assertSame(2, $result->rowCount());
 
         $result = $db->queryValues("SELECT id,keyvalue FROM `test`", 'keyvalue');
@@ -223,18 +224,16 @@ class SchemaTest extends BaseTest
 
         $result = $db->queryMapColumn("SELECT id,keyname,keyvalue FROM `test`", 'keyname');
         $expected = array(
-            'test' =>
-                array(
-                    'id' => '1',
-                    'keyname' => 'test',
-                    'keyvalue' => '123',
-                ),
-            'test2' =>
-                array(
-                    'id' => '2',
-                    'keyname' => 'test2',
-                    'keyvalue' => '1234',
-                ),
+            'test' => array(
+                'id' => '1',
+                'keyname' => 'test',
+                'keyvalue' => '123',
+            ),
+            'test2' => array(
+                'id' => '2',
+                'keyname' => 'test2',
+                'keyvalue' => '1234',
+            ),
         );
         $this->assertEquals($expected, $result);
 
@@ -251,7 +250,8 @@ class SchemaTest extends BaseTest
         for ($i = 0; $i < 100; $i++) {
             $rows[] = array('keyname' => 'test', 'keyvalue' => 'value-' . $i);
         }
-        $result = $table->insertRows('test', $rows);
+        $result = $table->insert($rows)->prepare();
+        $result->execute();
         $this->assertSame(100, $result->rowCount());
 
         $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll(PDO::FETCH_ASSOC);
@@ -261,16 +261,15 @@ class SchemaTest extends BaseTest
             'keyname' => 'test-new',
             'keyvalue' => 'value-new'
         );
-        //$update = $db->newUpdate()->table('test')->cols($fields)->where('keyname = ?', ['test']);
-        //$update = $db->newUpdate()->table('test')->cols($fields)->where('keyname = ?', 'test');
-        //$stmt = $db->executeQuery($update);
-        $stmt = $table->updateRow('test', $fields, ['keyname' => 'test']);
+        $stmt = $table->update($fields, ['keyname' => 'test'])->prepare();
+        $stmt->execute();
         $this->assertSame(100, $stmt->rowCount());
 
-        $stmt = $table->deleteRow('test', array('id' => '10'));
+        $stmt = $table->delete(array('id' => '10'))->prepare();
+        $stmt->execute();
         $this->assertSame(1, $stmt->rowCount());
 
-        $stmt = $table->deleteRow('test', array('id' => '9999999'));
+        $stmt = $table->delete(array('id' => '9999999'))->prepare();
         $stmt->execute();
         $this->assertSame(0, $stmt->rowCount());
 
