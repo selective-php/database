@@ -86,7 +86,7 @@ where each result is an instance of the Array or PHP StdClass object.
 You may access each column's value by accessing the column as a property of the object:
 
 ```php
-$stmt = $select->query();
+$stmt = $db->select()->from('users')->query();
 while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     echo $row->id;
 }
@@ -95,13 +95,13 @@ while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 #### Retrieving A Single Row From A Table
 
 ```php
-$row = $select->query()->fetch();
+$row = $db->select()->from('users')->query()->fetch();
 ```
 
 #### Retrieving A Single Column From A Table
 
 ```php
-$value = $select->query()->fetchColumn(0);
+$value = $db->select()->from('users')->query()->fetchColumn(0);
 ```
 
 #### Distinct
@@ -109,7 +109,7 @@ $value = $select->query()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$select = $db->select()->distinct()->columns('id')->from('users');
+$users = $db->select()->distinct()->columns('id')->from('users')->query()->fetchAll();
 ```
 
 #### Raw Expressions
@@ -244,7 +244,8 @@ $users = $db->select()->from('users')->where('name', 'like', 'D%')->query()->fet
 You may also pass multiple AND conditions:
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('status', '=', 1)
     ->where('subscribed', '<>', 1)
     ->query()->fetchAll();
@@ -256,10 +257,12 @@ ou may chain where constraints together as well as add OR clauses to the query.
 The orWhere method accepts the same arguments as the where method:
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('votes', '>', 100)
     ->orWhere('name', '=', 'John')
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Additional Where Clauses
@@ -269,49 +272,62 @@ $users = $db->select()->from('users')
 ```php
 $users = $db->select()->from('users')
     ->where('votes', 'between', [1, 100])
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('votes', 'not between', [1, 100])
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ##### In and not in
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('id', 'in', [1, 2, 3])
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('votes', 'not in', [1, 2, 3])
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ##### Is null and is not null
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('updated_at', 'is', null)
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('updated_at', 'is not', null)
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 If you use the '=' or '<>' for comparison and pass a null value you get the same result.
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('updated_at', '=', null) // IS NULL
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Where Column
@@ -374,40 +390,50 @@ $users = $db->select()
 #### Where Raw
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where(new RawExp('users.id = posts.user_id'))
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Order By
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->orderBy('updated_at ASC')
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Group By
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->groupBy('role')
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Limit and Offset
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->limit(10)
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->limit(10)
     ->offset(25)
-    ->query()->fetchAll();
+    ->query()
+    ->fetchAll();
 ```
 
 #### Having
@@ -461,7 +487,8 @@ records into the database table.
 The insert method accepts an array of column names and values:
 
 ```php
-$db->insert()->into('test')
+$db->insert()
+    ->into('test')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
 ```
@@ -471,7 +498,8 @@ to insert by passing an array of arrays. Each array represents a
 row to be inserted into the table:
 
 ```php
-$db->insert()->into('test')->set([
+$db->insert()
+    ->into('test')->set([
         ['email' => 'daniel@example.com', 'votes' => 0],
         ['email' => 'john@example.com', 'votes' => 0]
     ])->execute();
@@ -533,7 +561,8 @@ $db->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->exe
 ```
 
 ```php
-$db->update()->table('users')
+$db->update()
+    ->table('users')
     ->set(['votes' => '1'])
     ->where('id', '=', '1')
     ->orWhere('id', '=', '2')
@@ -713,10 +742,10 @@ from one or more tables depending on the condition in the WHERE clause.
 Not supported
 ```
 
-## Table
+## Repository
 
 ```php
-$table = new \Odan\Database\Table($connection);
+$repository = new \Odan\Database\Repository($db);
 ```
 
 Todo: Write more documentation
@@ -724,10 +753,10 @@ Todo: Write more documentation
 ## Schema
 
 ```php
-$schema = new \Odan\Database\Schema($connection);
+$schema = new \Odan\Database\Schema($db);
 ```
 
-### Current database
+### Get Current database
 
 ```php
 $database = $schema->getDatabase();
@@ -747,7 +776,7 @@ Todo: Write more documentation
 The compress and uncompress methods are compatible with MySQL COMPRESS.
 
 ```php
-$compression = new \Odan\Database\Compression($connection);
+$compression = new \Odan\Database\Compression($db);
 ```
 
 ### Compress
