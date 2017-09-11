@@ -271,7 +271,8 @@ $users = $db->select()
 ##### Between and not between
 
 ```php
-$users = $db->select()->from('users')
+$users = $db->select()
+    ->from('users')
     ->where('votes', 'between', [1, 100])
     ->query()
     ->fetchAll();
@@ -512,15 +513,18 @@ If the table has an auto-incrementing id,
 use the insertGetId method to insert a record and then retrieve the ID:
 
 ```php
-$userId = $this->insert()->into('test')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
+$userId = $db->insert()->into('users')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
 ```
 
 Another way to get the last inserted ID:
 
 ```php
-$insert = $this->insert()->into('users')->set(['email' => 'john@example.com', 'votes' => 0]);
-$insert->execute();
-$userId = $insert->lastInsertId();
+$db->insert()
+    ->into('users')
+    ->set(['email' => 'john@example.com', 'votes' => 0])
+    ->execute();
+    
+$userId = $db->lastInsertId();
 ```
 
 ### Number of rows affected by the last statement
@@ -529,7 +533,7 @@ Sometimes you need more then just the last inserted ID, for example the number o
 You can find this information in the Statement object:
 
 ```php
-$stmt = $this->insert()
+$stmt = $db->insert()
     ->into('users')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->prepare();
@@ -546,7 +550,7 @@ Create a update object:
 use Odan\Database\Connection;
 
 $db = new Connection($dsn, $username, $password, $options);
-$db->update()->table('users')->...;
+$update = $db->update()->table('users');
 ```
 
 Of course, in addition to inserting records into the database, 
@@ -558,7 +562,11 @@ and value pairs containing the columns to be updated.
 You may constrain the update query using where clauses:
 
 ```php
-$db->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->execute();
+$status = $db->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->where('id', '=', '1')
+    ->execute();
 ```
 
 ```php
