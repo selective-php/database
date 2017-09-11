@@ -3,7 +3,6 @@
 namespace Odan\Test;
 
 use Odan\Database\Connection;
-use Odan\Database\QueryFactory;
 use Odan\Database\Schema;
 use Odan\Database\Repository;
 use PHPUnit\Framework\TestCase;
@@ -28,11 +27,6 @@ abstract class BaseTest extends TestCase
      * @var Schema
      */
     protected $schema;
-
-    /**
-     * @var QueryFactory
-     */
-    protected $query;
 
     /**
      * @return Connection
@@ -65,17 +59,6 @@ abstract class BaseTest extends TestCase
             $this->schema = new Schema($this->getConnection());
         }
         return $this->schema;
-    }
-
-    /**
-     * @return QueryFactory
-     */
-    public function getQuery()
-    {
-        if ($this->query === null) {
-            $this->query = new QueryFactory($this->getConnection());
-        }
-        return $this->query;
     }
 
     /**

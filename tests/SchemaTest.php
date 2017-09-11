@@ -155,7 +155,7 @@ class SchemaTest extends BaseTest
         $this->assertSame(true, !empty($columns));
         $this->assertSame(10, count($columns));
 
-        $insert = $this->getQuery()->insert()->into('test')->set(array(
+        $insert = $this->getConnection()->insert()->into('test')->set(array(
             'keyname' => 'test',
             'keyvalue' => '123'
         ));
