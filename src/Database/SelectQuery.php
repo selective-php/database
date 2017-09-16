@@ -110,6 +110,18 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * Alias for sub selects
+     *
+     * @param string $alias
+     * @return self
+     */
+    public function as(string $alias): self
+    {
+        $this->alias = $alias;
+        return $this;
+    }
+
+    /**
      * From
      *
      * @param string $table Table name
@@ -307,7 +319,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function query(): PDOStatement
     {
-        return $this->pdo->query($this->build());
+        return $this->db->query($this->build());
     }
 
     /**
@@ -317,6 +329,6 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function prepare(): PDOStatement
     {
-        return $this->pdo->prepare($this->build());
+        return $this->db->prepare($this->build());
     }
 }

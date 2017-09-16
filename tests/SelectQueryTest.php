@@ -30,14 +30,6 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * @return SelectQuery
-     */
-    protected function select()
-    {
-        return new SelectQuery($this->getConnection());
-    }
-
-    /**
      * Test
      *
      * @covers ::distinct
@@ -178,6 +170,42 @@ class SelectQueryTest extends BaseTest
     /**
      * Test
      *
+     * @covers ::where
+     * @covers ::as
+     * @covers ::getAliasSql
+     * @covers ::getColumnsSql
+     * @covers \Odan\Database\Condition::addClauseCondClosure
+     * @covers \Odan\Database\Condition::getRightFieldValue
+     * @covers \Odan\Database\Condition::getWhereSql
+     * @covers \Odan\Database\Condition::getConditionSql
+     * @covers ::columns
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testSubselect()
+    {
+        // Raw
+        $select = $this->select()
+            ->columns('id', new RawExp("(SELECT MAX(payments.amount) FROM payments) AS max_amount"))
+            ->from('test');
+        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`", $select->build());
+
+        // With a sub query object
+        $select = $this->select()
+            ->columns('id', function (SelectQuery $subSelect) {
+                $subSelect->columns(new RawExp('MAX(payments.amount)'))
+                    ->from('payments')
+                    ->as('max_amount'); // AS max_amount
+            })
+            ->from('test');
+
+        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`", $select->build());
+    }
+
+    /**
+     * Test
+     *
      * @covers ::columns
      * @covers ::from
      * @covers ::prepare
@@ -244,6 +272,9 @@ class SelectQueryTest extends BaseTest
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'is not', null);
         $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL", $select->build());
+
+        $select = $this->select()->columns('*')->from('users')->where('username', '=', "hello' or 1=1;--");
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` = 'hello\' or 1=1;--'", $select->build());
     }
 
     /**

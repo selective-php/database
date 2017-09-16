@@ -2,6 +2,8 @@
 
 namespace Odan\Database;
 
+use Closure;
+
 /**
  * Class SelectQueryBuilder
  *
@@ -17,7 +19,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      *
      * @var Connection
      */
-    protected $pdo;
+    protected $db;
 
     /**
      * @var Quoter
@@ -25,6 +27,7 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected $quoter;
 
     protected $columns = [];
+    protected $alias = null;
     protected $from = '';
     protected $join = [];
 
@@ -47,13 +50,13 @@ abstract class SelectQueryBuilder implements QueryInterface
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $db
      */
-    public function __construct(Connection $pdo)
+    public function __construct(Connection $db)
     {
-        $this->pdo = $pdo;
-        $this->quoter = $pdo->getQuoter();
-        $this->condition = new Condition($pdo, $this);
+        $this->db = $db;
+        $this->quoter = $db->getQuoter();
+        $this->condition = new Condition($db, $this);
     }
 
     /**
@@ -74,6 +77,7 @@ abstract class SelectQueryBuilder implements QueryInterface
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
         $result = trim(implode(" ", $sql));
+        $result = $this->getAliasSql($result);
         return $result;
     }
 
@@ -106,9 +110,19 @@ abstract class SelectQueryBuilder implements QueryInterface
     {
         if (empty($this->columns)) {
             $sql[] = '*';
-        } else {
-            $sql[] = implode(',', $this->quoter->quoteNames($this->columns));
+            return $sql;
         }
+        $columns = [];
+        foreach ($this->columns as $key => $column) {
+            if ($column instanceof Closure) {
+                // Sub Select
+                $query = new SelectQuery($this->db);
+                $column($query);
+                $column = new RawExp($query->build());
+            }
+            $columns[] = $column;
+        }
+        $sql[] = implode(',', $this->quoter->quoteNames($columns));
         return $sql;
     }
 
@@ -143,6 +157,20 @@ abstract class SelectQueryBuilder implements QueryInterface
             $sql[] = sprintf('LIMIT %s', (float)$this->limit);
         }
         return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param string $sql
+     * @return string $sql
+     */
+    protected function getAliasSql(string $sql): string
+    {
+        if (!isset($this->alias)) {
+            return $sql;
+        }
+        return sprintf('(%s) AS %s', $sql, $this->quoter->quoteName($this->alias));
     }
 
     /**

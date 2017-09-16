@@ -7,5 +7,4 @@ namespace Odan\Database;
  */
 interface RepositoryInterface
 {
-
 }

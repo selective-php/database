@@ -5,6 +5,7 @@ namespace Odan\Test;
 use Odan\Database\Connection;
 use Odan\Database\Schema;
 use Odan\Database\Repository;
+use Odan\Database\SelectQuery;
 use PHPUnit\Framework\TestCase;
 use PDO;
 
@@ -100,5 +101,13 @@ abstract class BaseTest extends TestCase
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
         return $result;
+    }
+
+    /**
+     * @return SelectQuery
+     */
+    protected function select()
+    {
+        return new SelectQuery($this->getConnection());
     }
 }

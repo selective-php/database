@@ -56,6 +56,8 @@ Creating a SelectQuery object manually:
 $select = new \Odan\Database\SelectQuery($db);
 ```
 
+## Inspecting The Query
+
 Getting the generated SQL string:
 
 ```php
@@ -147,6 +149,29 @@ $payments = $db->select()
     ->from('payments')
     ->query()
     ->fetchAll();
+```
+
+#### Sub Selects
+
+If you want to SELECT FROM a subselect, do so by calling fromSubSelect(). 
+Pass both the subselect query string, and an alias for the subselect:
+
+```php
+$payments = $this->select()
+    ->columns('id', function (SelectQuery $subSelect) {
+        $subSelect->columns(new RawExp('MAX(payments.amount)'))
+        ->from('payments')
+        ->as('max_amount');
+    })
+    ->from('test')
+    ->query()
+    ->fetchAll();
+```
+
+SQL statement:
+
+```sql
+SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;
 ```
 
 ### Joins
