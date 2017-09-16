@@ -30,6 +30,7 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected $alias = null;
     protected $from = '';
     protected $join = [];
+    protected $union = [];
 
     /**
      * @var Condition Where conditions
@@ -39,7 +40,7 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected $orderBy = [];
     protected $groupBy = [];
     protected $limit;
-    protected $offset;
+    protected $offset = null;
     protected $distinct = '';
     protected $calcFoundRows = '';
     protected $bufferResult = '';
@@ -64,7 +65,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      *
      * @return string SQL string
      */
-    public function build(): string
+    public function build(bool $complete = true): string
     {
         $sql = [];
         $sql = $this->getSelectSql($sql);
@@ -76,8 +77,12 @@ abstract class SelectQueryBuilder implements QueryInterface
         $sql = $this->condition->getHavingSql($sql);
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
+        $sql = $this->getUnionSql($sql);
         $result = trim(implode(" ", $sql));
         $result = $this->getAliasSql($result);
+        if ($complete) {
+            $result = trim($result) . ';';
+        }
         return $result;
     }
 
@@ -118,7 +123,7 @@ abstract class SelectQueryBuilder implements QueryInterface
                 // Sub Select
                 $query = new SelectQuery($this->db);
                 $column($query);
-                $column = new RawExp($query->build());
+                $column = new RawExp($query->build(false));
             }
             $columns[] = $column;
         }
@@ -151,13 +156,31 @@ abstract class SelectQueryBuilder implements QueryInterface
         if (!isset($this->limit)) {
             return $sql;
         }
-        if (isset($this->offset)) {
+        if ($this->offset > 0) {
             $sql[] = sprintf('LIMIT %s OFFSET %s', (float)$this->limit, (float)$this->offset);
         } else {
             $sql[] = sprintf('LIMIT %s', (float)$this->limit);
         }
         return $sql;
     }
+
+    /**
+     * Get sql.
+     *
+     * @param $sql
+     * @return array
+     */
+    protected function getUnionSql(array $sql): array
+    {
+        if (empty($this->union)) {
+            return $sql;
+        }
+        foreach ($this->union as $union) {
+            $sql[] = 'UNION ' . trim($union[0] . ' ' . $union[1]);
+        }
+        return $sql;
+    }
+
 
     /**
      * Get sql.

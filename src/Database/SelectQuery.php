@@ -134,6 +134,45 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * UNION is used to combine the result from multiple
+     * SELECT statements into a single result set.
+     *
+     * @param SelectQuery $query The query to combine.
+     * @return self
+     */
+    public function union(SelectQuery $query): self
+    {
+        $this->union[] = ['', $query->build(false)];
+        return $this;
+    }
+
+    /**
+     * UNION ALL is used to combine the result from multiple
+     * SELECT statements into a single result set.
+     *
+     * @param SelectQuery $query The query to combine.
+     * @return self
+     */
+    public function unionAll(SelectQuery $query): self
+    {
+        $this->union[] = ['ALL', $query->build(false)];
+        return $this;
+    }
+
+    /**
+     * UNION DISTINCT is used to combine the result from multiple
+     * SELECT statements into a single result set.
+     *
+     * @param SelectQuery $query The query to combine.
+     * @return self
+     */
+    public function unionDistinct(SelectQuery $query): self
+    {
+        $this->union[] = ['DISTINCT', $query->build(false)];
+        return $this;
+    }
+
+    /**
      * Join.
      *
      * @param string $table Table name

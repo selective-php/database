@@ -47,7 +47,7 @@ class RawExpTest extends BaseTest
             ->where('status', '<>', 1)
             ->groupBy('status')
             ->build();
-        $this->assertEquals("SELECT COUNT(*) AS user_count,`status` FROM `payments` WHERE `status` <> '1' GROUP BY `status`", $select);
+        $this->assertEquals("SELECT COUNT(*) AS user_count,`status` FROM `payments` WHERE `status` <> '1' GROUP BY `status`;", $select);
     }
 
     /**
@@ -63,6 +63,6 @@ class RawExpTest extends BaseTest
                 new RawExp('MIN(amount)'))
             ->from('payments')
             ->build();
-        $this->assertEquals('SELECT MAX(amount),MIN(amount) FROM `payments`', $select);
+        $this->assertEquals('SELECT MAX(amount),MIN(amount) FROM `payments`;', $select);
     }
 }

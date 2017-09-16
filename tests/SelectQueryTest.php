@@ -43,11 +43,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->distinct()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT DISTINCT `id` FROM `test`", $select->build());
+        $this->assertEquals("SELECT DISTINCT `id` FROM `test`;", $select->build());
 
         $select = $this->select()->distinctRow()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT DISTINCTROW `id` FROM `test`", $select->build());
+        $this->assertEquals("SELECT DISTINCTROW `id` FROM `test`;", $select->build());
     }
 
     /**
@@ -62,7 +62,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->straightJoin()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT STRAIGHT_JOIN * FROM `users`", $select->build());
+        $this->assertEquals("SELECT STRAIGHT_JOIN * FROM `users`;", $select->build());
     }
 
     /**
@@ -77,7 +77,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->highPriority()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT HIGH_PRIORITY * FROM `users`", $select->build());
+        $this->assertEquals("SELECT HIGH_PRIORITY * FROM `users`;", $select->build());
     }
 
     /**
@@ -92,7 +92,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->smallResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT SQL_SMALL_RESULT * FROM `users`", $select->build());
+        $this->assertEquals("SELECT SQL_SMALL_RESULT * FROM `users`;", $select->build());
     }
 
     /**
@@ -107,7 +107,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->bigResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT SQL_BIG_RESULT * FROM `users`", $select->build());
+        $this->assertEquals("SELECT SQL_BIG_RESULT * FROM `users`;", $select->build());
     }
 
     /**
@@ -122,7 +122,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->bufferResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT SQL_BUFFER_RESULT * FROM `users`", $select->build());
+        $this->assertEquals("SELECT SQL_BUFFER_RESULT * FROM `users`;", $select->build());
     }
 
     /**
@@ -137,7 +137,7 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->calcFoundRows()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT SQL_CALC_FOUND_ROWS * FROM `users`", $select->build());
+        $this->assertEquals("SELECT SQL_CALC_FOUND_ROWS * FROM `users`;", $select->build());
     }
 
     /**
@@ -152,26 +152,26 @@ class SelectQueryTest extends BaseTest
     public function testColumns()
     {
         $select = $this->select()->from('users');
-        $this->assertEquals("SELECT * FROM `users`", $select->build());
+        $this->assertEquals("SELECT * FROM `users`;", $select->build());
 
         $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`", $select->build());
+        $this->assertEquals("SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;", $select->build());
 
 
         // queries without table
         $select = $this->select()->columns(new RawExp("ISNULL(1+1)"));
-        $this->assertEquals("SELECT ISNULL(1+1)", $select->build());
+        $this->assertEquals("SELECT ISNULL(1+1);", $select->build());
 
         $select = $this->select()->columns(new RawExp("INTERVAL(23, 1, 15, 17, 30, 44, 200)"));
-        $this->assertEquals("SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200)", $select->build());
+        $this->assertEquals("SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200);", $select->build());
     }
 
     /**
      * Test
      *
      * @covers ::where
-     * @covers ::as
+     * @covers ::alias
      * @covers ::getAliasSql
      * @covers ::getColumnsSql
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -189,7 +189,7 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()
             ->columns('id', new RawExp("(SELECT MAX(payments.amount) FROM payments) AS max_amount"))
             ->from('test');
-        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`", $select->build());
+        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;", $select->build());
 
         // With a sub query object
         $select = $this->select()
@@ -200,7 +200,36 @@ class SelectQueryTest extends BaseTest
             })
             ->from('test');
 
-        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`", $select->build());
+        $this->assertEquals("SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::union
+     * @covers ::unionAll
+     * @covers ::unionDistinct
+     * @covers ::getUnionSql
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testUnion()
+    {
+        $select = $this->select()->columns('id')->from('table1');
+        $select2 = $this->select()->columns('id')->from('table2');
+        $select->union($select2);
+        $this->assertEquals("SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;", $select->build());
+
+        $select = $this->select()->columns('id')->from('table1');
+        $select2 = $this->select()->columns('id')->from('table2');
+        $select->unionAll($select2);
+        $this->assertEquals("SELECT `id` FROM `table1` UNION ALL SELECT `id` FROM `table2`;", $select->build());
+
+        $select = $this->select()->columns('id')->from('table1');
+        $select2 = $this->select()->columns('id')->from('table2');
+        $select->unionDistinct($select2);
+        $this->assertEquals("SELECT `id` FROM `table1` UNION DISTINCT SELECT `id` FROM `table2`;", $select->build());
     }
 
     /**
@@ -215,10 +244,10 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id` FROM `test`", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test`;", $select->build());
 
         $select = $this->select()->columns('id')->from('test AS t');
-        $this->assertEquals("SELECT `id` FROM `test` AS `t`", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` AS `t`;", $select->build());
     }
 
     /**
@@ -238,43 +267,43 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->columns('id')->from('test')->where('id', '=', 1);
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = '1'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = '1';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '>=', 3);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` >= '3'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` >= '3';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '>', 4);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` > '4'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` > '4';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '<', 5);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` < '5'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` < '5';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '<=', 6);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` <= '6'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` <= '6';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '<>', 7);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` <> '7'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` <> '7';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '!=', 8);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` != '8'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` != '8';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '<>', null);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '!=', null);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '=', null);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NULL", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NULL;", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'is', null);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NULL", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NULL;", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'is not', null);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
 
         $select = $this->select()->columns('*')->from('users')->where('username', '=', "hello' or 1=1;--");
-        $this->assertEquals("SELECT * FROM `users` WHERE `username` = 'hello\' or 1=1;--'", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` = 'hello\' or 1=1;--';", $select->build());
     }
 
     /**
@@ -293,10 +322,10 @@ class SelectQueryTest extends BaseTest
     public function testWhereIn()
     {
         $select = $this->select()->columns('id')->from('test')->where('id', 'in', [1, 'a', "'b", null]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IN ('1', 'a', '\'b', NULL)", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` IN ('1', 'a', '\'b', NULL);", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'not in', [2, 'a', "'b", null]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` NOT IN ('2', 'a', '\'b', NULL)", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` NOT IN ('2', 'a', '\'b', NULL);", $select->build());
     }
 
     /**
@@ -315,13 +344,13 @@ class SelectQueryTest extends BaseTest
     public function testWhereFunction()
     {
         $select = $this->select()->columns('id')->from('test')->where('id', 'greatest', [1, '2', "'b", null]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = GREATEST ('1', '2', '\'b', NULL)", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = GREATEST ('1', '2', '\'b', NULL);", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'interval', [1, 2, 3]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = INTERVAL ('1', '2', '3')", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = INTERVAL ('1', '2', '3');", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'strcmp', ['text', "text'2"]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = STRCMP ('text', 'text\'2')", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` = STRCMP ('text', 'text\'2');", $select->build());
     }
 
     /**
@@ -340,7 +369,7 @@ class SelectQueryTest extends BaseTest
     public function testWhereBetween()
     {
         $select = $this->select()->columns('id')->from('test')->where('id', 'between', [1, 100]);
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` BETWEEN '1' AND '100'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `id` BETWEEN '1' AND '100';", $select->build());
     }
 
     /**
@@ -359,13 +388,13 @@ class SelectQueryTest extends BaseTest
     public function testWhereLike()
     {
         $select = $this->select()->columns('id')->from('test')->where('first_name', 'like', "%max%");
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` LIKE '%max%'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` LIKE '%max%';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('first_name', 'like', "%a'b%");
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` LIKE '%a\'b%'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` LIKE '%a\'b%';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('first_name', 'not like', "%a'1%");
-        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` NOT LIKE '%a\'1%'", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE `first_name` NOT LIKE '%a\'1%';", $select->build());
     }
 
     /**
@@ -384,10 +413,10 @@ class SelectQueryTest extends BaseTest
     public function testWhereRegexp()
     {
         $select = $this->select()->from('users')->where('username', Operator::REGEXP, '^[a-d]');
-        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP '^[a-d]'", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP '^[a-d]';", $select->build());
 
         $select = $this->select()->from('users')->where('username', Operator::REGEXP, "new\\*.\\*line");
-        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP 'new\\\\*.\\\\*line'", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `username` REGEXP 'new\\\\*.\\\\*line';", $select->build());
     }
 
     /**
@@ -406,10 +435,10 @@ class SelectQueryTest extends BaseTest
     public function testWhereRaw()
     {
         $select = $this->select()->columns('id')->from('test')->where(new RawExp("STRCMP('text', 'text2')"));
-        $this->assertEquals("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2')", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where(new RawExp("ISNULL(1+1)"));
-        $this->assertEquals("SELECT `id` FROM `test` WHERE ISNULL(1+1)", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` WHERE ISNULL(1+1);", $select->build());
     }
 
     /**
@@ -430,18 +459,18 @@ class SelectQueryTest extends BaseTest
     public function testWhereColumn()
     {
         $select = $this->select()->from('users')->whereColumn('first_name', '=', 'last_name');
-        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name`", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name`;", $select->build());
 
         $select = $select->orWhereColumn('votes', '>=', 'vote_max');
-        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;", $select->build());
 
         $select = $this->select()->from('users')->whereColumn('users.email', '=', 'table2.email');
-        $this->assertEquals("SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`;", $select->build());
 
         $select = $this->select()->from('users')
             ->whereColumn('first_name', '=', 'last_name')
             ->whereColumn('updated_at', '=', 'created_at');
-        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`", $select->build());
+        $this->assertEquals("SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;", $select->build());
     }
 
     /**
@@ -517,10 +546,10 @@ class SelectQueryTest extends BaseTest
             ->groupBy('id', 'username', new RawExp('`role`'))
             ->orderBy('id ASC', 'username DESC', new RawExp('`role` ASC'))
             ->limit(10)
-            ->offset(0);
+            ->offset(5);
 
         $sql = $select->build();
-        $expected = '2ff24c6b776b03bb930965d4ad889a4e2e766b83';
+        $expected = 'c2b7274a1f54189f25d87590b2250d55534c31f4';
         $actual = sha1($sql);
         if ($expected != $actual) {
             echo "\nSQL: $sql\n";
@@ -545,10 +574,10 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->join('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id`", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
 
         $select->join('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`";
+        $expected = "SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
         $this->assertEquals($expected, $select->build());
     }
 
@@ -568,10 +597,10 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoin('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
 
         $select->leftJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`";
+        $expected = "SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
         $this->assertEquals($expected, $select->build());
     }
 
@@ -592,14 +621,14 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->crossJoin('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertEquals("SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id`", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
 
         $select->crossJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`";
+        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
         $this->assertEquals($expected, $select->build());
 
         $select->leftJoin('table3 AS t3', 't3.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id` LEFT JOIN `table3` AS `t3` ON `t3`.`id` = `test`.`user_id`";
+        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id` LEFT JOIN `table3` AS `t3` ON `t3`.`id` = `test`.`user_id`;";
         $this->assertEquals($expected, $select->build());
     }
 
@@ -620,6 +649,6 @@ class SelectQueryTest extends BaseTest
     public function testLimit()
     {
         $select = $this->select()->columns('id')->from('test')->limit(10);
-        $this->assertEquals("SELECT `id` FROM `test` LIMIT 10", $select->build());
+        $this->assertEquals("SELECT `id` FROM `test` LIMIT 10;", $select->build());
     }
 }
