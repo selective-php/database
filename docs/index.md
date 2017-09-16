@@ -230,17 +230,22 @@ the join method. The Closure will receive a JoinClause object
 which allows you to specify constraints on the join clause:
 
 ```
-Not supported
+Not supported. Use the RawExp('... sql ...') object intead.
 ```
 
 ### Unions
 
 The query builder also provides a quick way to "union" two queries together. 
 For example, you may create an initial query and use the 
-union method to union it with a second query:
+`union()`, `unionAll()` and `unionDistinct() `method to union it with a second query:
 
+```php
+$select = $db->select()->columns('id')->from('table1');
+$select2 = $this->select()->columns('id')->from('table2');
+$select->union($select2);
 ```
-Supported in the next version.
+```sql
+SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;
 ```
 
 #### Where Clauses
