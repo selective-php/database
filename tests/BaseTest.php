@@ -4,7 +4,7 @@ namespace Odan\Test;
 
 use Odan\Database\Connection;
 use Odan\Database\Schema;
-use Odan\Database\Repository;
+use Odan\Database\Table;
 use Odan\Database\SelectQuery;
 use PHPUnit\Framework\TestCase;
 use PDO;
@@ -63,11 +63,11 @@ abstract class BaseTest extends TestCase
     }
 
     /**
-     * @return Repository
+     * @return Table
      */
     public function getRepository()
     {
-        return new TestRepository($this->getConnection());
+        return new TestTable($this->getConnection());
     }
 
     /**
