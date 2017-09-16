@@ -50,18 +50,21 @@ Create a select query object with the connection object.
 ```php
 $statement = $db->select()->from('users')->query();
 ```
-
-Using the factory:
-
-```php
-$query = new \Odan\Database\QueryFactory($db);
-$select = $db->select();
-```
-
-Creating a object manually:
+Creating a SelectQuery object manually:
 
 ```php
 $select = new \Odan\Database\SelectQuery($db);
+```
+
+Getting the generated SQL string:
+
+```php
+echo $db->select()->from('users')->build();
+```
+Output:
+
+```sql
+SELECT * FROM `users`;
 ```
 
 ### Retrieving Results
