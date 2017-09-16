@@ -8,9 +8,6 @@ use Closure;
  * Class SelectQueryBuilder
  *
  * https://dev.mysql.com/doc/refman/5.7/en/select.html
- *
- * @todo Add support (and methods) for:
- * - UNION
  */
 abstract class SelectQueryBuilder implements QueryInterface
 {
