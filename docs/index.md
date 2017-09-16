@@ -11,9 +11,11 @@
 
 ## Introduction
 
-The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application and works on all supported database systems.
+The database query builder provides a convenient, fluent interface to creating and running database queries. 
+It can be used to perform most database operations in your application and works on all supported database systems.
 
-The query builder uses PDO parameter binding to protect your application against SQL injection attacks. There is no need to clean strings being passed as bindings.
+The query builder uses PDO parameter binding to protect your application against SQL injection attacks. 
+There is no need to clean strings being passed as bindings.
 
 ## Connection
 
@@ -230,7 +232,7 @@ the join method. The Closure will receive a JoinClause object
 which allows you to specify constraints on the join clause:
 
 ```
-Not supported. Use the RawExp('... sql ...') object intead.
+Not supported.
 ```
 
 ### Unions
@@ -732,12 +734,9 @@ $db->delete()->from('some_logs')
 
 ORDER BY also helps to delete rows in an order required to avoid referential integrity violations.
 
-You cannot use ORDER BY or LIMIT in a multiple-table DELETE.
-
 ### Delete Limit
 
 The LIMIT clause places a limit on the number of rows that can be deleted. 
-These clauses apply to single-table deletes, but not multi-table deletes.
 
 ```php
 $db->delete()->from('users')->limit(10)->execute();
@@ -775,13 +774,3 @@ does not merge index leaves during delete, which may speed up some kinds of dele
 ```php
 $db->delete()->from('users')->quick()->execute();
 ```
-
-### Multi-Table Deletes
-
-You can specify multiple tables in a DELETE statement to delete rows 
-from one or more tables depending on the condition in the WHERE clause.
-
-```
-Not supported
-```
-
