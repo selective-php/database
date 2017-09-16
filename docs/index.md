@@ -153,15 +153,15 @@ $payments = $db->select()
 
 #### Sub Selects
 
-If you want to SELECT FROM a subselect, do so by calling fromSubSelect(). 
-Pass both the subselect query string, and an alias for the subselect:
+If you want to SELECT FROM a subselect, do so by passing a callback
+function and define an alias for the subselect:
 
 ```php
 $payments = $this->select()
     ->columns('id', function (SelectQuery $subSelect) {
         $subSelect->columns(new RawExp('MAX(payments.amount)'))
         ->from('payments')
-        ->as('max_amount');
+        ->alias('max_amount');
     })
     ->from('test')
     ->query()

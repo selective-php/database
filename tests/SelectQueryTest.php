@@ -196,7 +196,7 @@ class SelectQueryTest extends BaseTest
             ->columns('id', function (SelectQuery $subSelect) {
                 $subSelect->columns(new RawExp('MAX(payments.amount)'))
                     ->from('payments')
-                    ->as('max_amount'); // AS max_amount
+                    ->alias('max_amount'); // AS max_amount
             })
             ->from('test');
 

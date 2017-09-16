@@ -115,7 +115,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param string $alias
      * @return self
      */
-    public function as(string $alias): self
+    public function alias(string $alias): self
     {
         $this->alias = $alias;
         return $this;
