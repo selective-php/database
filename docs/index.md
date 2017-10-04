@@ -224,6 +224,12 @@ $users = $this->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT *
+FROM `users`
+LEFT JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
+```
+
 #### Cross Join Clause
 
 To perform a "cross join" use the crossJoin method with the name of the table you wish to cross join to. 
@@ -235,6 +241,12 @@ $users = $this->select()
     ->crossJoin('posts', 'users.id', '=', 'posts.user_id')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT *
+FROM `users`
+CROSS JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
 ```
 
 #### Advanced Join Clauses
@@ -259,6 +271,7 @@ $select = $db->select()->columns('id')->from('table1');
 $select2 = $this->select()->columns('id')->from('table2');
 $select->union($select2);
 ```
+
 ```sql
 SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;
 ```
@@ -282,6 +295,10 @@ of the "votes" column is equal to 100:
 $users = $db->select()->from('users')->where('votes', '=', 100)->execute()->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `votes` = 100;
+```
+
 Of course, you may use a variety of other operators when writing a where clause:
 
 ```php
@@ -301,6 +318,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `status` = '1' AND `subscribed` <> '1';
+```
+
 #### Or Statements
 
 ou may chain where constraints together as well as add OR clauses to the query. 
@@ -315,6 +336,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `votes` > '100' OR `name` = 'John';
+```
+
 #### Additional Where Clauses
 
 ##### Between and not between
@@ -327,12 +352,21 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `votes` BETWEEN '1' AND '100';
+```
+
+
 ```php
 $users = $db->select()
     ->from('users')
     ->where('votes', 'not between', [1, 100])
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * FROM `users` WHERE `votes` NOT BETWEEN '1' AND '100';
 ```
 
 ##### In and not in
@@ -345,12 +379,20 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
+```
+
 ```php
 $users = $db->select()
     ->from('users')
     ->where('votes', 'not in', [1, 2, 3])
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * FROM `users` WHERE `id` NOT IN ('1', '2', '3');
 ```
 
 ##### Is null and is not null
@@ -363,12 +405,20 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `updated_at` IS NULL;
+```
+
 ```php
 $users = $db->select()
     ->from('users')
     ->where('updated_at', 'is not', null)
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * FROM `users` WHERE `updated_at` IS NOT NULL;
 ```
 
 If you use the '=' or '<>' for comparison and pass a null value you get the same result.
@@ -380,6 +430,11 @@ $users = $db->select()
     ->execute()
     ->fetchAll();
 ```
+
+```sql
+SELECT * FROM `users` WHERE `updated_at` IS NULL;
+```
+
 
 #### Where Column
 
@@ -393,6 +448,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE `users`.`id` = `posts`.`user_id`;
+```
+
 The whereColumn method can also be called multiple times to add multiple conditions. 
 These conditions will be joined using the and operator:
 
@@ -403,6 +462,13 @@ $users = $db->select()
     ->whereColumn('updated_at', '=', 'created_at')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * 
+FROM `users` 
+WHERE `first_name` = `last_name`
+AND `updated_at` = `created_at`;
 ```
 
 #### Complex Where Conditions
@@ -448,6 +514,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` WHERE users.id = posts.user_id;
+```
+
 #### Order By
 
 ```php
@@ -456,6 +526,10 @@ $users = $db->select()
     ->orderBy('updated_at ASC')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * FROM `users` ORDER BY `updated_at` ASC;
 ```
 
 #### Group By
@@ -468,6 +542,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` GROUP BY `role`;
+```
+
 #### Limit and Offset
 
 ```php
@@ -476,6 +554,10 @@ $users = $db->select()
     ->limit(10)
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * FROM `users` LIMIT 10;
 ```
 
 ```php
@@ -487,15 +569,26 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT * FROM `users` LIMIT 25, 10;
+```
+
 #### Having
 
 ```php
 $users = $db->select()
     ->from('users')
     ->groupBy('id', 'username ASC')
-    ->having('u.username', '=', 'admin')
+    ->having('username', '=', 'admin')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT * 
+FROM `users` 
+GROUP BY `id`, `username` ASC
+HAVING `username` = 'admin';
 ```
 
 Complex having conditions:
@@ -527,7 +620,7 @@ Create a insert object:
 use Odan\Database\Connection;
 
 $db = new Connection($dsn, $username, $password, $options);
-$db->insert()->into('users')->...;
+$insert = $db->insert();
 ```
 
 ### Insert A Single Row
