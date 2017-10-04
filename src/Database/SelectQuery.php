@@ -356,7 +356,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      *
      * @return PDOStatement
      */
-    public function query(): PDOStatement
+    public function execute(): PDOStatement
     {
         return $this->db->query($this->build());
     }
