@@ -379,6 +379,7 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+
 ```sql
 SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
 ```
@@ -408,6 +409,7 @@ $users = $db->select()
 ```sql
 SELECT * FROM `users` WHERE `updated_at` IS NULL;
 ```
+
 
 ```php
 $users = $db->select()
@@ -559,6 +561,7 @@ $users = $db->select()
 ```sql
 SELECT * FROM `users` LIMIT 10;
 ```
+
 
 ```php
 $users = $db->select()
