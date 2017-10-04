@@ -138,6 +138,10 @@ $users = $db->select()
     ->fetchAll();
 ```
 
+```sql
+SELECT count(*) as user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
+```
+
 #### Aggregates
 
 The query builder also provides a RawExp for aggregate methods 
@@ -151,6 +155,10 @@ $payments = $db->select()
     ->from('payments')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT MAX(amount), MIN(amount) FROM `payments`;
 ```
 
 #### Sub Selects
@@ -196,6 +204,12 @@ $users = $this->select()
     ->join('orders', 'users.id', '=', 'orders.user_id')
     ->execute()
     ->fetchAll();
+```
+
+```sql
+SELECT `users`.*, `contacts`.`phone`, `orders`.`price` FROM `users`
+INNER JOIN `contacts` ON `users`.`id` = `contacts`.`user_id`
+INNER JOIN `orders` ON `users`.`id` = `orders`.`user_id`;
 ```
 
 #### Left Join Clause
