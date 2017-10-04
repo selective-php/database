@@ -9,7 +9,7 @@
     "builder",
     "database"
   ],
-  "homepage": "http://github.com/odan/database",
+  "homepage": "https://github.com/odan/database",
   "license": "MIT",
   "require-dev": {
     "phpunit/phpunit": "^6.0"
