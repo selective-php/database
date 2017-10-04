@@ -178,8 +178,6 @@ $payments = $this->select()
     ->fetchAll();
 ```
 
-SQL statement:
-
 ```sql
 SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;
 ```
@@ -207,7 +205,8 @@ $users = $this->select()
 ```
 
 ```sql
-SELECT `users`.*, `contacts`.`phone`, `orders`.`price` FROM `users`
+SELECT `users`.*, `contacts`.`phone`, `orders`.`price` 
+FROM `users`
 INNER JOIN `contacts` ON `users`.`id` = `contacts`.`user_id`
 INNER JOIN `orders` ON `users`.`id` = `orders`.`user_id`;
 ```
