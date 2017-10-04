@@ -355,7 +355,7 @@ $users = $db->select()
 ```sql
 SELECT * FROM `users` WHERE `votes` BETWEEN '1' AND '100';
 ```
-<br>
+ 
 
 ```php
 $users = $db->select()
@@ -383,7 +383,7 @@ $users = $db->select()
 SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
 ```
 
-<br>
+ 
 
 ```php
 $users = $db->select()
@@ -411,7 +411,7 @@ $users = $db->select()
 SELECT * FROM `users` WHERE `updated_at` IS NULL;
 ```
 
-<br>
+ 
 
 ```php
 $users = $db->select()
@@ -564,7 +564,7 @@ $users = $db->select()
 SELECT * FROM `users` LIMIT 10;
 ```
 
-<br>
+ 
 
 ```php
 $users = $db->select()
