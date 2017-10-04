@@ -50,7 +50,7 @@ $db = new Connection($dsn, $username, $password, $options);
 Create a select query object with the connection object.
 
 ```php
-$statement = $db->select()->from('users')->query();
+$statement = $db->select()->from('users')->execute();
 ```
 Creating a SelectQuery object manually:
 
@@ -84,7 +84,7 @@ the query and then finally get the results using the get method:
 $stmt = $db->select()
     ->columns('id', 'username', 'email')
     ->from('users')
-    ->query();
+    ->execute();
     
 $rows = $stmt->fetchAll();
 ```
@@ -94,7 +94,7 @@ where each result is an instance of the Array or PHP StdClass object.
 You may access each column's value by accessing the column as a property of the object:
 
 ```php
-$stmt = $db->select()->from('users')->query();
+$stmt = $db->select()->from('users')->execute();
 while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     echo $row->id;
 }
@@ -103,13 +103,13 @@ while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 #### Retrieving A Single Row From A Table
 
 ```php
-$row = $db->select()->from('users')->query()->fetch();
+$row = $db->select()->from('users')->execute()->fetch();
 ```
 
 #### Retrieving A Single Column From A Table
 
 ```php
-$value = $db->select()->from('users')->query()->fetchColumn(0);
+$value = $db->select()->from('users')->execute()->fetchColumn(0);
 ```
 
 #### Distinct
@@ -117,7 +117,7 @@ $value = $db->select()->from('users')->query()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$users = $db->select()->distinct()->columns('id')->from('users')->query()->fetchAll();
+$users = $db->select()->distinct()->columns('id')->from('users')->execute()->fetchAll();
 ```
 
 #### Raw Expressions
@@ -134,7 +134,7 @@ $users = $db->select()
     ->from('payments')
     ->where('status', '<>', 1)
     ->groupBy('status')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -149,7 +149,7 @@ You may call any of these methods after constructing your query:
 $payments = $db->select()
     ->columns(new RawExp('MAX(amount)'), new RawExp('MIN(amount)'))
     ->from('payments')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -166,7 +166,7 @@ $payments = $this->select()
         ->alias('max_amount');
     })
     ->from('test')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -194,7 +194,7 @@ $users = $this->select()
     ->from('users')
     ->join('contacts', 'users.id', '=', 'contacts.user_id')
     ->join('orders', 'users.id', '=', 'orders.user_id')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -207,7 +207,7 @@ use the leftJoin method. The  leftJoin method has the same signature as the join
 $users = $this->select()
     ->from('users')
     ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -220,7 +220,7 @@ Cross joins generate a cartesian product between the first table and the joined 
 $users = $this->select()
     ->from('sizes')
     ->crossJoin('posts', 'users.id', '=', 'posts.user_id')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -266,15 +266,15 @@ For example, here is a query that verifies the value
 of the "votes" column is equal to 100:
 
 ```php
-$users = $db->select()->from('users')->where('votes', '=', 100)->query()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '=', 100)->execute()->fetchAll();
 ```
 
 Of course, you may use a variety of other operators when writing a where clause:
 
 ```php
-$users = $db->select()->from('users')->where('votes', '>=', 100)->query()->fetchAll();
-$users = $db->select()->from('users')->where('votes', '<>', 100)->query()->fetchAll();
-$users = $db->select()->from('users')->where('name', 'like', 'D%')->query()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '>=', 100)->execute()->fetchAll();
+$users = $db->select()->from('users')->where('votes', '<>', 100)->execute()->fetchAll();
+$users = $db->select()->from('users')->where('name', 'like', 'D%')->execute()->fetchAll();
 ```
 
 You may also pass multiple AND conditions:
@@ -284,7 +284,7 @@ $users = $db->select()
     ->from('users')
     ->where('status', '=', 1)
     ->where('subscribed', '<>', 1)
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -298,7 +298,7 @@ $users = $db->select()
     ->from('users')
     ->where('votes', '>', 100)
     ->orWhere('name', '=', 'John')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -310,7 +310,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('votes', 'between', [1, 100])
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -318,7 +318,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('votes', 'not between', [1, 100])
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -328,7 +328,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('id', 'in', [1, 2, 3])
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -336,7 +336,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('votes', 'not in', [1, 2, 3])
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -346,7 +346,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('updated_at', 'is', null)
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -354,7 +354,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where('updated_at', 'is not', null)
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -364,7 +364,7 @@ If you use the '=' or '<>' for comparison and pass a null value you get the same
 $users = $db->select()
     ->from('users')
     ->where('updated_at', '=', null) // IS NULL
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -376,7 +376,7 @@ The whereColumn method may be used to verify that two columns are equal:
 $users = $db->select()
     ->from('users')
     ->whereColumn('users.id', '=', 'posts.user_id')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -388,7 +388,7 @@ $users = $db->select()
     ->from('users')
     ->whereColumn('first_name', '=', 'last_name')
     ->whereColumn('updated_at', '=', 'created_at')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -421,7 +421,7 @@ $users = $db->select()
             $db->orWhere(new RawExp('c.id = u.id'));
         });
     })
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -431,7 +431,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->where(new RawExp('users.id = posts.user_id'))
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -441,7 +441,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->orderBy('updated_at ASC')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -451,7 +451,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->groupBy('role')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -461,7 +461,7 @@ $users = $db->select()
 $users = $db->select()
     ->from('users')
     ->limit(10)
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -470,7 +470,7 @@ $users = $db->select()
     ->from('users')
     ->limit(10)
     ->offset(25)
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -481,7 +481,7 @@ $users = $db->select()
     ->from('users')
     ->groupBy('id', 'username ASC')
     ->having('u.username', '=', 'admin')
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
@@ -502,7 +502,7 @@ $users = $db->select()
             $db->orHaving(new RawExp('c.id = u.id'));
         });
     })
-    ->query()
+    ->execute()
     ->fetchAll();
 ```
 
