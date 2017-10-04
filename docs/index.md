@@ -355,7 +355,7 @@ $users = $db->select()
 ```sql
 SELECT * FROM `users` WHERE `votes` BETWEEN '1' AND '100';
 ```
-
+<br>
 
 ```php
 $users = $db->select()
@@ -379,10 +379,11 @@ $users = $db->select()
     ->fetchAll();
 ```
 
-
 ```sql
 SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
 ```
+
+<br>
 
 ```php
 $users = $db->select()
@@ -410,6 +411,7 @@ $users = $db->select()
 SELECT * FROM `users` WHERE `updated_at` IS NULL;
 ```
 
+<br>
 
 ```php
 $users = $db->select()
@@ -562,6 +564,7 @@ $users = $db->select()
 SELECT * FROM `users` LIMIT 10;
 ```
 
+<br>
 
 ```php
 $users = $db->select()
@@ -695,7 +698,7 @@ Create a update object:
 use Odan\Database\Connection;
 
 $db = new Connection($dsn, $username, $password, $options);
-$update = $db->update()->table('users');
+$update = $db->update();
 ```
 
 Of course, in addition to inserting records into the database, 
@@ -807,7 +810,7 @@ Create a delete object:
 use Odan\Database\Connection;
 
 $db = new Connection($dsn, $username, $password, $options);
-$db->delete()->from('users')->...;
+$delete = $db->delete();
 ```
 
 The query builder may also be used to delete records from the 
