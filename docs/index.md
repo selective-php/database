@@ -25,7 +25,6 @@ Create a new database Connection:
 <?php
 
 use Odan\Database\Connection;
-use Odan\Database\QueryFactory;
 use Odan\Database\RawExp;
 
 $host = '127.0.0.1';
@@ -75,7 +74,7 @@ SELECT * FROM `users`;
 
 #### Retrieving All Rows From A Table
 
-You may use the `select()` method on the `QueryFactory` to begin a query. 
+You may use the `select()` method of the `Connection` object to begin a query. 
 The table method returns a fluent query builder instance for 
 the given table, allowing you to chain more constraints onto 
 the query and then finally get the results using the get method:
