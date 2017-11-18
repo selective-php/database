@@ -605,12 +605,12 @@ $users = $db->select()
     ->having('u.username', '=', 'admin')
     ->having('u.username', '=', 'max')
     ->having(function(SelectQuery $query) {
-        $db->having('x', '<>', '2');
-        $db->having('y', '=', null);
-        $db->having('z', '<>', '5');
-        $db->orHaving(function(SelectQuery $query) {
-            $db->having(new RawExp('a.id = b.id'));
-            $db->orHaving(new RawExp('c.id = u.id'));
+        $query->having('x', '<>', '2');
+        $query->having('y', '=', null);
+        $query->having('z', '<>', '5');
+        $query->orHaving(function(SelectQuery $query2) {
+            $query2->having(new RawExp('a.id = b.id'));
+            $query2->orHaving(new RawExp('c.id = u.id'));
         });
     })
     ->execute()
