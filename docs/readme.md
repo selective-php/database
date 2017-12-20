@@ -5,7 +5,6 @@
 * [Insert](#inserts)
 * [Update](#updates)
 * [Delete](#deletes)
-* [Repository](repository.md)
 * [Schema](schema.md)
 * [Compression](compression.md)
 
@@ -62,12 +61,12 @@ $select = new \Odan\Database\SelectQuery($db);
 Getting the generated SQL string:
 
 ```php
-echo $db->select()->from('users')->build();
+echo $db->select()->from('users AS user')->build();
 ```
 Output:
 
 ```sql
-SELECT * FROM `users`;
+SELECT * FROM `users` as `u`;
 ```
 
 ### Retrieving Results

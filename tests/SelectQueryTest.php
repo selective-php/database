@@ -248,6 +248,9 @@ class SelectQueryTest extends BaseTest
 
         $select = $this->select()->columns('id')->from('test AS t');
         $this->assertEquals("SELECT `id` FROM `test` AS `t`;", $select->build());
+
+        $select = $this->select()->columns('id')->from('dbname.test AS t');
+        $this->assertEquals("SELECT `id` FROM `dbname`.`test` AS `t`;", $select->build());
     }
 
     /**
