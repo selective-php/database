@@ -56,7 +56,7 @@ class Condition
     /**
      * Get sql.
      *
-     * @param $sql
+     * @param array $sql
      * @return array
      */
     public function getWhereSql(array $sql): array
@@ -231,11 +231,11 @@ class Condition
      * Get sql.
      *
      * @param array $sql
-     * @param $where
-     * @param $conditionType
+     * @param array $where
+     * @param string $conditionType
      * @return array
      */
-    public function getConditionSql(array $sql, $where, $conditionType): array
+    public function getConditionSql(array $sql, array $where, string $conditionType): array
     {
         if (empty($where)) {
             return $sql;

@@ -285,7 +285,7 @@ class DeleteQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param $sql
+     * @param array $sql
      * @return array
      */
     protected function getLimitSql(array $sql): array

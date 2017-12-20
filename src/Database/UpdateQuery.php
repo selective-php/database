@@ -190,10 +190,10 @@ class UpdateQuery implements QueryInterface
      * Incrementing or decrementing the value of a given column.
      *
      * @param string $column The column to modify
-     * @param $amount [optional] The amount by which the column should be incremented
+     * @param int $amount [optional] The amount by which the column should be incremented
      * @return self
      */
-    public function increment(string $column, $amount = 1): self
+    public function increment(string $column, int $amount = 1): self
     {
         $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '+' . $this->quoter->quoteValue($amount));
         return $this;
@@ -203,10 +203,10 @@ class UpdateQuery implements QueryInterface
      * Decrementing the value of a given column.
      *
      * @param string $column The column to modify
-     * @param $amount [optional] The amount by which the column should be decrement
+     * @param int $amount [optional] The amount by which the column should be decrement
      * @return self
      */
-    public function decrement(string $column, $amount = 1): self
+    public function decrement(string $column, int $amount = 1): self
     {
         $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '-' . $this->quoter->quoteValue($amount));
         return $this;
@@ -299,7 +299,7 @@ class UpdateQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param $sql
+     * @param array $sql
      * @return array
      */
     protected function getLimitSql(array $sql): array

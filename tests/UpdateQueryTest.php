@@ -176,12 +176,12 @@ class UpdateQueryTest extends BaseTest
         $update = $this->update()->table('users')->increment('voted');
         $this->assertEquals("UPDATE `users` SET `voted`=`voted`+'1';", $update->build());
 
-        $update = $this->update()->table('users')->increment('voted', '1')
+        $update = $this->update()->table('users')->increment('voted', 1)
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
         $this->assertEquals("UPDATE `users` SET `voted`=`voted`+'1' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());
 
-        $update = $this->update()->table('users')->decrement('voted', '10')
+        $update = $this->update()->table('users')->decrement('voted', 10)
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
         $this->assertEquals("UPDATE `users` SET `voted`=`voted`-'10' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());

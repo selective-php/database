@@ -2,6 +2,8 @@
 
 namespace Odan\Database;
 
+use RuntimeException;
+
 /**
  * Quoter
  */
@@ -28,20 +30,28 @@ class Quoter
      * Quotes a value for use in a query.
      *
      * @param mixed $value
-     * @return string|false a quoted string
+     * @return string a quoted string
+     * @throws RuntimeException
      */
     public function quoteValue($value): string
     {
         if ($value === null) {
             return 'NULL';
         }
-        return $this->pdo->quote($value);
+
+        $result = $this->pdo->quote($value);
+
+        if ($result === false) {
+            throw new RuntimeException('The database driver does not support quoting in this way.');
+        }
+
+        return $result;
     }
 
     /**
      * Quote array values.
      *
-     * @param array|null $array
+     * @param array $array
      * @return array
      */
     public function quoteArray(array $array): array
@@ -184,12 +194,12 @@ class Quoter
     /**
      * Get sql.
      *
-     * @param $identifiers
+     * @param array $identifiers
      * @return array
      */
-    public function quoteByFields($identifiers): array
+    public function quoteByFields(array $identifiers): array
     {
-        foreach ((array)$identifiers as $key => $identifier) {
+        foreach ($identifiers as $key => $identifier) {
             if ($identifier instanceof RawExp) {
                 $identifiers[$key] = $identifier->getValue();
                 continue;
