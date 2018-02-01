@@ -34,6 +34,22 @@ The database query builder provides a convenient, fluent interface to creating a
 
 For more details how to build queries read the **[documentation](docs/readme.md)**.
 
+## Example
+
+```php
+$db = new Connection($dsn, $username, $password, $options);
+
+$users = $db->select()
+    ->columns('id', 'username', 'email')
+    ->from('users')
+    ->execute()
+    ->fetchAll();
+    
+foreach ($users as $user) {
+    var_dump($user);
+}
+```
+
 ## Security
 
 If you discover any security related issues, please email instead of using the issue tracker.
