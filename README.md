@@ -37,7 +37,7 @@ For more details how to build queries read the **[documentation](docs/readme.md)
 ## Example
 
 ```php
-$db = new Connection($dsn, $username, $password, $options);
+$db = new \Odan\Database\Connection($dsn, $username, $password, $options);
 
 $users = $db->select()
     ->columns('id', 'username', 'email')
