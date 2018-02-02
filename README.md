@@ -28,13 +28,7 @@ composer require odan/database
 * PHP 7.x
 * MySQL
 
-## Query Builder
-
-The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application, and works on all supported database systems.
-
-For more details how to build queries read the **[documentation](docs/readme.md)**.
-
-## Example
+## Usage
 
 ```php
 $db = new \Odan\Database\Connection($dsn, $username, $password, $options);
@@ -49,6 +43,12 @@ foreach ($users as $user) {
     var_dump($user);
 }
 ```
+
+## Documentation
+
+The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application, and works on all supported database systems.
+
+For more details how to build queries read the **[documentation](docs/readme.md)**.
 
 ## Security
 
