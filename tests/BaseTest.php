@@ -5,8 +5,8 @@ namespace Odan\Test;
 use Odan\Database\Connection;
 use Odan\Database\Schema;
 use Odan\Database\SelectQuery;
-use PHPUnit\Framework\TestCase;
 use PDO;
+use PHPUnit\Framework\TestCase;
 
 /**
  * ConnectionTest
@@ -40,7 +40,7 @@ abstract class BaseTest extends TestCase
             $password = '';
             $charset = 'utf8';
             $collate = 'utf8_unicode_ci';
-            $this->connection = new Connection("mysql:host=$host;dbname=$dbname;charset=$charset", $username, $password, array(
+            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_PERSISTENT => false,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -70,15 +70,22 @@ abstract class BaseTest extends TestCase
     {
         $db = $this->getConnection();
         $schema = $this->getSchema();
+
+        if (!$schema->existDatabase('database_test')) {
+            $schema->createDatabase('database_test');
+        }
+
+        $schema->useDatabase('database_test');
+
         foreach ($schema->getTables() as $table) {
             $schema->dropTable($table);
         }
 
         $result = $db->exec("CREATE TABLE `test` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `keyname` varchar(255) COLLATE utf8_unicode_ci,
-            `keyvalue` varchar(255) COLLATE utf8_unicode_ci,
-            `boolvalue` tinyint(1) NOT NULL DEFAULT 0,
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `keyname` VARCHAR(255) COLLATE utf8_unicode_ci,
+            `keyvalue` VARCHAR(255) COLLATE utf8_unicode_ci,
+            `boolvalue` TINYINT(1) NOT NULL DEFAULT 0,
             `created` DATETIME DEFAULT NULL,
             `created_user_id` INT(11) DEFAULT NULL,
             `updated` DATETIME DEFAULT NULL,

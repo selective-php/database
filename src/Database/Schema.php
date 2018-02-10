@@ -78,6 +78,37 @@ class Schema
     }
 
     /**
+     * Create a database.
+     *
+     * @param string $dbName The database name
+     * @param string $characterSet
+     * @param string $collate
+     * @return bool Success
+     */
+    public function createDatabase(string $dbName, $characterSet = 'utf8', $collate = 'utf8_unicode_ci'): bool
+    {
+        $sql = "CREATE DATABASE %s CHARACTER SET %s COLLATE %s;";
+        $sql = vsprintf($sql, [
+            $this->quoter->quoteName($dbName),
+            $this->quoter->quoteValue($characterSet),
+            $this->quoter->quoteValue($collate)
+        ]);
+        return $this->db->exec($sql);
+    }
+
+    /**
+     * Create a database.
+     *
+     * @param string $dbName The database name
+     * @return bool Success
+     */
+    public function useDatabase(string $dbName): bool
+    {
+        $sql = sprintf("USE %s;", $this->quoter->quoteName($dbName));
+        return $this->db->exec($sql);
+    }
+
+    /**
      * Return all Tables from Database
      *
      * @param string $like (optional) e.g. 'information%'
