@@ -51,6 +51,6 @@ class ConnectionTest extends BaseTest
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         $this->assertTrue(!empty($row['TABLE_NAME']));
-        $this->assertEquals('TABLES', $row['TABLE_NAME']);
+        $this->assertSame('TABLES', $row['TABLE_NAME']);
     }
 }

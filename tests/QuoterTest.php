@@ -40,34 +40,34 @@ class QuoterTest extends BaseTest
     public function testEsc()
     {
         $quoter = $this->getConnection()->getQuoter();
-        $this->assertEquals('NULL', $quoter->quoteValue(null));
-        $this->assertEquals("'\\0'", $quoter->quoteValue("\0"));
-        $this->assertEquals("'0'", $quoter->quoteValue(0));
-        $this->assertEquals("'0'", $quoter->quoteValue('0'));
-        $this->assertEquals("''", $quoter->quoteValue(false));
-        $this->assertEquals("'1'", $quoter->quoteValue(true));
-        $this->assertEquals("'-1'", $quoter->quoteValue(-1));
-        $this->assertEquals("'abc123'", $quoter->quoteValue("abc123"));
-        $this->assertEquals("'öäüÖÄÜß'", $quoter->quoteValue("öäüÖÄÜß"));
-        $this->assertEquals("'?'", $quoter->quoteValue('?'));
-        $this->assertEquals("':'", $quoter->quoteValue(':'));
-        $this->assertEquals("'\\''", $quoter->quoteValue("'"));
-        $this->assertEquals("'\\\"'", $quoter->quoteValue("\""));
-        $this->assertEquals("'\\\\'", $quoter->quoteValue("\\"));
-        $this->assertEquals("'\\0'", $quoter->quoteValue("\x00"));
-        $this->assertEquals("'\\Z'", $quoter->quoteValue("\x1a"));
-        $this->assertEquals("'\\n'", $quoter->quoteValue("\n"));
-        $this->assertEquals("'\\r'", $quoter->quoteValue("\r"));
-        $this->assertEquals("','", $quoter->quoteValue(","));
-        $this->assertEquals("'\\','", $quoter->quoteValue("',"));
-        $this->assertEquals("'`'", $quoter->quoteValue("`"));
-        $this->assertEquals("'%s'", $quoter->quoteValue("%s"));
-        $this->assertEquals("'Naughty \\' string'", $quoter->quoteValue("Naughty ' string"));
-        $this->assertEquals("'@þÿ€'", $quoter->quoteValue("@þÿ€"));
+        $this->assertSame('NULL', $quoter->quoteValue(null));
+        $this->assertSame("'\\0'", $quoter->quoteValue("\0"));
+        $this->assertSame("'0'", $quoter->quoteValue(0));
+        $this->assertSame("'0'", $quoter->quoteValue('0'));
+        $this->assertSame("''", $quoter->quoteValue(false));
+        $this->assertSame("'1'", $quoter->quoteValue(true));
+        $this->assertSame("'-1'", $quoter->quoteValue(-1));
+        $this->assertSame("'abc123'", $quoter->quoteValue("abc123"));
+        $this->assertSame("'öäüÖÄÜß'", $quoter->quoteValue("öäüÖÄÜß"));
+        $this->assertSame("'?'", $quoter->quoteValue('?'));
+        $this->assertSame("':'", $quoter->quoteValue(':'));
+        $this->assertSame("'\\''", $quoter->quoteValue("'"));
+        $this->assertSame("'\\\"'", $quoter->quoteValue("\""));
+        $this->assertSame("'\\\\'", $quoter->quoteValue("\\"));
+        $this->assertSame("'\\0'", $quoter->quoteValue("\x00"));
+        $this->assertSame("'\\Z'", $quoter->quoteValue("\x1a"));
+        $this->assertSame("'\\n'", $quoter->quoteValue("\n"));
+        $this->assertSame("'\\r'", $quoter->quoteValue("\r"));
+        $this->assertSame("','", $quoter->quoteValue(","));
+        $this->assertSame("'\\','", $quoter->quoteValue("',"));
+        $this->assertSame("'`'", $quoter->quoteValue("`"));
+        $this->assertSame("'%s'", $quoter->quoteValue("%s"));
+        $this->assertSame("'Naughty \\' string'", $quoter->quoteValue("Naughty ' string"));
+        $this->assertSame("'@þÿ€'", $quoter->quoteValue("@þÿ€"));
         // Injection patterns
-        $this->assertEquals("'\\' OR \\'\\'=\\''", $quoter->quoteValue("' OR ''='"));
-        $this->assertEquals("'1\\' or \\'1\\' = \\'1'", $quoter->quoteValue("1' or '1' = '1"));
-        $this->assertEquals("'1\\' or \\'1\\' = \\'1\\'))/*'", $quoter->quoteValue("1' or '1' = '1'))/*"));
+        $this->assertSame("'\\' OR \\'\\'=\\''", $quoter->quoteValue("' OR ''='"));
+        $this->assertSame("'1\\' or \\'1\\' = \\'1'", $quoter->quoteValue("1' or '1' = '1"));
+        $this->assertSame("'1\\' or \\'1\\' = \\'1\\'))/*'", $quoter->quoteValue("1' or '1' = '1'))/*"));
     }
 
     /**
@@ -121,10 +121,10 @@ class QuoterTest extends BaseTest
     public function testQuoteArray()
     {
         $quoter = $this->getConnection()->getQuoter();
-        $this->assertEquals([], $quoter->quoteArray([]));
+        $this->assertSame([], $quoter->quoteArray([]));
 
         $row = ['1', '2', '3', null];
-        $this->assertEquals(["'1'", "'2'", "'3'", 'NULL'], $quoter->quoteArray($row));
+        $this->assertSame(["'1'", "'2'", "'3'", 'NULL'], $quoter->quoteArray($row));
     }
 
 
@@ -137,9 +137,9 @@ class QuoterTest extends BaseTest
     public function testQuoteNames()
     {
         $quoter = $this->getConnection()->getQuoter();
-        $this->assertEquals([], $quoter->quoteNames([]));
+        $this->assertSame([], $quoter->quoteNames([]));
 
         $row = ['a', 'a.b', 'a.b.c', new RawExp('a.z')];
-        $this->assertEquals(["`a`", "`a`.`b`", "`a`.`b`.`c`", "a.z"], $quoter->quoteNames($row));
+        $this->assertSame(["`a`", "`a`.`b`", "`a`.`b`.`c`", "a.z"], $quoter->quoteNames($row));
     }
 }

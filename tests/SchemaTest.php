@@ -43,19 +43,19 @@ class SchemaTest extends BaseTest
         $dbName = $schema->getDatabase();
         if ($schema->existDatabase('test1')) {
             $schema->setDatabase('test1');
-            $this->assertEquals('test1', $schema->getDatabase());
+            $this->assertSame('test1', $schema->getDatabase());
         }
 
         $schema->setDatabase($dbName);
-        $this->assertEquals($dbName, $schema->getDatabase());
+        $this->assertSame($dbName, $schema->getDatabase());
 
         $databases = $schema->getDatabases();
-        $this->assertEquals(true, in_array('information_schema', $databases));
-        $this->assertEquals(true, in_array('database_test', $databases));
+        $this->assertSame(true, in_array('information_schema', $databases));
+        $this->assertSame(true, in_array('database_test', $databases));
 
         $databases = $schema->getDatabases('information_sch%');
-        $this->assertEquals(true, in_array('information_schema', $databases));
-        $this->assertEquals(1, count($databases));
+        $this->assertSame(true, in_array('information_schema', $databases));
+        $this->assertSame(1, count($databases));
     }
 
     /**
@@ -94,32 +94,32 @@ class SchemaTest extends BaseTest
 
         if ($schema->existTable('test')) {
             $result = $schema->dropTable('test');
-            $this->assertEquals(0, $result);
+            $this->assertSame(0, $result);
         }
 
         $result = $schema->existTable('test');
-        $this->assertEquals(false, $result);
+        $this->assertSame(false, $result);
 
         $result = $schema->existTable('database_test.test_not_existing');
-        $this->assertEquals(false, $result);
+        $this->assertSame(false, $result);
 
         $result = $schema->existTable('notexistingdb.noexistingtable');
-        $this->assertEquals(false, $result);
+        $this->assertSame(false, $result);
 
         $result = $this->createTestTable();
-        $this->assertEquals(0, $result);
+        $this->assertSame(0, $result);
 
         $result = $schema->existTable('database_test.test');
-        $this->assertEquals(true, $result);
+        $this->assertSame(true, $result);
 
         $result = $schema->existTable('notexistingdb.noexistingtable');
-        $this->assertEquals(false, $result);
+        $this->assertSame(false, $result);
 
         $result = $schema->getTableSchemaId('test');
-        $this->assertEquals('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
+        $this->assertSame('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
 
         $result = $schema->getTableSchemaId('database_test.test');
-        $this->assertEquals('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
+        $this->assertSame('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
 
         $result = $schema->compareTableSchema('test', 'test');
         $this->assertSame(true, $result);
@@ -134,10 +134,10 @@ class SchemaTest extends BaseTest
         $this->assertSame(false, $result);
 
         $tables = $schema->getTables();
-        $this->assertEquals(array(0 => 'test'), $tables);
+        $this->assertSame(array(0 => 'test'), $tables);
 
         $tables = $schema->getTables('te%');
-        $this->assertEquals(array(0 => 'test'), $tables);
+        $this->assertSame(array(0 => 'test'), $tables);
 
         $columns = $schema->getColumns('test');
         $this->assertSame(true, !empty($columns));
@@ -179,10 +179,10 @@ class SchemaTest extends BaseTest
         $this->assertSame(2, $result);
 
         $result = $db->lastInsertId();
-        $this->assertEquals(1, $result);
+        $this->assertSame('1', $result);
 
         $result = $db->query("SELECT COUNT(*) AS count FROM `test`")->fetchAll(PDO::FETCH_ASSOC);
-        $this->assertEquals(array(0 => array('count' => 1)), $result);
+        $this->assertSame(array(0 => array('count' => '1')), $result);
 
         $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
         $this->assertSame('1', $result);
@@ -215,7 +215,7 @@ class SchemaTest extends BaseTest
         $this->assertSame(2, $result->rowCount());
 
         $result = $db->queryValues("SELECT id,keyvalue FROM `test`", 'keyvalue');
-        $this->assertEquals(array('123', '1234'), $result);
+        $this->assertSame(array('123', '1234'), $result);
 
         $result = $db->queryMapColumn("SELECT id,keyname,keyvalue FROM `test`", 'keyname');
         $expected = array(
@@ -230,7 +230,7 @@ class SchemaTest extends BaseTest
                 'keyvalue' => '1234',
             ),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         $result = $schema->clearTable('test');
         $this->assertSame(2, $result);

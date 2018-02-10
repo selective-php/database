@@ -47,12 +47,12 @@ class InsertQueryTest extends BaseTest
     public function testInto()
     {
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
-        $this->assertEquals("INSERT INTO `test` SET `keyname`='admin-007';", $insert->build());
+        $this->assertSame("INSERT INTO `test` SET `keyname`='admin-007';", $insert->build());
         $stmt = $insert->prepare();
         $this->assertInstanceOf(PDOStatement::class, $stmt);
         $this->assertTrue($stmt->execute());
-        $this->assertEquals(1, $stmt->rowCount());
-        $this->assertEquals(1, $this->getConnection()->lastInsertId());
+        $this->assertSame(1, $stmt->rowCount());
+        $this->assertSame('1', $this->getConnection()->lastInsertId());
     }
 
     /**
@@ -69,7 +69,7 @@ class InsertQueryTest extends BaseTest
     {
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
         $insert->execute();
-        $this->assertEquals(1, $insert->lastInsertId());
+        $this->assertSame('1', $insert->lastInsertId());
     }
 
     /**
@@ -85,7 +85,7 @@ class InsertQueryTest extends BaseTest
     public function testInsertGetId()
     {
         $insertGetId = $this->insert()->into('test')->insertGetId(['keyname' => 'admin-007']);
-        $this->assertEquals(1, $insertGetId);
+        $this->assertSame('1', $insertGetId);
     }
 
     /**
@@ -101,10 +101,10 @@ class InsertQueryTest extends BaseTest
     public function testPriority()
     {
         $insert = $this->insert()->lowPriority()->into('test')->set(['username' => 'admin']);
-        $this->assertEquals("INSERT LOW_PRIORITY INTO `test` SET `username`='admin';", $insert->build());
+        $this->assertSame("INSERT LOW_PRIORITY INTO `test` SET `username`='admin';", $insert->build());
 
         $insert = $this->insert()->highPriority()->into('test')->set(['username' => 'admin']);
-        $this->assertEquals("INSERT HIGH_PRIORITY INTO `test` SET `username`='admin';", $insert->build());
+        $this->assertSame("INSERT HIGH_PRIORITY INTO `test` SET `username`='admin';", $insert->build());
     }
 
     /**
@@ -120,10 +120,10 @@ class InsertQueryTest extends BaseTest
     public function testIgnore()
     {
         $insert = $this->insert()->ignore()->into('test')->set(['username' => 'admin']);
-        $this->assertEquals("INSERT IGNORE INTO `test` SET `username`='admin';", $insert->build());
+        $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin';", $insert->build());
 
         $insert = $this->insert()->lowPriority()->ignore()->into('test')->set(['username' => 'admin']);
-        $this->assertEquals("INSERT LOW_PRIORITY IGNORE INTO `test` SET `username`='admin';", $insert->build());
+        $this->assertSame("INSERT LOW_PRIORITY IGNORE INTO `test` SET `username`='admin';", $insert->build());
     }
 
     /**
@@ -139,7 +139,7 @@ class InsertQueryTest extends BaseTest
     public function testDelayed()
     {
         $insert = $this->insert()->delayed()->into('test')->set(['username' => 'admin']);
-        $this->assertEquals("INSERT DELAYED INTO `test` SET `username`='admin';", $insert->build());
+        $this->assertSame("INSERT DELAYED INTO `test` SET `username`='admin';", $insert->build());
     }
 
     /**
@@ -155,6 +155,6 @@ class InsertQueryTest extends BaseTest
     {
         $insert = $this->insert()->ignore()->into('test')->set(['username' => 'admin']);
         $insert->onDuplicateKeyUpdate(['username' => 'admin-01']);
-        $this->assertEquals("INSERT IGNORE INTO `test` SET `username`='admin' ON DUPLICATE KEY UPDATE `username`='admin-01';", $insert->build());
+        $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin' ON DUPLICATE KEY UPDATE `username`='admin-01';", $insert->build());
     }
 }

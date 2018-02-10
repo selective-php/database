@@ -17,7 +17,7 @@ class RawExpTest extends BaseTest
     public function testGetValue()
     {
         $exp = new RawExp('123');
-        $this->assertEquals('123', $exp->getValue());
+        $this->assertSame('123', $exp->getValue());
     }
 
     /**
@@ -28,7 +28,7 @@ class RawExpTest extends BaseTest
     public function testToString()
     {
         $exp = new RawExp('abc');
-        $this->assertEquals('abc', $exp->__toString());
+        $this->assertSame('abc', $exp->__toString());
     }
 
     /**
@@ -47,7 +47,7 @@ class RawExpTest extends BaseTest
             ->where('status', '<>', 1)
             ->groupBy('status')
             ->build();
-        $this->assertEquals("SELECT COUNT(*) AS user_count,`status` FROM `payments` WHERE `status` <> '1' GROUP BY `status`;", $select);
+        $this->assertSame("SELECT COUNT(*) AS user_count,`status` FROM `payments` WHERE `status` <> '1' GROUP BY `status`;", $select);
     }
 
     /**
@@ -63,6 +63,6 @@ class RawExpTest extends BaseTest
                 new RawExp('MIN(amount)'))
             ->from('payments')
             ->build();
-        $this->assertEquals('SELECT MAX(amount),MIN(amount) FROM `payments`;', $select);
+        $this->assertSame('SELECT MAX(amount),MIN(amount) FROM `payments`;', $select);
     }
 }
