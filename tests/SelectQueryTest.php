@@ -625,25 +625,6 @@ class SelectQueryTest extends BaseTest
     /**
      * Test
      *
-     * @covers ::crossJoinRaw
-     * @covers ::getJoinSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
-     */
-    public function testCrossJoinRaw()
-    {
-        $select = $this->select()
-            ->columns('id')
-            ->from('test')
-            ->crossJoinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` CROSS JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
-    }
-
-    /**
-     * Test
-     *
      * @covers ::leftJoin
      * @covers ::getJoinSql
      * @covers ::from
@@ -661,34 +642,6 @@ class SelectQueryTest extends BaseTest
 
         $select->leftJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = "SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
-        $this->assertSame($expected, $select->build());
-    }
-
-    /**
-     * Test
-     *
-     * @covers ::crossJoin
-     * @covers ::getJoinSql
-     * @covers ::leftJoin
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
-     */
-    public function testCrossJoin()
-    {
-        $select = $this->select()
-            ->columns('id')
-            ->from('test')
-            ->crossJoin('users u', 'u.id', '=', 'test.user_id');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
-
-        $select->crossJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
-        $this->assertSame($expected, $select->build());
-
-        $select->leftJoin('table3 AS t3', 't3.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` CROSS JOIN `users` `u` ON `u`.`id` = `test`.`user_id` CROSS JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id` LEFT JOIN `table3` AS `t3` ON `t3`.`id` = `test`.`user_id`;";
         $this->assertSame($expected, $select->build());
     }
 

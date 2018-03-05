@@ -219,22 +219,6 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Cross Join.
-     *
-     * @param string $table Table name
-     * @param string $leftField Name of the left field
-     * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
-     * @param mixed $rightField Value of the right field
-     * @return self
-     */
-    public function crossJoin(string $table, string $leftField, string $comparison, $rightField): self
-    {
-        $this->join[] = ['cross', $table, $leftField, $comparison, $rightField];
-
-        return $this;
-    }
-
-    /**
      * Join with complex conditions.
      *
      * @param string $table Table name
@@ -258,20 +242,6 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function leftJoinRaw(string $table, RawExp $raw): self
     {
         $this->join[] = ['left', $table, $raw, null, null, null];
-
-        return $this;
-    }
-
-    /**
-     * Cross join with complex conditions.
-     *
-     * @param string $table Table name
-     * @param RawExp $raw
-     * @return self
-     */
-    public function crossJoinRaw(string $table, RawExp $raw): self
-    {
-        $this->join[] = ['cross', $table, $raw, null, null, null];
 
         return $this;
     }

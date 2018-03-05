@@ -230,22 +230,14 @@ LEFT JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
 
 #### Cross Join Clause
 
-To perform a "cross join" use the crossJoin method with the name of the table you wish to cross join to. 
-Cross joins generate a cartesian product between the first table and the joined table:
+From the [MySQL JOIN](https://dev.mysql.com/doc/refman/5.7/en/nested-join-optimization.html) docs:
 
-```php
-$users = $this->select()
-    ->from('sizes')
-    ->crossJoin('posts', 'users.id', '=', 'posts.user_id')
-    ->execute()
-    ->fetchAll();
-```
+> In MySQL, CROSS JOIN is syntactically equivalent to INNER JOIN; they can replace each other. 
+> In standard SQL, they are not equivalent. INNER JOIN is used with an ON clause; CROSS JOIN is used otherwise.
 
-```sql
-SELECT *
-FROM `users`
-CROSS JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
-```
+In MySQL Inner Join and Cross Join yielding the same result.
+
+Please use the [join](#inner-join-clause) method.
 
 #### Advanced Join Clauses
 
@@ -262,7 +254,8 @@ $users = $this->select()
 ```
 
 ```sql
-SELECT `id` FROM `users` AS `u` INNER JOIN `posts` AS `p` ON (p.user_id=u.id AND u.enabled=1 OR p.published IS NULL);
+SELECT `id` FROM `users` AS `u` 
+INNER JOIN `posts` AS `p` ON (p.user_id=u.id AND u.enabled=1 OR p.published IS NULL);
 ```
 
 ### Unions
