@@ -574,14 +574,71 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()
             ->columns('id')
-            ->from('test')
-            ->join('users u', 'u.id', '=', 'test.user_id');
+            ->from('test AS t')
+            ->join('users AS u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
+        $this->assertSame("SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
 
         $select->join('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` INNER JOIN `users` `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
+        $expected = "SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
         $this->assertSame($expected, $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::joinRaw
+     * @covers ::getJoinSql
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testJoinRaw()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->joinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame("SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::leftJoinRaw
+     * @covers ::getJoinSql
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testLeftJoinRaw()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->leftJoinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
+    }
+
+    /**
+     * Test
+     *
+     * @covers ::crossJoinRaw
+     * @covers ::getJoinSql
+     * @covers ::from
+     * @covers ::prepare
+     * @covers ::build
+     */
+    public function testCrossJoinRaw()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->crossJoinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame("SELECT `id` FROM `test` CROSS JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
     }
 
     /**

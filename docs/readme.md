@@ -250,12 +250,19 @@ CROSS JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
 #### Advanced Join Clauses
 
 You may also specify more advanced join clauses. 
-To get started, pass a Closure as the second argument into 
-the join method. The Closure will receive a JoinClause object 
-which allows you to specify constraints on the join clause:
+To get started, pass a RawExp as the second argument into 
+the `joinRaw` and `leftJoinRaw` method.
 
+```php
+$users = $this->select()
+    ->from('users AS u')
+    ->joinRaw('posts AS p', new RawExp('p.user_id=u.id AND u.enabled=1 OR p.published IS NULL'))
+    ->execute()
+    ->fetchAll();
 ```
-Not supported.
+
+```sql
+SELECT `id` FROM `users` AS `u` INNER JOIN `posts` AS `p` ON (p.user_id=u.id AND u.enabled=1 OR p.published IS NULL);
 ```
 
 ### Unions

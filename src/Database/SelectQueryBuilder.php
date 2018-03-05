@@ -208,9 +208,13 @@ abstract class SelectQueryBuilder implements QueryInterface
             list($type, $table, $leftField, $operator, $rightField) = $item;
             $joinType = strtoupper($type) . ' JOIN';
             $table = $this->quoter->quoteName($table);
-            $leftField = $this->quoter->quoteName($leftField);
-            $rightField = $this->quoter->quoteName($rightField);
-            $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
+            if($leftField instanceof RawExp) {
+                $sql[] = sprintf('%s %s ON (%s)', $joinType, $table, $leftField->getValue());
+            } else {
+                $leftField = $this->quoter->quoteName($leftField);
+                $rightField = $this->quoter->quoteName($rightField);
+                $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
+            }
         }
         return $sql;
     }

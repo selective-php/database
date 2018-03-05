@@ -17,6 +17,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function distinct(): self
     {
         $this->distinct = 'DISTINCT';
+
         return $this;
     }
 
@@ -28,6 +29,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function distinctRow(): self
     {
         $this->distinct = 'DISTINCTROW';
+
         return $this;
     }
 
@@ -39,6 +41,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function straightJoin(): self
     {
         $this->straightJoin = 'STRAIGHT_JOIN';
+
         return $this;
     }
 
@@ -50,6 +53,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function highPriority(): self
     {
         $this->highPriority = 'HIGH_PRIORITY';
+
         return $this;
     }
 
@@ -61,6 +65,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function smallResult(): self
     {
         $this->resultSize = 'SQL_SMALL_RESULT';
+
         return $this;
     }
 
@@ -72,6 +77,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function bigResult(): self
     {
         $this->resultSize = 'SQL_BIG_RESULT';
+
         return $this;
     }
 
@@ -83,6 +89,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function bufferResult(): self
     {
         $this->bufferResult = 'SQL_BUFFER_RESULT';
+
         return $this;
     }
 
@@ -94,6 +101,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function calcFoundRows(): self
     {
         $this->calcFoundRows = 'SQL_CALC_FOUND_ROWS';
+
         return $this;
     }
 
@@ -106,6 +114,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function columns(...$columns): self
     {
         $this->columns = $columns;
+
         return $this;
     }
 
@@ -118,6 +127,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function alias(string $alias): self
     {
         $this->alias = $alias;
+
         return $this;
     }
 
@@ -130,6 +140,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function from(string $table): self
     {
         $this->from = $table;
+
         return $this;
     }
 
@@ -143,6 +154,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function union(SelectQuery $query): self
     {
         $this->union[] = ['', $query->build(false)];
+
         return $this;
     }
 
@@ -156,6 +168,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function unionAll(SelectQuery $query): self
     {
         $this->union[] = ['ALL', $query->build(false)];
+
         return $this;
     }
 
@@ -169,6 +182,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function unionDistinct(SelectQuery $query): self
     {
         $this->union[] = ['DISTINCT', $query->build(false)];
+
         return $this;
     }
 
@@ -184,6 +198,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function join(string $table, string $leftField, string $comparison, $rightField): self
     {
         $this->join[] = ['inner', $table, $leftField, $comparison, $rightField];
+
         return $this;
     }
 
@@ -199,6 +214,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function leftJoin(string $table, string $leftField, string $comparison, $rightField): self
     {
         $this->join[] = ['left', $table, $leftField, $comparison, $rightField];
+
         return $this;
     }
 
@@ -214,6 +230,49 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function crossJoin(string $table, string $leftField, string $comparison, $rightField): self
     {
         $this->join[] = ['cross', $table, $leftField, $comparison, $rightField];
+
+        return $this;
+    }
+
+    /**
+     * Join with complex conditions.
+     *
+     * @param string $table Table name
+     * @param RawExp $raw
+     * @return self
+     */
+    public function joinRaw(string $table, RawExp $raw): self
+    {
+        $this->join[] = ['inner', $table, $raw, null, null, null];
+
+        return $this;
+    }
+
+    /**
+     * Left join with complex conditions.
+     *
+     * @param string $table Table name
+     * @param RawExp $raw
+     * @return self
+     */
+    public function leftJoinRaw(string $table, RawExp $raw): self
+    {
+        $this->join[] = ['left', $table, $raw, null, null, null];
+
+        return $this;
+    }
+
+    /**
+     * Cross join with complex conditions.
+     *
+     * @param string $table Table name
+     * @param RawExp $raw
+     * @return self
+     */
+    public function crossJoinRaw(string $table, RawExp $raw): self
+    {
+        $this->join[] = ['cross', $table, $raw, null, null, null];
+
         return $this;
     }
 
@@ -228,6 +287,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function where(...$conditions): self
     {
         $this->condition->where($conditions);
+
         return $this;
     }
 
@@ -242,6 +302,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function orWhere(...$conditions): self
     {
         $this->condition->orWhere($conditions);
+
         return $this;
     }
 
@@ -257,6 +318,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     {
         $secondColumn = $this->quoter->quoteName($secondColumn);
         $this->condition->where([$column, $comparison, new RawExp($secondColumn)]);
+
         return $this;
     }
 
@@ -272,6 +334,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     {
         $secondColumn = $this->quoter->quoteName($secondColumn);
         $this->condition->orWhere([$column, $comparison, new RawExp($secondColumn)]);
+
         return $this;
     }
 
@@ -284,6 +347,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function orderBy(...$fields): self
     {
         $this->orderBy = $fields;
+
         return $this;
     }
 
@@ -296,6 +360,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function groupBy(...$fields): self
     {
         $this->groupBy = $fields;
+
         return $this;
     }
 
@@ -310,6 +375,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function having(...$conditions): self
     {
         $this->condition->having($conditions);
+
         return $this;
     }
 
@@ -324,6 +390,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function orHaving(...$conditions): self
     {
         $this->condition->orHaving($conditions);
+
         return $this;
     }
 
@@ -336,6 +403,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function limit(float $rowCount): self
     {
         $this->limit = $rowCount;
+
         return $this;
     }
 
@@ -348,6 +416,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function offset(float $offset): self
     {
         $this->offset = $offset;
+
         return $this;
     }
 
