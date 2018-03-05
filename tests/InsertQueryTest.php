@@ -10,12 +10,6 @@ use PDOStatement;
  */
 class InsertQueryTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
-
     /**
      * Test create object.
      *
@@ -156,5 +150,11 @@ class InsertQueryTest extends BaseTest
         $insert = $this->insert()->ignore()->into('test')->set(['username' => 'admin']);
         $insert->onDuplicateKeyUpdate(['username' => 'admin-01']);
         $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin' ON DUPLICATE KEY UPDATE `username`='admin-01';", $insert->build());
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->createTestTable();
     }
 }

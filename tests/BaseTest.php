@@ -29,39 +29,6 @@ abstract class BaseTest extends TestCase
     protected $schema;
 
     /**
-     * @return Connection
-     */
-    protected function getConnection()
-    {
-        if (!$this->connection) {
-            $host = '127.0.0.1';
-            $dbname = 'database_test';
-            $username = 'root';
-            $password = '';
-            $charset = 'utf8';
-            $collate = 'utf8_unicode_ci';
-            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, array(
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_PERSISTENT => false,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
-            ));
-        }
-        return $this->connection;
-    }
-
-    /**
-     * @return Schema
-     */
-    protected function getSchema()
-    {
-        if ($this->schema === null) {
-            $this->schema = new Schema($this->getConnection());
-        }
-        return $this->schema;
-    }
-
-    /**
      * Create test table
      *
      * @return int
@@ -99,6 +66,41 @@ abstract class BaseTest extends TestCase
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
         return $result;
+    }
+
+    /**
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        if (!$this->connection) {
+            $host = '127.0.0.1';
+            $dbname = 'database_test';
+            $username = 'root';
+            $password = '';
+            $charset = 'utf8';
+            $collate = 'utf8_unicode_ci';
+            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, array(
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_PERSISTENT => false,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
+            ));
+        }
+
+        return $this->connection;
+    }
+
+    /**
+     * @return Schema
+     */
+    protected function getSchema()
+    {
+        if ($this->schema === null) {
+            $this->schema = new Schema($this->getConnection());
+        }
+
+        return $this->schema;
     }
 
     /**

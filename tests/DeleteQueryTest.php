@@ -10,12 +10,6 @@ use PDOStatement;
  */
 class DeleteQueryTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
-
     /**
      * Test create object.
      *
@@ -180,5 +174,11 @@ class DeleteQueryTest extends BaseTest
     {
         $delete = $this->delete()->from('test')->truncate();
         $this->assertSame("TRUNCATE TABLE `test`;", $delete->build());
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->createTestTable();
     }
 }

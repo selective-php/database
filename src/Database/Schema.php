@@ -59,6 +59,7 @@ class Schema
 
         $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
         $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
+
         return !empty($row['SCHEMA_NAME']);
     }
 
@@ -74,6 +75,7 @@ class Schema
         if ($like !== null) {
             $sql = sprintf('SHOW DATABASES WHERE `database` LIKE %s;', $this->quoter->quoteValue($like));
         }
+
         return $this->db->queryValues($sql, 'Database');
     }
 
@@ -93,6 +95,7 @@ class Schema
             $this->quoter->quoteValue($characterSet),
             $this->quoter->quoteValue($collate)
         ]);
+
         return $this->db->exec($sql);
     }
 
@@ -105,6 +108,7 @@ class Schema
     public function useDatabase(string $dbName): bool
     {
         $sql = sprintf("USE %s;", $this->quoter->quoteName($dbName));
+
         return $this->db->exec($sql);
     }
 
@@ -126,26 +130,8 @@ class Schema
                 WHERE table_schema = database()
                 AND table_name LIKE %s;", $this->quoter->quoteValue($like));
         };
-        return $this->db->queryValues($sql, 'table_name');
-    }
 
-    /**
-     * Split table into dbname and table name
-     *
-     * @param string $tableName table
-     * @return array
-     */
-    protected function parseTableName($tableName)
-    {
-        $dbName = 'database()';
-        if (strpos($tableName, '.') !== false) {
-            $parts = explode('.', $tableName);
-            $dbName = $this->quoter->quoteValue($parts[0]);
-            $tableName = $this->quoter->quoteValue($parts[1]);
-        } else {
-            $tableName = $this->quoter->quoteValue($tableName);
-        }
-        return [$dbName, $tableName];
+        return $this->db->queryValues($sql, 'table_name');
     }
 
     /**
@@ -165,7 +151,28 @@ class Schema
 
         $sql = sprintf($sql, $dbName, $tableName);
         $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
+
         return (isset($row['table_name']));
+    }
+
+    /**
+     * Split table into dbname and table name
+     *
+     * @param string $tableName table
+     * @return array
+     */
+    protected function parseTableName($tableName)
+    {
+        $dbName = 'database()';
+        if (strpos($tableName, '.') !== false) {
+            $parts = explode('.', $tableName);
+            $dbName = $this->quoter->quoteValue($parts[0]);
+            $tableName = $this->quoter->quoteValue($parts[1]);
+        } else {
+            $tableName = $this->quoter->quoteValue($tableName);
+        }
+
+        return [$dbName, $tableName];
     }
 
     /**
@@ -214,6 +221,7 @@ class Schema
         $tableSource = $this->quoter->quoteName($tableSource);
         $tableTarget = $this->quoter->quoteName($tableTarget);
         $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $tableSource, $tableTarget));
+
         return true;
     }
 
@@ -229,7 +237,25 @@ class Schema
         $tableNameSource = $this->quoter->quoteName($tableNameSource);
         $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
         $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
+
         return true;
+    }
+
+    /**
+     * Returns the column names of a table as an array
+     *
+     * @param string $tableName
+     * @return array
+     */
+    public function getColumnNames($tableName)
+    {
+        $result = [];
+        foreach ($this->getColumns($tableName) as $value) {
+            $field = $value['column_name'];
+            $result[$field] = $field;
+        }
+
+        return $result;
     }
 
     /**
@@ -262,37 +288,8 @@ class Schema
 
         list($dbName, $tableName) = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
+
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Returns the column names of a table as an array
-     *
-     * @param string $tableName
-     * @return array
-     */
-    public function getColumnNames($tableName)
-    {
-        $result = [];
-        foreach ($this->getColumns($tableName) as $value) {
-            $field = $value['column_name'];
-            $result[$field] = $field;
-        }
-        return $result;
-    }
-
-    /**
-     * Calculate a hash key (SHA1) using a table schema
-     * Used to quickly compare table structures or schema versions
-     *
-     * @param string $tableName
-     * @return string
-     */
-    public function getTableSchemaId($tableName)
-    {
-        $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
-        $rows = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        return sha1(json_encode($rows));
     }
 
     /**
@@ -306,6 +303,22 @@ class Schema
     {
         $schema1 = $this->getTableSchemaId($tableName1);
         $schema2 = $this->getTableSchemaId($tableName2);
+
         return $schema1 === $schema2;
+    }
+
+    /**
+     * Calculate a hash key (SHA1) using a table schema
+     * Used to quickly compare table structures or schema versions
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function getTableSchemaId($tableName)
+    {
+        $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
+        $rows = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        return sha1(json_encode($rows));
     }
 }

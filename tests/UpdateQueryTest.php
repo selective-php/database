@@ -11,12 +11,6 @@ use PDOStatement;
  */
 class UpdateQueryTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
-
     /**
      * Test create object.
      *
@@ -149,8 +143,8 @@ class UpdateQueryTest extends BaseTest
     public function testWhere()
     {
         $update = $this->update()->table('test')->set(['username' => 'admin'])
-        ->where('test.id', '=', 1)
-        ->orWhere('db.test.id', '>', 2);
+            ->where('test.id', '=', 1)
+            ->orWhere('db.test.id', '>', 2);
         $this->assertSame("UPDATE `test` SET `username`='admin' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $update->build());
     }
 
@@ -188,5 +182,11 @@ class UpdateQueryTest extends BaseTest
 
         $update = $this->update()->table('users')->set(['votes' => new RawExp('votes+1')])->where('id', '=', '1');
         $this->assertSame("UPDATE `users` SET `votes`=votes+1 WHERE `id` = '1';", $update->build());
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->createTestTable();
     }
 }

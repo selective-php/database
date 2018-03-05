@@ -27,6 +27,24 @@ class Quoter
     }
 
     /**
+     * Quote array values.
+     *
+     * @param array $array
+     * @return array
+     */
+    public function quoteArray(array $array): array
+    {
+        if (empty($array)) {
+            return [];
+        }
+        foreach ($array as $key => $value) {
+            $array[$key] = $this->quoteValue($value);
+        }
+
+        return $array;
+    }
+
+    /**
      * Quotes a value for use in a query.
      *
      * @param mixed $value
@@ -49,20 +67,22 @@ class Quoter
     }
 
     /**
-     * Quote array values.
+     * Quote array of names.
      *
-     * @param array $array
+     * @param array $identifiers
      * @return array
      */
-    public function quoteArray(array $array): array
+    public function quoteNames(array $identifiers): array
     {
-        if (empty($array)) {
-            return [];
+        foreach ($identifiers as $key => $identifier) {
+            if ($identifier instanceof RawExp) {
+                $identifiers[$key] = $identifier->getValue();
+                continue;
+            }
+            $identifiers[$key] = $this->quoteName($identifier);
         }
-        foreach ($array as $key => $value) {
-            $array[$key] = $this->quoteValue($value);
-        }
-        return $array;
+
+        return $identifiers;
     }
 
     /**
@@ -83,25 +103,8 @@ class Quoter
                 return $this->quoteNameWithSeparator($identifier, $sep, $pos);
             }
         }
-        return $this->quoteIdentifier($identifier);
-    }
 
-    /**
-     * Quote array of names.
-     *
-     * @param array $identifiers
-     * @return array
-     */
-    public function quoteNames(array $identifiers): array
-    {
-        foreach ($identifiers as $key => $identifier) {
-            if ($identifier instanceof RawExp) {
-                $identifiers[$key] = $identifier->getValue();
-                continue;
-            }
-            $identifiers[$key] = $this->quoteName($identifier);
-        }
-        return $identifiers;
+        return $this->quoteIdentifier($identifier);
     }
 
     /**
@@ -117,6 +120,7 @@ class Quoter
         $len = strlen($sep);
         $part1 = $this->quoteName(substr($spec, 0, $pos));
         $part2 = $this->quoteIdentifier(substr($spec, $pos + $len));
+
         return "{$part1}{$sep}{$part2}";
     }
 
@@ -139,6 +143,7 @@ class Quoter
         if ($name == '*') {
             return $name;
         }
+
         return "`" . str_replace("`", "``", $name) . "`";
     }
 
@@ -158,6 +163,7 @@ class Quoter
             }
             $values[] = $this->quoteName($key) . '=' . $this->quoteValue($value);
         }
+
         return implode(', ', $values);
     }
 
@@ -173,6 +179,7 @@ class Quoter
         foreach ($row as $key => $value) {
             $values[] = $this->quoteValue($value);
         }
+
         return implode(',', $values);
     }
 
@@ -188,6 +195,7 @@ class Quoter
         foreach (array_keys($row) as $field) {
             $fields[] = $this->quoteName($field);
         }
+
         return implode(', ', $fields);
     }
 
@@ -211,6 +219,7 @@ class Quoter
             }
             $identifiers[$key] = $this->quoteName($identifier);
         }
+
         return $identifiers;
     }
 }

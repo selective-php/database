@@ -80,6 +80,7 @@ abstract class SelectQueryBuilder implements QueryInterface
         if ($complete) {
             $result = trim($result) . ';';
         }
+
         return $result;
     }
 
@@ -99,6 +100,7 @@ abstract class SelectQueryBuilder implements QueryInterface
                 $this->bufferResult,
                 $this->calcFoundRows,
             ])));
+
         return $sql;
     }
 
@@ -112,6 +114,7 @@ abstract class SelectQueryBuilder implements QueryInterface
     {
         if (empty($this->columns)) {
             $sql[] = '*';
+
             return $sql;
         }
         $columns = [];
@@ -125,6 +128,7 @@ abstract class SelectQueryBuilder implements QueryInterface
             $columns[] = $column;
         }
         $sql[] = implode(',', $this->quoter->quoteNames($columns));
+
         return $sql;
     }
 
@@ -139,6 +143,66 @@ abstract class SelectQueryBuilder implements QueryInterface
         if (!empty($this->from)) {
             $sql[] = 'FROM ' . $this->quoter->quoteName($this->from);
         }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @return array
+     */
+    protected function getJoinSql(array $sql): array
+    {
+        if (empty($this->join)) {
+            return $sql;
+        }
+        foreach ($this->join as $item) {
+            list($type, $table, $leftField, $operator, $rightField) = $item;
+            $joinType = strtoupper($type) . ' JOIN';
+            $table = $this->quoter->quoteName($table);
+            if ($leftField instanceof RawExp) {
+                $sql[] = sprintf('%s %s ON (%s)', $joinType, $table, $leftField->getValue());
+            } else {
+                $leftField = $this->quoter->quoteName($leftField);
+                $rightField = $this->quoter->quoteName($rightField);
+                $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
+            }
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @return array
+     */
+    protected function getGroupBySql(array $sql): array
+    {
+        if (empty($this->groupBy)) {
+            return $sql;
+        }
+        $sql[] = 'GROUP BY ' . implode(', ', $this->quoter->quoteByFields($this->groupBy));
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @return array
+     */
+    protected function getOrderBySql(array $sql): array
+    {
+        if (empty($this->orderBy)) {
+            return $sql;
+        }
+        $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
+
         return $sql;
     }
 
@@ -158,6 +222,7 @@ abstract class SelectQueryBuilder implements QueryInterface
         } else {
             $sql[] = sprintf('LIMIT %s', (float)$this->limit);
         }
+
         return $sql;
     }
 
@@ -175,9 +240,9 @@ abstract class SelectQueryBuilder implements QueryInterface
         foreach ($this->union as $union) {
             $sql[] = 'UNION ' . trim($union[0] . ' ' . $union[1]);
         }
+
         return $sql;
     }
-
 
     /**
      * Get sql.
@@ -190,62 +255,7 @@ abstract class SelectQueryBuilder implements QueryInterface
         if (!isset($this->alias)) {
             return $sql;
         }
+
         return sprintf('(%s) AS %s', $sql, $this->quoter->quoteName($this->alias));
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     * @return array
-     */
-    protected function getJoinSql(array $sql): array
-    {
-        if (empty($this->join)) {
-            return $sql;
-        }
-        foreach ($this->join as $item) {
-            list($type, $table, $leftField, $operator, $rightField) = $item;
-            $joinType = strtoupper($type) . ' JOIN';
-            $table = $this->quoter->quoteName($table);
-            if($leftField instanceof RawExp) {
-                $sql[] = sprintf('%s %s ON (%s)', $joinType, $table, $leftField->getValue());
-            } else {
-                $leftField = $this->quoter->quoteName($leftField);
-                $rightField = $this->quoter->quoteName($rightField);
-                $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
-            }
-        }
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     * @return array
-     */
-    protected function getGroupBySql(array $sql): array
-    {
-        if (empty($this->groupBy)) {
-            return $sql;
-        }
-        $sql[] = 'GROUP BY ' . implode(', ', $this->quoter->quoteByFields($this->groupBy));
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     * @return array
-     */
-    protected function getOrderBySql(array $sql): array
-    {
-        if (empty($this->orderBy)) {
-            return $sql;
-        }
-        $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
-        return $sql;
     }
 }

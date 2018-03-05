@@ -70,18 +70,7 @@ class InsertQuery implements QueryInterface
     public function into(string $table): self
     {
         $this->table = $table;
-        return $this;
-    }
 
-    /**
-     * Value list.
-     *
-     * @param array $values Value list
-     * @return self
-     */
-    public function set(array $values): self
-    {
-        $this->values = $values;
         return $this;
     }
 
@@ -93,6 +82,7 @@ class InsertQuery implements QueryInterface
     public function lowPriority(): self
     {
         $this->priority = 'LOW_PRIORITY';
+
         return $this;
     }
 
@@ -104,6 +94,7 @@ class InsertQuery implements QueryInterface
     public function delayed(): self
     {
         $this->priority = 'DELAYED';
+
         return $this;
     }
 
@@ -115,6 +106,7 @@ class InsertQuery implements QueryInterface
     public function highPriority(): self
     {
         $this->priority = 'HIGH_PRIORITY';
+
         return $this;
     }
 
@@ -126,6 +118,7 @@ class InsertQuery implements QueryInterface
     public function ignore(): self
     {
         $this->ignore = 'IGNORE';
+
         return $this;
     }
 
@@ -138,6 +131,7 @@ class InsertQuery implements QueryInterface
     public function onDuplicateKeyUpdate($values): self
     {
         $this->duplicateValues = $values;
+
         return $this;
     }
 
@@ -149,30 +143,6 @@ class InsertQuery implements QueryInterface
     public function execute(): bool
     {
         return $this->prepare()->execute();
-    }
-
-    /**
-     * Returns the ID of the last inserted row or sequence value.
-     *
-     * @param string $name [optional] Name of the sequence object from which the ID should be returned.
-     * @return string Last inserted Id
-     */
-    public function lastInsertId($name = null): string
-    {
-        return $this->pdo->lastInsertId($name);
-    }
-
-    /**
-     * Insert new row(s) and return new Id.
-     *
-     * @param array $values Values
-     * @return string Last inserted Id
-     */
-    public function insertGetId(array $values): string
-    {
-        $stmt = $this->set($values)->prepare();
-        $stmt->execute();
-        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -220,5 +190,43 @@ class InsertQuery implements QueryInterface
         $result .= ';';
 
         return $result;
+    }
+
+    /**
+     * Returns the ID of the last inserted row or sequence value.
+     *
+     * @param string $name [optional] Name of the sequence object from which the ID should be returned.
+     * @return string Last inserted Id
+     */
+    public function lastInsertId($name = null): string
+    {
+        return $this->pdo->lastInsertId($name);
+    }
+
+    /**
+     * Insert new row(s) and return new Id.
+     *
+     * @param array $values Values
+     * @return string Last inserted Id
+     */
+    public function insertGetId(array $values): string
+    {
+        $stmt = $this->set($values)->prepare();
+        $stmt->execute();
+
+        return $this->pdo->lastInsertId();
+    }
+
+    /**
+     * Value list.
+     *
+     * @param array $values Value list
+     * @return self
+     */
+    public function set(array $values): self
+    {
+        $this->values = $values;
+
+        return $this;
     }
 }

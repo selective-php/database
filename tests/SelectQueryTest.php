@@ -12,12 +12,6 @@ use PDOStatement;
  */
 class SelectQueryTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
-
     /**
      * Test create object.
      *
@@ -663,5 +657,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->columns('id')->from('test')->limit(10);
         $this->assertSame("SELECT `id` FROM `test` LIMIT 10;", $select->build());
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->createTestTable();
     }
 }

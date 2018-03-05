@@ -15,6 +15,17 @@ class CompressionTest extends BaseTest
     protected $compression;
 
     /**
+     * Test create object.
+     *
+     * @return void
+     */
+    public function testInstance()
+    {
+        $object = $this->getCompression();
+        $this->assertInstanceOf(Compression::class, $object);
+    }
+
+    /**
      * Return Data object
      *
      * @return Compression
@@ -24,18 +35,8 @@ class CompressionTest extends BaseTest
         if ($this->compression === null) {
             $this->compression = new Compression($this->getConnection());
         }
-        return $this->compression;
-    }
 
-    /**
-     * Test create object.
-     *
-     * @return void
-     */
-    public function testInstance()
-    {
-        $object = $this->getCompression();
-        $this->assertInstanceOf(Compression::class, $object);
+        return $this->compression;
     }
 
     /**

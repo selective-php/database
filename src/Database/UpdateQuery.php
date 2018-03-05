@@ -96,6 +96,7 @@ class UpdateQuery implements QueryInterface
     public function lowPriority(): self
     {
         $this->priority = 'LOW_PRIORITY';
+
         return $this;
     }
 
@@ -107,6 +108,7 @@ class UpdateQuery implements QueryInterface
     public function ignore(): self
     {
         $this->ignore = 'IGNORE';
+
         return $this;
     }
 
@@ -119,6 +121,7 @@ class UpdateQuery implements QueryInterface
     public function table(string $table): self
     {
         $this->table = $table;
+
         return $this;
     }
 
@@ -131,6 +134,7 @@ class UpdateQuery implements QueryInterface
     public function set(array $values): self
     {
         $this->values = $values;
+
         return $this;
     }
 
@@ -145,6 +149,7 @@ class UpdateQuery implements QueryInterface
     public function where(...$conditions): self
     {
         $this->condition->where($conditions);
+
         return $this;
     }
 
@@ -159,6 +164,7 @@ class UpdateQuery implements QueryInterface
     public function orWhere(...$conditions): self
     {
         $this->condition->orWhere($conditions);
+
         return $this;
     }
 
@@ -171,6 +177,7 @@ class UpdateQuery implements QueryInterface
     public function orderBy(...$fields): self
     {
         $this->orderBy = $fields;
+
         return $this;
     }
 
@@ -183,6 +190,7 @@ class UpdateQuery implements QueryInterface
     public function limit(int $rowCount): self
     {
         $this->limit = $rowCount;
+
         return $this;
     }
 
@@ -196,6 +204,7 @@ class UpdateQuery implements QueryInterface
     public function increment(string $column, int $amount = 1): self
     {
         $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '+' . $this->quoter->quoteValue($amount));
+
         return $this;
     }
 
@@ -209,6 +218,7 @@ class UpdateQuery implements QueryInterface
     public function decrement(string $column, int $amount = 1): self
     {
         $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '-' . $this->quoter->quoteValue($amount));
+
         return $this;
     }
 
@@ -246,6 +256,7 @@ class UpdateQuery implements QueryInterface
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
         $result = trim(implode(" ", $sql)) . ';';
+
         return $result;
     }
 
@@ -265,6 +276,7 @@ class UpdateQuery implements QueryInterface
             $update .= ' ' . $this->ignore;
         }
         $sql[] = $update . ' ' . $this->quoter->quoteName($this->table);
+
         return $sql;
     }
 
@@ -278,6 +290,7 @@ class UpdateQuery implements QueryInterface
     {
         // single row
         $sql[] = 'SET ' . $this->quoter->quoteSetValues($this->values);
+
         return $sql;
     }
 
@@ -293,6 +306,7 @@ class UpdateQuery implements QueryInterface
             return $sql;
         }
         $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
+
         return $sql;
     }
 
@@ -308,6 +322,7 @@ class UpdateQuery implements QueryInterface
             return $sql;
         }
         $sql[] = sprintf('LIMIT %s', (int)$this->limit);
+
         return $sql;
     }
 }

@@ -91,6 +91,7 @@ class DeleteQuery implements QueryInterface
     public function lowPriority(): self
     {
         $this->priority = 'LOW_PRIORITY';
+
         return $this;
     }
 
@@ -102,6 +103,7 @@ class DeleteQuery implements QueryInterface
     public function ignore(): self
     {
         $this->ignore = 'IGNORE';
+
         return $this;
     }
 
@@ -117,6 +119,7 @@ class DeleteQuery implements QueryInterface
     public function quick(): self
     {
         $this->quick = 'QUICK';
+
         return $this;
     }
 
@@ -129,6 +132,7 @@ class DeleteQuery implements QueryInterface
     public function from(string $table): self
     {
         $this->table = $table;
+
         return $this;
     }
 
@@ -143,6 +147,7 @@ class DeleteQuery implements QueryInterface
     public function where(...$conditions): self
     {
         $this->condition->where($conditions);
+
         return $this;
     }
 
@@ -157,6 +162,7 @@ class DeleteQuery implements QueryInterface
     public function orWhere(...$conditions): self
     {
         $this->condition->orWhere($conditions);
+
         return $this;
     }
 
@@ -169,6 +175,7 @@ class DeleteQuery implements QueryInterface
     public function orderBy(...$fields): self
     {
         $this->orderBy = $fields;
+
         return $this;
     }
 
@@ -181,6 +188,7 @@ class DeleteQuery implements QueryInterface
     public function limit(int $rowCount): self
     {
         $this->limit = $rowCount;
+
         return $this;
     }
 
@@ -192,6 +200,7 @@ class DeleteQuery implements QueryInterface
     public function truncate(): self
     {
         $this->truncate = true;
+
         return $this;
     }
 
@@ -232,29 +241,8 @@ class DeleteQuery implements QueryInterface
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
         $result = trim(implode(" ", $sql)) . ';';
-        return $result;
-    }
 
-    /**
- * Get sql.
- *
- * @param array $sql
- * @return array
- */
-    public function getDeleteSql(array $sql)
-    {
-        $delete = 'DELETE';
-        if (!empty($this->priority)) {
-            $delete .= ' ' . $this->priority;
-        }
-        if (!empty($this->quick)) {
-            $delete .= ' ' . $this->quick;
-        }
-        if (!empty($this->ignore)) {
-            $delete .= ' ' . $this->ignore;
-        }
-        $sql[] = $delete . ' FROM ' . $this->quoter->quoteName($this->table);
-        return $sql;
+        return $result;
     }
 
     /**
@@ -273,12 +261,36 @@ class DeleteQuery implements QueryInterface
      * @param array $sql
      * @return array
      */
+    public function getDeleteSql(array $sql)
+    {
+        $delete = 'DELETE';
+        if (!empty($this->priority)) {
+            $delete .= ' ' . $this->priority;
+        }
+        if (!empty($this->quick)) {
+            $delete .= ' ' . $this->quick;
+        }
+        if (!empty($this->ignore)) {
+            $delete .= ' ' . $this->ignore;
+        }
+        $sql[] = $delete . ' FROM ' . $this->quoter->quoteName($this->table);
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     * @return array
+     */
     protected function getOrderBySql(array $sql): array
     {
         if (empty($this->orderBy)) {
             return $sql;
         }
         $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
+
         return $sql;
     }
 
@@ -294,6 +306,7 @@ class DeleteQuery implements QueryInterface
             return $sql;
         }
         $sql[] = sprintf('LIMIT %s', (int)$this->limit);
+
         return $sql;
     }
 }

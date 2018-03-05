@@ -32,6 +32,7 @@ class Compression
         if ($value === null || $value === '') {
             return $value;
         }
+
         return pack('L', strlen($value)) . gzcompress($value);
     }
 
@@ -46,6 +47,7 @@ class Compression
         if ($value === null || $value === '') {
             return $value;
         }
+
         return gzuncompress(substr($value, 4));
     }
 }

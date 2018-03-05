@@ -10,12 +10,6 @@ use PDO;
  */
 class SchemaTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
-
     /**
      * Test create object.
      *
@@ -332,5 +326,11 @@ class SchemaTest extends BaseTest
         $this->assertTrue($schema->copyTable('test', 'test_copy'));
         $this->assertTrue($schema->existTable('test_copy'));
         $this->assertTrue($schema->existTable('test'));
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->createTestTable();
     }
 }

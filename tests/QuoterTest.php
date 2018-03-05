@@ -23,15 +23,6 @@ class QuoterTest extends BaseTest
     }
 
     /**
-     * @param PDO $pdo
-     * @return PDO
-     */
-    protected function pdoMethod(PDO $pdo)
-    {
-        return $pdo;
-    }
-
-    /**
      * Test
      *
      * @return void
@@ -127,7 +118,6 @@ class QuoterTest extends BaseTest
         $this->assertSame(["'1'", "'2'", "'3'", 'NULL'], $quoter->quoteArray($row));
     }
 
-
     /**
      * Test
      *
@@ -141,5 +131,14 @@ class QuoterTest extends BaseTest
 
         $row = ['a', 'a.b', 'a.b.c', new RawExp('a.z')];
         $this->assertSame(["`a`", "`a`.`b`", "`a`.`b`.`c`", "a.z"], $quoter->quoteNames($row));
+    }
+
+    /**
+     * @param PDO $pdo
+     * @return PDO
+     */
+    protected function pdoMethod(PDO $pdo)
+    {
+        return $pdo;
     }
 }

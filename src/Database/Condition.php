@@ -68,129 +68,38 @@ class Condition
      * Get sql.
      *
      * @param array $sql
+     * @param array $where
+     * @param string $conditionType
      * @return array
      */
-    public function getHavingSql(array $sql): array
+    public function getConditionSql(array $sql, array $where, string $conditionType): array
     {
-        return $this->getConditionSql($sql, $this->having, 'HAVING');
-    }
-
-    /**
-     * Where AND condition.
-     *
-     * @param array ...$conditions (field, comparison, value)
-     * or (field, comparison, new RawExp('table.field'))
-     * or new RawExp('...')
-     * @return self
-     */
-    public function where($conditions): self
-    {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('where', 'AND', $conditions[0]);
-            return $this;
+        if (empty($where)) {
+            return $sql;
         }
-        $this->where[] = ['and', $conditions];
-        return $this;
-    }
+        foreach ($where as $index => $item) {
+            if ($item instanceof RawExp) {
+                $sql[] = $item->getValue();
+                continue;
+            }
+            list($type, $conditions) = $item;
+            if (!$index) {
+                $whereType = $conditionType;
+            } else {
+                $whereType = strtoupper($type);
+            }
+            if ($conditions[0] instanceof RawExp) {
+                $sql[] = $whereType . ' ' . $conditions[0]->getValue();
+                continue;
+            }
+            list($leftField, $operator, $rightField) = $conditions;
+            $leftField = $this->quoter->quoteName($leftField);
+            list($rightField, $operator) = $this->getRightFieldValue($rightField, $operator);
 
-    /**
-     * Where OR condition.
-     *
-     * @param array ...$conditions (field, comparison, value)
-     * or (field, comparison, new RawExp('table.field'))
-     * or new RawExp('...')
-     * @return self
-     */
-    public function orWhere($conditions): self
-    {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('where', 'OR', $conditions[0]);
-            return $this;
-        }
-        $this->where[] = ['or', $conditions];
-        return $this;
-    }
-
-    /**
-     * Add AND having condition.
-     *
-     * @param array ...$conditions (field, comparison, value)
-     * or (field, comparison, new RawExp('table.field'))
-     * or new RawExp('...')
-     * @return self
-     */
-    public function having($conditions): self
-    {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('having', 'AND', $conditions[0]);
-            return $this;
-        }
-        $this->having[] = ['and', $conditions];
-        return $this;
-    }
-
-    /**
-     * Add OR having condition.
-     *
-     * @param array ...$conditions (field, comparison, value)
-     * or (field, comparison, new RawExp('table.field'))
-     * or new RawExp('...')
-     * @return self
-     */
-    public function orHaving($conditions): self
-    {
-        if ($conditions[0] instanceof Closure) {
-            $this->addClauseCondClosure('having', 'OR', $conditions[0]);
-            return $this;
-        }
-        $this->having[] = ['or', $conditions];
-        return $this;
-    }
-
-    /**
-     * Adds to a clause through a closure, enclosing within parentheses.
-     *
-     * @param string $clause The clause to work with, typically 'where' or 'having'.
-     * @param string $andor Add the condition using this operator, typically 'AND' or 'OR'.
-     * @param callable $closure The closure that adds to the clause.
-     * @return void
-     */
-    protected function addClauseCondClosure($clause, $andor, $closure)
-    {
-        // retain the prior set of conditions, and temporarily reset the clause
-        // for the closure to work with (otherwise there will be an extraneous
-        // opening AND/OR keyword)
-        $set = $this->$clause;
-        $this->$clause = [];
-        // invoke the closure, which will re-populate the $this->$clause
-        $closure($this->query);
-        // are there new clause elements?
-        if (!$this->$clause) {
-            // no: restore the old ones, and done
-            $this->$clause = $set;
-            return;
+            $sql[] = sprintf('%s %s %s %s', $whereType, $leftField, $operator, $rightField);
         }
 
-        // append an opening parenthesis to the prior set of conditions,
-        // with AND/OR as needed ...
-        if ($set) {
-            $set[] = new RawExp(strtoupper($andor) . " (");
-        } else {
-            $set[] = new RawExp("(");
-        }
-
-        // append the new conditions to the set, with indenting
-        $sql = [];
-        $sql = $this->getConditionSql($sql, $this->$clause, '');
-        foreach ($sql as $cond) {
-            $set[] = new RawExp($cond);
-        }
-        $set[] = new RawExp(")");
-
-        // ... then put the full set of conditions back into $this->$clause
-        $this->$clause = $set;
-
-        return;
+        return $sql;
     }
 
     /**
@@ -224,6 +133,7 @@ class Condition
         } else {
             $rightField = $this->quoter->quoteValue($rightField);
         }
+
         return [$rightField, strtoupper($comparison)];
     }
 
@@ -231,36 +141,137 @@ class Condition
      * Get sql.
      *
      * @param array $sql
-     * @param array $where
-     * @param string $conditionType
      * @return array
      */
-    public function getConditionSql(array $sql, array $where, string $conditionType): array
+    public function getHavingSql(array $sql): array
     {
-        if (empty($where)) {
-            return $sql;
-        }
-        foreach ($where as $index => $item) {
-            if ($item instanceof RawExp) {
-                $sql[] = $item->getValue();
-                continue;
-            }
-            list($type, $conditions) = $item;
-            if (!$index) {
-                $whereType = $conditionType;
-            } else {
-                $whereType = strtoupper($type);
-            }
-            if ($conditions[0] instanceof RawExp) {
-                $sql[] = $whereType . ' ' . $conditions[0]->getValue();
-                continue;
-            }
-            list($leftField, $operator, $rightField) = $conditions;
-            $leftField = $this->quoter->quoteName($leftField);
-            list($rightField, $operator) = $this->getRightFieldValue($rightField, $operator);
+        return $this->getConditionSql($sql, $this->having, 'HAVING');
+    }
 
-            $sql[] = sprintf('%s %s %s %s', $whereType, $leftField, $operator, $rightField);
+    /**
+     * Where AND condition.
+     *
+     * @param array ...$conditions (field, comparison, value)
+     * or (field, comparison, new RawExp('table.field'))
+     * or new RawExp('...')
+     * @return self
+     */
+    public function where($conditions): self
+    {
+        if ($conditions[0] instanceof Closure) {
+            $this->addClauseCondClosure('where', 'AND', $conditions[0]);
+
+            return $this;
         }
-        return $sql;
+        $this->where[] = ['and', $conditions];
+
+        return $this;
+    }
+
+    /**
+     * Adds to a clause through a closure, enclosing within parentheses.
+     *
+     * @param string $clause The clause to work with, typically 'where' or 'having'.
+     * @param string $andor Add the condition using this operator, typically 'AND' or 'OR'.
+     * @param callable $closure The closure that adds to the clause.
+     * @return void
+     */
+    protected function addClauseCondClosure($clause, $andor, $closure)
+    {
+        // retain the prior set of conditions, and temporarily reset the clause
+        // for the closure to work with (otherwise there will be an extraneous
+        // opening AND/OR keyword)
+        $set = $this->$clause;
+        $this->$clause = [];
+        // invoke the closure, which will re-populate the $this->$clause
+        $closure($this->query);
+        // are there new clause elements?
+        if (!$this->$clause) {
+            // no: restore the old ones, and done
+            $this->$clause = $set;
+
+            return;
+        }
+
+        // append an opening parenthesis to the prior set of conditions,
+        // with AND/OR as needed ...
+        if ($set) {
+            $set[] = new RawExp(strtoupper($andor) . " (");
+        } else {
+            $set[] = new RawExp("(");
+        }
+
+        // append the new conditions to the set, with indenting
+        $sql = [];
+        $sql = $this->getConditionSql($sql, $this->$clause, '');
+        foreach ($sql as $cond) {
+            $set[] = new RawExp($cond);
+        }
+        $set[] = new RawExp(")");
+
+        // ... then put the full set of conditions back into $this->$clause
+        $this->$clause = $set;
+
+        return;
+    }
+
+    /**
+     * Where OR condition.
+     *
+     * @param array ...$conditions (field, comparison, value)
+     * or (field, comparison, new RawExp('table.field'))
+     * or new RawExp('...')
+     * @return self
+     */
+    public function orWhere($conditions): self
+    {
+        if ($conditions[0] instanceof Closure) {
+            $this->addClauseCondClosure('where', 'OR', $conditions[0]);
+
+            return $this;
+        }
+        $this->where[] = ['or', $conditions];
+
+        return $this;
+    }
+
+    /**
+     * Add AND having condition.
+     *
+     * @param array ...$conditions (field, comparison, value)
+     * or (field, comparison, new RawExp('table.field'))
+     * or new RawExp('...')
+     * @return self
+     */
+    public function having($conditions): self
+    {
+        if ($conditions[0] instanceof Closure) {
+            $this->addClauseCondClosure('having', 'AND', $conditions[0]);
+
+            return $this;
+        }
+        $this->having[] = ['and', $conditions];
+
+        return $this;
+    }
+
+    /**
+     * Add OR having condition.
+     *
+     * @param array ...$conditions (field, comparison, value)
+     * or (field, comparison, new RawExp('table.field'))
+     * or new RawExp('...')
+     * @return self
+     */
+    public function orHaving($conditions): self
+    {
+        if ($conditions[0] instanceof Closure) {
+            $this->addClauseCondClosure('having', 'OR', $conditions[0]);
+
+            return $this;
+        }
+        $this->having[] = ['or', $conditions];
+
+        return $this;
     }
 }

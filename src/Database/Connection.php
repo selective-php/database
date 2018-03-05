@@ -53,6 +53,7 @@ class Connection extends PDO
         if (!$this->quoter) {
             $this->quoter = new Quoter($this);
         }
+
         return $this->quoter;
     }
 
@@ -73,6 +74,7 @@ class Connection extends PDO
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result[] = $row[$key];
         }
+
         return $result;
     }
 
@@ -90,6 +92,7 @@ class Connection extends PDO
         if ($row = $this->query($sql)->fetch(PDO::FETCH_ASSOC)) {
             $result = $row[$column];
         }
+
         return $result;
     }
 
@@ -111,6 +114,7 @@ class Connection extends PDO
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result[$row[$key]] = $row;
         }
+
         return $result;
     }
 }
