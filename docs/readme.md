@@ -242,7 +242,7 @@ Please use the [join](#inner-join-clause) method.
 #### Advanced Join Clauses
 
 You may also specify more advanced join clauses. 
-To get started, pass a RawExp as the second argument into 
+To get started, pass a (raw) string as the second argument into 
 the `joinRaw` and `leftJoinRaw` method.
 
 ```php
