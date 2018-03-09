@@ -222,12 +222,12 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Join with complex conditions.
      *
      * @param string $table Table name
-     * @param RawExp $raw
+     * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
      * @return self
      */
-    public function joinRaw(string $table, RawExp $raw): self
+    public function joinRaw(string $table, string $conditions): self
     {
-        $this->join[] = ['inner', $table, $raw, null, null, null];
+        $this->join[] = ['inner', $table, new RawExp($conditions), null, null, null];
 
         return $this;
     }
@@ -236,12 +236,12 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Left join with complex conditions.
      *
      * @param string $table Table name
-     * @param RawExp $raw
+     * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
      * @return self
      */
-    public function leftJoinRaw(string $table, RawExp $raw): self
+    public function leftJoinRaw(string $table, string $conditions): self
     {
-        $this->join[] = ['left', $table, $raw, null, null, null];
+        $this->join[] = ['left', $table, new RawExp($conditions), null, null, null];
 
         return $this;
     }

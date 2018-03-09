@@ -248,7 +248,7 @@ the `joinRaw` and `leftJoinRaw` method.
 ```php
 $users = $this->select()
     ->from('users AS u')
-    ->joinRaw('posts AS p', new RawExp('p.user_id=u.id AND u.enabled=1 OR p.published IS NULL'))
+    ->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL')
     ->execute()
     ->fetchAll();
 ```
