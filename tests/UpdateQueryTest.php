@@ -31,7 +31,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -49,7 +49,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -65,7 +65,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -85,7 +85,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -110,7 +110,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -126,7 +126,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::set
@@ -149,7 +149,7 @@ class UpdateQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::table
      * @covers ::increment

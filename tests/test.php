@@ -10,9 +10,9 @@ $phpunit = new \PHPUnit\TextUI\TestRunner();
 
 try {
     echo "<pre>\n";
-    $testResults = $phpunit->doRun($phpunit->getTest(__DIR__, '', 'Test.php'), array(), false);
+    $testResults = $phpunit->doRun($phpunit->getTest(__DIR__, '', 'Test.php'), [], false);
     echo "</pre>\n";
 } catch (\PHPUnit\Framework\Exception $e) {
-    print $e->getMessage() . "\n";
-    echo "Unit tests failed.";
+    echo $e->getMessage() . "\n";
+    echo 'Unit tests failed.';
 }

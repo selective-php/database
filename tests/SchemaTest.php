@@ -22,7 +22,7 @@ class SchemaTest extends BaseTest
     }
 
     /**
-     * Test setDbName method
+     * Test setDbName method.
      *
      * @return void
      * @covers ::setDatabase
@@ -53,7 +53,7 @@ class SchemaTest extends BaseTest
     }
 
     /**
-     * Test getTables method
+     * Test getTables method.
      *
      * @return void
      * @covers ::getTables
@@ -128,10 +128,10 @@ class SchemaTest extends BaseTest
         $this->assertSame(false, $result);
 
         $tables = $schema->getTables();
-        $this->assertSame(array(0 => 'test'), $tables);
+        $this->assertSame([0 => 'test'], $tables);
 
         $tables = $schema->getTables('te%');
-        $this->assertSame(array(0 => 'test'), $tables);
+        $this->assertSame([0 => 'test'], $tables);
 
         $columns = $schema->getColumns('test');
         $this->assertSame(true, !empty($columns));
@@ -145,10 +145,10 @@ class SchemaTest extends BaseTest
         $this->assertSame(true, !empty($columns));
         $this->assertSame(10, count($columns));
 
-        $insert = $this->getConnection()->insert()->into('test')->set(array(
+        $insert = $this->getConnection()->insert()->into('test')->set([
             'keyname' => 'test',
-            'keyvalue' => '123'
-        ));
+            'keyvalue' => '123',
+        ]);
         $stmt = $insert->prepare();
         $stmt->execute();
         $this->assertTrue($stmt->rowCount() > 0);
@@ -156,17 +156,17 @@ class SchemaTest extends BaseTest
         // With ON DUPLICATE KEY UPDATE, the affected-rows value per row
         // is 1 if the row is inserted as a new row, and 2 if an existing row is updated.
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
-        $insert = $db->insert()->into('test')->set(array(
+        $insert = $db->insert()->into('test')->set([
             'id' => 1,
             'keyname' => 'test',
             'keyvalue' => '123',
-            'boolvalue' => 1
-        ))->onDuplicateKeyUpdate(array(
+            'boolvalue' => 1,
+        ])->onDuplicateKeyUpdate([
             'id' => 1,
             'keyname' => 'testx',
             'keyvalue' => '123',
-            'boolvalue' => 1
-        ));
+            'boolvalue' => 1,
+        ]);
         $stmt = $insert->prepare();
         $stmt->execute();
         $result = $stmt->rowCount();
@@ -175,19 +175,19 @@ class SchemaTest extends BaseTest
         $result = $db->lastInsertId();
         $this->assertSame('1', $result);
 
-        $result = $db->query("SELECT COUNT(*) AS count FROM `test`")->fetchAll(PDO::FETCH_ASSOC);
-        $this->assertSame(array(0 => array('count' => '1')), $result);
+        $result = $db->query('SELECT COUNT(*) AS count FROM `test`')->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertSame([0 => ['count' => '1']], $result);
 
-        $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
+        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('1', $result);
 
-        $result = $db->queryValue("SELECT * FROM `test` WHERE id = 9999999;", 'id');
+        $result = $db->queryValue('SELECT * FROM `test` WHERE id = 9999999;', 'id');
         $this->assertSame(null, $result);
 
-        $rows = array(
-            0 => array('keyname' => 'test', 'keyvalue' => '123'),
-            1 => array('keyname' => 'test2', 'keyvalue' => '1234')
-        );
+        $rows = [
+            0 => ['keyname' => 'test', 'keyvalue' => '123'],
+            1 => ['keyname' => 'test2', 'keyvalue' => '1234'],
+        ];
         $result = $db->insert()->into('test')->set($rows)->prepare();
         $result->execute();
         $this->assertSame(2, $result->rowCount());
@@ -195,61 +195,61 @@ class SchemaTest extends BaseTest
         $result = $db->lastInsertId();
         $this->assertSame('2', $result);
 
-        $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
+        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('3', $result);
 
         $result = $schema->truncateTable('test');
         $this->assertSame(0, $result);
 
-        $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
+        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('0', $result);
 
         $result = $db->insert()->into('test')->set($rows)->prepare();
         $result->execute();
         $this->assertSame(2, $result->rowCount());
 
-        $result = $db->queryValues("SELECT id,keyvalue FROM `test`", 'keyvalue');
-        $this->assertSame(array('123', '1234'), $result);
+        $result = $db->queryValues('SELECT id,keyvalue FROM `test`', 'keyvalue');
+        $this->assertSame(['123', '1234'], $result);
 
-        $result = $db->queryMapColumn("SELECT id,keyname,keyvalue FROM `test`", 'keyname');
-        $expected = array(
-            'test' => array(
+        $result = $db->queryMapColumn('SELECT id,keyname,keyvalue FROM `test`', 'keyname');
+        $expected = [
+            'test' => [
                 'id' => '1',
                 'keyname' => 'test',
                 'keyvalue' => '123',
-            ),
-            'test2' => array(
+            ],
+            'test2' => [
                 'id' => '2',
                 'keyname' => 'test2',
                 'keyvalue' => '1234',
-            ),
-        );
+            ],
+        ];
         $this->assertSame($expected, $result);
 
         $result = $schema->clearTable('test');
         $this->assertSame(2, $result);
 
-        $result = $db->queryValue("SELECT COUNT(*) AS count FROM `test`", 'count');
+        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('0', $result);
 
         $result = $db->queryValue("SHOW TABLE STATUS FROM `database_test` LIKE 'test'; ", 'Auto_increment');
         $this->assertSame('3', $result);
 
-        $rows = array();
+        $rows = [];
         for ($i = 0; $i < 100; $i++) {
-            $rows[] = array('keyname' => 'test', 'keyvalue' => 'value-' . $i);
+            $rows[] = ['keyname' => 'test', 'keyvalue' => 'value-' . $i];
         }
         $result = $db->insert()->into('test')->set($rows)->prepare();
         $result->execute();
         $this->assertSame(100, $result->rowCount());
 
-        $result = $db->query("SELECT keyname,keyvalue FROM test;")->fetchAll(PDO::FETCH_ASSOC);
+        $result = $db->query('SELECT keyname,keyvalue FROM test;')->fetchAll(PDO::FETCH_ASSOC);
         $this->assertSame(true, $rows == $result);
 
-        $fields = array(
+        $fields = [
             'keyname' => 'test-new',
-            'keyvalue' => 'value-new'
-        );
+            'keyvalue' => 'value-new',
+        ];
         $stmt = $db->update()->table('test')->set($fields)->where('keyname', '=', 'test')->prepare();
         $stmt->execute();
         $this->assertSame(100, $stmt->rowCount());
@@ -287,7 +287,7 @@ class SchemaTest extends BaseTest
     }
 
     /**
-     * Test getTables method
+     * Test getTables method.
      *
      * @return void
      * @covers ::getColumnNames

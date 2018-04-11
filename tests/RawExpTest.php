@@ -10,7 +10,7 @@ use Odan\Database\RawExp;
 class RawExpTest extends BaseTest
 {
     /**
-     * Test
+     * Test.
      *
      * @covers ::getValue
      */
@@ -21,7 +21,7 @@ class RawExpTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::__toString
      */
@@ -32,7 +32,7 @@ class RawExpTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::getValue
      */
@@ -51,7 +51,7 @@ class RawExpTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::getValue
      */

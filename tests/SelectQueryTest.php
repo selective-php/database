@@ -24,7 +24,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::distinct
      * @covers ::distinctRow
@@ -37,15 +37,15 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->distinct()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT DISTINCT `id` FROM `test`;", $select->build());
+        $this->assertSame('SELECT DISTINCT `id` FROM `test`;', $select->build());
 
         $select = $this->select()->distinctRow()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT DISTINCTROW `id` FROM `test`;", $select->build());
+        $this->assertSame('SELECT DISTINCTROW `id` FROM `test`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::straightJoin
      * @covers ::from
@@ -56,11 +56,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->straightJoin()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT STRAIGHT_JOIN * FROM `users`;", $select->build());
+        $this->assertSame('SELECT STRAIGHT_JOIN * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::highPriority
      * @covers ::from
@@ -71,11 +71,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->highPriority()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT HIGH_PRIORITY * FROM `users`;", $select->build());
+        $this->assertSame('SELECT HIGH_PRIORITY * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::smallResult
      * @covers ::from
@@ -86,11 +86,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->smallResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT SQL_SMALL_RESULT * FROM `users`;", $select->build());
+        $this->assertSame('SELECT SQL_SMALL_RESULT * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::bigResult
      * @covers ::from
@@ -101,11 +101,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->bigResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT SQL_BIG_RESULT * FROM `users`;", $select->build());
+        $this->assertSame('SELECT SQL_BIG_RESULT * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::bufferResult
      * @covers ::from
@@ -116,11 +116,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->bufferResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT SQL_BUFFER_RESULT * FROM `users`;", $select->build());
+        $this->assertSame('SELECT SQL_BUFFER_RESULT * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::calcFoundRows
      * @covers ::from
@@ -131,11 +131,11 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->calcFoundRows()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT SQL_CALC_FOUND_ROWS * FROM `users`;", $select->build());
+        $this->assertSame('SELECT SQL_CALC_FOUND_ROWS * FROM `users`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::columns
      * @covers ::getColumnsSql
@@ -146,23 +146,22 @@ class SelectQueryTest extends BaseTest
     public function testColumns()
     {
         $select = $this->select()->from('users');
-        $this->assertSame("SELECT * FROM `users`;", $select->build());
+        $this->assertSame('SELECT * FROM `users`;', $select->build());
 
         $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;", $select->build());
-
+        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;', $select->build());
 
         // queries without table
-        $select = $this->select()->columns(new RawExp("ISNULL(1+1)"));
-        $this->assertSame("SELECT ISNULL(1+1);", $select->build());
+        $select = $this->select()->columns(new RawExp('ISNULL(1+1)'));
+        $this->assertSame('SELECT ISNULL(1+1);', $select->build());
 
-        $select = $this->select()->columns(new RawExp("INTERVAL(23, 1, 15, 17, 30, 44, 200)"));
-        $this->assertSame("SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200);", $select->build());
+        $select = $this->select()->columns(new RawExp('INTERVAL(23, 1, 15, 17, 30, 44, 200)'));
+        $this->assertSame('SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200);', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers ::alias
@@ -181,9 +180,9 @@ class SelectQueryTest extends BaseTest
     {
         // Raw
         $select = $this->select()
-            ->columns('id', new RawExp("(SELECT MAX(payments.amount) FROM payments) AS max_amount"))
+            ->columns('id', new RawExp('(SELECT MAX(payments.amount) FROM payments) AS max_amount'))
             ->from('test');
-        $this->assertSame("SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;", $select->build());
+        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;', $select->build());
 
         // With a sub query object
         $select = $this->select()
@@ -194,11 +193,11 @@ class SelectQueryTest extends BaseTest
             })
             ->from('test');
 
-        $this->assertSame("SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;", $select->build());
+        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::union
      * @covers ::unionAll
@@ -213,21 +212,21 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->columns('id')->from('table1');
         $select2 = $this->select()->columns('id')->from('table2');
         $select->union($select2);
-        $this->assertSame("SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;', $select->build());
 
         $select = $this->select()->columns('id')->from('table1');
         $select2 = $this->select()->columns('id')->from('table2');
         $select->unionAll($select2);
-        $this->assertSame("SELECT `id` FROM `table1` UNION ALL SELECT `id` FROM `table2`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `table1` UNION ALL SELECT `id` FROM `table2`;', $select->build());
 
         $select = $this->select()->columns('id')->from('table1');
         $select2 = $this->select()->columns('id')->from('table2');
         $select->unionDistinct($select2);
-        $this->assertSame("SELECT `id` FROM `table1` UNION DISTINCT SELECT `id` FROM `table2`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `table1` UNION DISTINCT SELECT `id` FROM `table2`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::columns
      * @covers ::from
@@ -238,17 +237,17 @@ class SelectQueryTest extends BaseTest
     {
         $select = $this->select()->columns('id')->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test`;', $select->build());
 
         $select = $this->select()->columns('id')->from('test AS t');
-        $this->assertSame("SELECT `id` FROM `test` AS `t`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` AS `t`;', $select->build());
 
         $select = $this->select()->columns('id')->from('dbname.test AS t');
-        $this->assertSame("SELECT `id` FROM `dbname`.`test` AS `t`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `dbname`.`test` AS `t`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -285,26 +284,26 @@ class SelectQueryTest extends BaseTest
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` != '8';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '<>', null);
-        $this->assertSame("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` WHERE `id` IS NOT NULL;', $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '!=', null);
-        $this->assertSame("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` WHERE `id` IS NOT NULL;', $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '=', null);
-        $this->assertSame("SELECT `id` FROM `test` WHERE `id` IS NULL;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` WHERE `id` IS NULL;', $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'is', null);
-        $this->assertSame("SELECT `id` FROM `test` WHERE `id` IS NULL;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` WHERE `id` IS NULL;', $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', 'is not', null);
-        $this->assertSame("SELECT `id` FROM `test` WHERE `id` IS NOT NULL;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` WHERE `id` IS NOT NULL;', $select->build());
 
         $select = $this->select()->columns('*')->from('users')->where('username', '=', "hello' or 1=1;--");
         $this->assertSame("SELECT * FROM `users` WHERE `username` = 'hello\' or 1=1;--';", $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -326,7 +325,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -351,7 +350,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -370,7 +369,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test Simple pattern matching
+     * Test Simple pattern matching.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -384,7 +383,7 @@ class SelectQueryTest extends BaseTest
      */
     public function testWhereLike()
     {
-        $select = $this->select()->columns('id')->from('test')->where('first_name', 'like', "%max%");
+        $select = $this->select()->columns('id')->from('test')->where('first_name', 'like', '%max%');
         $this->assertSame("SELECT `id` FROM `test` WHERE `first_name` LIKE '%max%';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('first_name', 'like', "%a'b%");
@@ -395,7 +394,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test Simple pattern matching
+     * Test Simple pattern matching.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -412,12 +411,12 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->from('users')->where('username', Operator::REGEXP, '^[a-d]');
         $this->assertSame("SELECT * FROM `users` WHERE `username` REGEXP '^[a-d]';", $select->build());
 
-        $select = $this->select()->from('users')->where('username', Operator::REGEXP, "new\\*.\\*line");
+        $select = $this->select()->from('users')->where('username', Operator::REGEXP, 'new\\*.\\*line');
         $this->assertSame("SELECT * FROM `users` WHERE `username` REGEXP 'new\\\\*.\\\\*line';", $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers \Odan\Database\Condition::addClauseCondClosure
@@ -434,12 +433,12 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->columns('id')->from('test')->where(new RawExp("STRCMP('text', 'text2')"));
         $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
 
-        $select = $this->select()->columns('id')->from('test')->where(new RawExp("ISNULL(1+1)"));
-        $this->assertSame("SELECT `id` FROM `test` WHERE ISNULL(1+1);", $select->build());
+        $select = $this->select()->columns('id')->from('test')->where(new RawExp('ISNULL(1+1)'));
+        $this->assertSame('SELECT `id` FROM `test` WHERE ISNULL(1+1);', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers ::whereColumn
@@ -456,22 +455,22 @@ class SelectQueryTest extends BaseTest
     public function testWhereColumn()
     {
         $select = $this->select()->from('users')->whereColumn('first_name', '=', 'last_name');
-        $this->assertSame("SELECT * FROM `users` WHERE `first_name` = `last_name`;", $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name`;', $select->build());
 
         $select = $select->orWhereColumn('votes', '>=', 'vote_max');
-        $this->assertSame("SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;", $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;', $select->build());
 
         $select = $this->select()->from('users')->whereColumn('users.email', '=', 'table2.email');
-        $this->assertSame("SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`;", $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`;', $select->build());
 
         $select = $this->select()->from('users')
             ->whereColumn('first_name', '=', 'last_name')
             ->whereColumn('updated_at', '=', 'created_at');
-        $this->assertSame("SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;", $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::where
      * @covers ::orWhere
@@ -556,7 +555,7 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::join
      * @covers ::getJoinSql
@@ -571,15 +570,15 @@ class SelectQueryTest extends BaseTest
             ->from('test AS t')
             ->join('users AS u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;', $select->build());
 
         $select->join('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
+        $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
         $this->assertSame($expected, $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::joinRaw
      * @covers ::getJoinSql
@@ -594,11 +593,11 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->joinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::leftJoinRaw
      * @covers ::getJoinSql
@@ -613,11 +612,11 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);', $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::leftJoin
      * @covers ::getJoinSql
@@ -632,15 +631,15 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoin('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;', $select->build());
 
         $select->leftJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
-        $expected = "SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;";
+        $expected = 'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
         $this->assertSame($expected, $select->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::limit
      * @covers ::getLimitSql
@@ -656,7 +655,7 @@ class SelectQueryTest extends BaseTest
     public function testLimit()
     {
         $select = $this->select()->columns('id')->from('test')->limit(10);
-        $this->assertSame("SELECT `id` FROM `test` LIMIT 10;", $select->build());
+        $this->assertSame('SELECT `id` FROM `test` LIMIT 10;', $select->build());
     }
 
     protected function setUp()
