@@ -30,7 +30,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -50,7 +50,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -67,7 +67,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -83,7 +83,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -102,7 +102,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -121,7 +121,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set
@@ -137,7 +137,7 @@ class InsertQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::into
      * @covers ::set

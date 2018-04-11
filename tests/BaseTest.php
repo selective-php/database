@@ -9,7 +9,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 
 /**
- * ConnectionTest
+ * ConnectionTest.
  */
 abstract class BaseTest extends TestCase
 {
@@ -29,7 +29,7 @@ abstract class BaseTest extends TestCase
     protected $schema;
 
     /**
-     * Create test table
+     * Create test table.
      *
      * @return int
      */
@@ -48,7 +48,7 @@ abstract class BaseTest extends TestCase
             $schema->dropTable($table);
         }
 
-        $result = $db->exec("CREATE TABLE `test` (
+        $result = $db->exec('CREATE TABLE `test` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `keyname` VARCHAR(255) COLLATE utf8_unicode_ci,
             `keyvalue` VARCHAR(255) COLLATE utf8_unicode_ci,
@@ -63,7 +63,7 @@ abstract class BaseTest extends TestCase
             KEY `created_user_id` (`created_user_id`),
             KEY `updated_user_id` (`updated_user_id`),
             KEY `deleted_user_id` (`deleted_user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;');
 
         return $result;
     }
@@ -80,12 +80,12 @@ abstract class BaseTest extends TestCase
             $password = '';
             $charset = 'utf8';
             $collate = 'utf8_unicode_ci';
-            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, array(
+            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_PERSISTENT => false,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
-            ));
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate",
+            ]);
         }
 
         return $this->connection;

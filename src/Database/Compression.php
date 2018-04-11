@@ -3,11 +3,10 @@
 namespace Odan\Database;
 
 /**
- * Class Compression
+ * Class Compression.
  */
 class Compression
 {
-
     /** @var Connection */
     protected $db = null;
 
@@ -22,9 +21,10 @@ class Compression
     }
 
     /**
-     * Compress compatible with MySQL COMPRESS
+     * Compress compatible with MySQL COMPRESS.
      *
      * @param string|mixed $value data to compress
+     *
      * @return string|null compressed data
      */
     public function compress($value)
@@ -37,9 +37,10 @@ class Compression
     }
 
     /**
-     * Uncompress compatible with MySQL UNCOMPRESS
+     * Uncompress compatible with MySQL UNCOMPRESS.
      *
      * @param string|mixed $value
+     *
      * @return string|null
      */
     public function uncompress($value)

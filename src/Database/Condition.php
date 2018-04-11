@@ -6,9 +6,8 @@ use Closure;
 
 class Condition
 {
-
     /**
-     * PDO Connection
+     * PDO Connection.
      *
      * @var Connection
      */
@@ -20,21 +19,21 @@ class Condition
     protected $quoter;
 
     /**
-     * PDO Connection
+     * PDO Connection.
      *
      * @var QueryInterface
      */
     protected $query;
 
     /**
-     * Where clause
+     * Where clause.
      *
      * @var array
      */
     protected $where = [];
 
     /**
-     * Having clause
+     * Having clause.
      *
      * @var array
      */
@@ -57,6 +56,7 @@ class Condition
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     public function getWhereSql(array $sql): array
@@ -70,6 +70,7 @@ class Condition
      * @param array $sql
      * @param array $where
      * @param string $conditionType
+     *
      * @return array
      */
     public function getConditionSql(array $sql, array $where, string $conditionType): array
@@ -82,7 +83,7 @@ class Condition
                 $sql[] = $item->getValue();
                 continue;
             }
-            list($type, $conditions) = $item;
+            [$type, $conditions] = $item;
             if (!$index) {
                 $whereType = $conditionType;
             } else {
@@ -92,9 +93,9 @@ class Condition
                 $sql[] = $whereType . ' ' . $conditions[0]->getValue();
                 continue;
             }
-            list($leftField, $operator, $rightField) = $conditions;
+            [$leftField, $operator, $rightField] = $conditions;
             $leftField = $this->quoter->quoteName($leftField);
-            list($rightField, $operator) = $this->getRightFieldValue($rightField, $operator);
+            [$rightField, $operator] = $this->getRightFieldValue($rightField, $operator);
 
             $sql[] = sprintf('%s %s %s %s', $whereType, $leftField, $operator, $rightField);
         }
@@ -103,12 +104,13 @@ class Condition
     }
 
     /**
-     * Comparison Functions and Operators
+     * Comparison Functions and Operators.
      *
      * https://dev.mysql.com/doc/refman/5.7/en/comparison-operators.html
      *
      * @param mixed $rightField
      * @param mixed $comparison
+     *
      * @return array
      */
     protected function getRightFieldValue($rightField, $comparison): array
@@ -141,6 +143,7 @@ class Condition
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     public function getHavingSql(array $sql): array
@@ -154,6 +157,7 @@ class Condition
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function where($conditions): self
@@ -171,9 +175,10 @@ class Condition
     /**
      * Adds to a clause through a closure, enclosing within parentheses.
      *
-     * @param string $clause The clause to work with, typically 'where' or 'having'.
-     * @param string $andor Add the condition using this operator, typically 'AND' or 'OR'.
-     * @param callable $closure The closure that adds to the clause.
+     * @param string $clause the clause to work with, typically 'where' or 'having'
+     * @param string $andor add the condition using this operator, typically 'AND' or 'OR'
+     * @param callable $closure the closure that adds to the clause
+     *
      * @return void
      */
     protected function addClauseCondClosure($clause, $andor, $closure)
@@ -196,9 +201,9 @@ class Condition
         // append an opening parenthesis to the prior set of conditions,
         // with AND/OR as needed ...
         if ($set) {
-            $set[] = new RawExp(strtoupper($andor) . " (");
+            $set[] = new RawExp(strtoupper($andor) . ' (');
         } else {
-            $set[] = new RawExp("(");
+            $set[] = new RawExp('(');
         }
 
         // append the new conditions to the set, with indenting
@@ -207,7 +212,7 @@ class Condition
         foreach ($sql as $cond) {
             $set[] = new RawExp($cond);
         }
-        $set[] = new RawExp(")");
+        $set[] = new RawExp(')');
 
         // ... then put the full set of conditions back into $this->$clause
         $this->$clause = $set;
@@ -221,6 +226,7 @@ class Condition
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orWhere($conditions): self
@@ -241,6 +247,7 @@ class Condition
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function having($conditions): self
@@ -261,6 +268,7 @@ class Condition
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orHaving($conditions): self

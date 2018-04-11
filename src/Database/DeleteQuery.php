@@ -5,14 +5,14 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class DeleteQuery
+ * Class DeleteQuery.
  *
  * @see https://dev.mysql.com/doc/refman/5.7/en/delete.html
  */
 class DeleteQuery implements QueryInterface
 {
     /**
-     * Connection
+     * Connection.
      *
      * @var Connection
      */
@@ -34,7 +34,7 @@ class DeleteQuery implements QueryInterface
     protected $priority;
 
     /**
-     * Errors that occur while executing the DELETE statement are ignored
+     * Errors that occur while executing the DELETE statement are ignored.
      *
      * @var string Ignore modifier
      */
@@ -96,7 +96,7 @@ class DeleteQuery implements QueryInterface
     }
 
     /**
-     * Ignore errors modifier
+     * Ignore errors modifier.
      *
      * @return self
      */
@@ -124,9 +124,10 @@ class DeleteQuery implements QueryInterface
     }
 
     /**
-     * Table name
+     * Table name.
      *
      * @param string $table Table name
+     *
      * @return self
      */
     public function from(string $table): self
@@ -142,6 +143,7 @@ class DeleteQuery implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function where(...$conditions): self
@@ -157,6 +159,7 @@ class DeleteQuery implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orWhere(...$conditions): self
@@ -170,6 +173,7 @@ class DeleteQuery implements QueryInterface
      * Order by.
      *
      * @param array ...$fields Column name(s)
+     *
      * @return self
      */
     public function orderBy(...$fields): self
@@ -183,6 +187,7 @@ class DeleteQuery implements QueryInterface
      * Limit the number of rows returned.
      *
      * @param int $rowCount Row count
+     *
      * @return self
      */
     public function limit(int $rowCount): self
@@ -204,7 +209,6 @@ class DeleteQuery implements QueryInterface
         return $this;
     }
 
-
     /**
      * Executes a prepared statement.
      *
@@ -216,7 +220,7 @@ class DeleteQuery implements QueryInterface
     }
 
     /**
-     * Prepares a statement for execution and returns a statement object
+     * Prepares a statement for execution and returns a statement object.
      *
      * @return PDOStatement
      */
@@ -240,7 +244,7 @@ class DeleteQuery implements QueryInterface
         $sql = $this->condition->getWhereSql($sql);
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
-        $result = trim(implode(" ", $sql)) . ';';
+        $result = trim(implode(' ', $sql)) . ';';
 
         return $result;
     }
@@ -259,6 +263,7 @@ class DeleteQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     public function getDeleteSql(array $sql)
@@ -282,6 +287,7 @@ class DeleteQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getOrderBySql(array $sql): array
@@ -298,6 +304,7 @@ class DeleteQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getLimitSql(array $sql): array

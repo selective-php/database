@@ -14,6 +14,9 @@
   "require-dev": {
     "phpunit/phpunit": "^6.0"
   },
+  "require": {
+    "php": ">=7.1"
+  },
   "scripts": {
     "test": "phpunit",
     "test-coverage": "phpunit --coverage-clover build/logs/clover.xml --coverage-html build/coverage",
@@ -22,12 +25,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Odan\\": "src"
+      "Odan\\Database\\": "src/Database"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Odan\\Test\\": "tests"
+      "Odan\\Database\\Test\\": "tests/"
     }
   },
   "config": {

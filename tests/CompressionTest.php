@@ -26,7 +26,7 @@ class CompressionTest extends BaseTest
     }
 
     /**
-     * Return Data object
+     * Return Data object.
      *
      * @return Compression
      */
@@ -40,7 +40,7 @@ class CompressionTest extends BaseTest
     }
 
     /**
-     * Test compress method
+     * Test compress method.
      *
      * @return void
      * @covers ::compress
@@ -59,7 +59,7 @@ class CompressionTest extends BaseTest
         // MySQL TO_BASE64 function does not exist
         // https://github.com/travis-ci/travis-ci/issues/4088
         $result = $enc->compress(null);
-        $result2 = $db->queryValue("SELECT HEX(COMPRESS(NULL)) AS result;", 'result');
+        $result2 = $db->queryValue('SELECT HEX(COMPRESS(NULL)) AS result;', 'result');
         $this->assertSame(true, $result === $result2);
 
         $result = $enc->uncompress(hex2bin('04000000789C2B492D2E0100045D01C1'));
@@ -67,7 +67,7 @@ class CompressionTest extends BaseTest
         $this->assertSame($resultFromDb, $result);
 
         $result = $enc->uncompress(null);
-        $resultFromDb = $db->queryValue("SELECT UNCOMPRESS(NULL) AS result;", 'result');
+        $resultFromDb = $db->queryValue('SELECT UNCOMPRESS(NULL) AS result;', 'result');
         $this->assertSame(true, $resultFromDb === $result);
 
         // MySQL TO_BASE64 function does not exist

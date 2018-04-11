@@ -30,7 +30,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::from
@@ -42,12 +42,12 @@ class DeleteQueryTest extends BaseTest
     public function testFrom()
     {
         $delete = $this->delete()->from('test');
-        $this->assertSame("DELETE FROM `test`;", $delete->build());
+        $this->assertSame('DELETE FROM `test`;', $delete->build());
         $this->assertTrue($delete->execute());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::lowPriority
@@ -59,11 +59,11 @@ class DeleteQueryTest extends BaseTest
     {
         $delete = $this->delete()->lowPriority()->from('test');
         $this->assertInstanceOf(PDOStatement::class, $delete->prepare());
-        $this->assertSame("DELETE LOW_PRIORITY FROM `test`;", $delete->build());
+        $this->assertSame('DELETE LOW_PRIORITY FROM `test`;', $delete->build());
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::where
@@ -83,7 +83,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::where
@@ -100,7 +100,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::where
@@ -125,7 +125,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::where
@@ -141,7 +141,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::where
@@ -162,7 +162,7 @@ class DeleteQueryTest extends BaseTest
     }
 
     /**
-     * Test
+     * Test.
      *
      * @covers ::from
      * @covers ::truncate
@@ -173,7 +173,7 @@ class DeleteQueryTest extends BaseTest
     public function testTruncate()
     {
         $delete = $this->delete()->from('test')->truncate();
-        $this->assertSame("TRUNCATE TABLE `test`;", $delete->build());
+        $this->assertSame('TRUNCATE TABLE `test`;', $delete->build());
     }
 
     protected function setUp()

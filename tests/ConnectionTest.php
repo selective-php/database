@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Odan\Test;
 
@@ -7,7 +9,7 @@ use PDO;
 use PDOStatement;
 
 /**
- * @coversDefaultClass Odan\Database\Connection
+ * @coversDefaultClass \Odan\Database\Connection
  */
 class ConnectionTest extends BaseTest
 {
@@ -26,6 +28,7 @@ class ConnectionTest extends BaseTest
 
     /**
      * @param PDO $pdo
+     *
      * @return PDO
      */
     protected function pdoMethod(PDO $pdo)
@@ -34,8 +37,7 @@ class ConnectionTest extends BaseTest
     }
 
     /**
-     * Test
-     *
+     * Test.
      */
     public function testPrepareQuery()
     {

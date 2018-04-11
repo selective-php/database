@@ -5,14 +5,14 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * UpdateQuery
+ * UpdateQuery.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/update.html
  */
 class UpdateQuery implements QueryInterface
 {
     /**
-     * Connection
+     * Connection.
      *
      * @var Connection
      */
@@ -44,7 +44,7 @@ class UpdateQuery implements QueryInterface
     protected $priority;
 
     /**
-     * Errors that occur while executing the INSERT statement are ignored
+     * Errors that occur while executing the INSERT statement are ignored.
      *
      * @var string Ignore modifier
      */
@@ -75,7 +75,6 @@ class UpdateQuery implements QueryInterface
      */
     protected $decrement = [];
 
-
     /**
      * Constructor.
      *
@@ -101,7 +100,7 @@ class UpdateQuery implements QueryInterface
     }
 
     /**
-     * Ignore errors modifier
+     * Ignore errors modifier.
      *
      * @return self
      */
@@ -113,9 +112,10 @@ class UpdateQuery implements QueryInterface
     }
 
     /**
-     * Table name
+     * Table name.
      *
      * @param string $table Table name
+     *
      * @return self
      */
     public function table(string $table): self
@@ -129,6 +129,7 @@ class UpdateQuery implements QueryInterface
      * Values (key value).
      *
      * @param array $values
+     *
      * @return self
      */
     public function set(array $values): self
@@ -144,6 +145,7 @@ class UpdateQuery implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function where(...$conditions): self
@@ -159,6 +161,7 @@ class UpdateQuery implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orWhere(...$conditions): self
@@ -172,6 +175,7 @@ class UpdateQuery implements QueryInterface
      * Order by.
      *
      * @param array ...$fields Column name(s)
+     *
      * @return self
      */
     public function orderBy(...$fields): self
@@ -185,6 +189,7 @@ class UpdateQuery implements QueryInterface
      * Limit the number of rows returned.
      *
      * @param int $rowCount Row count
+     *
      * @return self
      */
     public function limit(int $rowCount): self
@@ -199,6 +204,7 @@ class UpdateQuery implements QueryInterface
      *
      * @param string $column The column to modify
      * @param int $amount [optional] The amount by which the column should be incremented
+     *
      * @return self
      */
     public function increment(string $column, int $amount = 1): self
@@ -213,6 +219,7 @@ class UpdateQuery implements QueryInterface
      *
      * @param string $column The column to modify
      * @param int $amount [optional] The amount by which the column should be decrement
+     *
      * @return self
      */
     public function decrement(string $column, int $amount = 1): self
@@ -233,7 +240,7 @@ class UpdateQuery implements QueryInterface
     }
 
     /**
-     * Prepares a statement for execution and returns a statement object
+     * Prepares a statement for execution and returns a statement object.
      *
      * @return PDOStatement
      */
@@ -255,7 +262,7 @@ class UpdateQuery implements QueryInterface
         $sql = $this->condition->getWhereSql($sql);
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
-        $result = trim(implode(" ", $sql)) . ';';
+        $result = trim(implode(' ', $sql)) . ';';
 
         return $result;
     }
@@ -264,6 +271,7 @@ class UpdateQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     public function getUpdateSql(array $sql)
@@ -284,6 +292,7 @@ class UpdateQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     public function getSetSql(array $sql): array
@@ -298,6 +307,7 @@ class UpdateQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getOrderBySql(array $sql): array
@@ -314,6 +324,7 @@ class UpdateQuery implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getLimitSql(array $sql): array

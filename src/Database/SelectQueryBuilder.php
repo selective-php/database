@@ -5,14 +5,14 @@ namespace Odan\Database;
 use Closure;
 
 /**
- * Class SelectQueryBuilder
+ * Class SelectQueryBuilder.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/select.html
  */
 abstract class SelectQueryBuilder implements QueryInterface
 {
     /**
-     * PDO Connection
+     * PDO Connection.
      *
      * @var Connection
      */
@@ -60,6 +60,8 @@ abstract class SelectQueryBuilder implements QueryInterface
     /**
      * Build a SQL string.
      *
+     * @param bool $complete
+     *
      * @return string SQL string
      */
     public function build(bool $complete = true): string
@@ -75,7 +77,7 @@ abstract class SelectQueryBuilder implements QueryInterface
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
         $sql = $this->getUnionSql($sql);
-        $result = trim(implode(" ", $sql));
+        $result = trim(implode(' ', $sql));
         $result = $this->getAliasSql($result);
         if ($complete) {
             $result = trim($result) . ';';
@@ -88,18 +90,19 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getSelectSql(array $sql): array
     {
         $sql[] = trim('SELECT ' . trim(implode(' ', [
-                $this->distinct,
-                $this->highPriority,
-                $this->straightJoin,
-                $this->resultSize,
-                $this->bufferResult,
-                $this->calcFoundRows,
-            ])));
+            $this->distinct,
+            $this->highPriority,
+            $this->straightJoin,
+            $this->resultSize,
+            $this->bufferResult,
+            $this->calcFoundRows,
+        ])));
 
         return $sql;
     }
@@ -108,6 +111,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getColumnsSql(array $sql): array
@@ -136,6 +140,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getFromSql(array $sql): array
@@ -151,6 +156,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getJoinSql(array $sql): array
@@ -159,7 +165,7 @@ abstract class SelectQueryBuilder implements QueryInterface
             return $sql;
         }
         foreach ($this->join as $item) {
-            list($type, $table, $leftField, $operator, $rightField) = $item;
+            [$type, $table, $leftField, $operator, $rightField] = $item;
             $joinType = strtoupper($type) . ' JOIN';
             $table = $this->quoter->quoteName($table);
             if ($leftField instanceof RawExp) {
@@ -178,6 +184,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getGroupBySql(array $sql): array
@@ -194,6 +201,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getOrderBySql(array $sql): array
@@ -210,6 +218,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getLimitSql(array $sql): array
@@ -230,6 +239,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param array $sql
+     *
      * @return array
      */
     protected function getUnionSql(array $sql): array
@@ -248,6 +258,7 @@ abstract class SelectQueryBuilder implements QueryInterface
      * Get sql.
      *
      * @param string $sql
+     *
      * @return string $sql
      */
     protected function getAliasSql(string $sql): string

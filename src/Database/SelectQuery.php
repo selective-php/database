@@ -5,12 +5,12 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class SelectQuery
+ * Class SelectQuery.
  */
 class SelectQuery extends SelectQueryBuilder implements QueryInterface
 {
     /**
-     * Distinct
+     * Distinct.
      *
      * @return self
      */
@@ -22,7 +22,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Distinct row
+     * Distinct row.
      *
      * @return self
      */
@@ -34,7 +34,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Distinct row
+     * Distinct row.
      *
      * @return self
      */
@@ -46,7 +46,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * High Priority
+     * High Priority.
      *
      * @return self
      */
@@ -58,7 +58,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Small Result
+     * Small Result.
      *
      * @return self
      */
@@ -70,7 +70,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Big Result
+     * Big Result.
      *
      * @return self
      */
@@ -82,7 +82,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Buffer Result
+     * Buffer Result.
      *
      * @return self
      */
@@ -94,7 +94,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Calc Found Rows
+     * Calc Found Rows.
      *
      * @return self
      */
@@ -106,9 +106,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Columns
+     * Columns.
      *
      * @param array ...$columns field1, field2, field3, ...
+     *
      * @return self
      */
     public function columns(...$columns): self
@@ -119,9 +120,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Alias for sub selects
+     * Alias for sub selects.
      *
      * @param string $alias
+     *
      * @return self
      */
     public function alias(string $alias): self
@@ -132,9 +134,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * From
+     * From.
      *
      * @param string $table Table name
+     *
      * @return self
      */
     public function from(string $table): self
@@ -148,7 +151,8 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query The query to combine.
+     * @param SelectQuery $query the query to combine
+     *
      * @return self
      */
     public function union(SelectQuery $query): self
@@ -162,7 +166,8 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION ALL is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query The query to combine.
+     * @param SelectQuery $query the query to combine
+     *
      * @return self
      */
     public function unionAll(SelectQuery $query): self
@@ -176,7 +181,8 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION DISTINCT is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query The query to combine.
+     * @param SelectQuery $query the query to combine
+     *
      * @return self
      */
     public function unionDistinct(SelectQuery $query): self
@@ -193,6 +199,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
      * @param mixed $rightField Value of the right field
+     *
      * @return self
      */
     public function join(string $table, string $leftField, string $comparison, $rightField): self
@@ -209,6 +216,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
      * @param mixed $rightField Value of the right field
+     *
      * @return self
      */
     public function leftJoin(string $table, string $leftField, string $comparison, $rightField): self
@@ -223,6 +231,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      *
      * @param string $table Table name
      * @param RawExp $raw
+     *
      * @return self
      */
     public function joinRaw(string $table, RawExp $raw): self
@@ -237,6 +246,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      *
      * @param string $table Table name
      * @param RawExp $raw
+     *
      * @return self
      */
     public function leftJoinRaw(string $table, RawExp $raw): self
@@ -252,6 +262,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function where(...$conditions): self
@@ -267,6 +278,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orWhere(...$conditions): self
@@ -282,6 +294,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param string $column Name of the first column
      * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
      * @param string $secondColumn Name of the second column
+     *
      * @return self
      */
     public function whereColumn(string $column, string $comparison, string $secondColumn): self
@@ -298,6 +311,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param string $column Name of the first column
      * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
      * @param string $secondColumn Name of the second column
+     *
      * @return self
      */
     public function orWhereColumn(string $column, string $comparison, string $secondColumn): self
@@ -312,6 +326,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Order by.
      *
      * @param array ...$fields Column name(s)
+     *
      * @return self
      */
     public function orderBy(...$fields): self
@@ -325,6 +340,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Group by.
      *
      * @param array ...$fields
+     *
      * @return self
      */
     public function groupBy(...$fields): self
@@ -340,6 +356,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function having(...$conditions): self
@@ -355,6 +372,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * @param array ...$conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
+     *
      * @return self
      */
     public function orHaving(...$conditions): self
@@ -368,6 +386,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Limit the number of rows returned.
      *
      * @param float $rowCount Row count
+     *
      * @return self
      */
     public function limit(float $rowCount): self
@@ -381,6 +400,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * Offset of the first row to return.
      *
      * @param float $offset Offset
+     *
      * @return self
      */
     public function offset(float $offset): self
@@ -401,7 +421,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Prepares a statement for execution and returns a statement object
+     * Prepares a statement for execution and returns a statement object.
      *
      * @return PDOStatement
      */

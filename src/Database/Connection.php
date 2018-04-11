@@ -58,13 +58,14 @@ class Connection extends PDO
     }
 
     /**
-     * Retrieving a list of column values
+     * Retrieving a list of column values.
      *
      * sample:
      * $lists = $db->queryValues('SELECT id FROM table;', 'id');
      *
      * @param string $sql
      * @param string $key
+     *
      * @return array
      */
     public function queryValues(string $sql, string $key): array
@@ -79,11 +80,12 @@ class Connection extends PDO
     }
 
     /**
-     * Retrieve only the given column of the first result row
+     * Retrieve only the given column of the first result row.
      *
      * @param string $sql
      * @param string $column
      * @param mixed $default
+     *
      * @return mixed|null
      */
     public function queryValue(string $sql, string $column, $default = null)
@@ -97,7 +99,7 @@ class Connection extends PDO
     }
 
     /**
-     * Map query result by column as new index
+     * Map query result by column as new index.
      *
      * <code>
      * $rows = $db->queryMapColumn('SELECT * FROM table;', 'id');
@@ -105,6 +107,7 @@ class Connection extends PDO
      *
      * @param string $sql
      * @param string $key Column name to map as index
+     *
      * @return array
      */
     public function queryMapColumn(string $sql, string $key): array

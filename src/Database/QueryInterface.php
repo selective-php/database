@@ -3,7 +3,7 @@
 namespace Odan\Database;
 
 /**
- * Interface QueryInterface
+ * Interface QueryInterface.
  */
 interface QueryInterface
 {

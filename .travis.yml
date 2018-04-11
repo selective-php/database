@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 7.0
   - 7.1
   - 7.2
 
@@ -21,8 +20,9 @@ before_script:
   - cd $TRAVIS_BUILD_DIR
 
 script:
+  - ant check-style
   - ant phpstan
-  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+  - ant phpunit-coverage
 
 #after_success:
 #  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi

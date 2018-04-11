@@ -5,14 +5,14 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class InsertQuery
+ * Class InsertQuery.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/insert.html
  */
 class InsertQuery implements QueryInterface
 {
     /**
-     * Connection
+     * Connection.
      *
      * @var Connection
      */
@@ -44,7 +44,7 @@ class InsertQuery implements QueryInterface
     protected $priority;
 
     /**
-     * Errors that occur while executing the INSERT statement are ignored
+     * Errors that occur while executing the INSERT statement are ignored.
      *
      * @var string Ignore modifier
      */
@@ -65,6 +65,7 @@ class InsertQuery implements QueryInterface
      * Table name.
      *
      * @param string $table Table name
+     *
      * @return self
      */
     public function into(string $table): self
@@ -87,7 +88,7 @@ class InsertQuery implements QueryInterface
     }
 
     /**
-     * Priority modifier
+     * Priority modifier.
      *
      * @return self
      */
@@ -99,7 +100,7 @@ class InsertQuery implements QueryInterface
     }
 
     /**
-     * Priority modifier
+     * Priority modifier.
      *
      * @return self
      */
@@ -111,7 +112,7 @@ class InsertQuery implements QueryInterface
     }
 
     /**
-     * Ignore errors modifier
+     * Ignore errors modifier.
      *
      * @return self
      */
@@ -126,6 +127,7 @@ class InsertQuery implements QueryInterface
      * On Duplicate Key Update.
      *
      * @param array $values Value list
+     *
      * @return self
      */
     public function onDuplicateKeyUpdate($values): self
@@ -174,13 +176,13 @@ class InsertQuery implements QueryInterface
 
         if (array_key_exists(0, $this->values)) {
             // multiple rows
-            $result = sprintf("%s INTO %s (%s) VALUES", $insert, $table, $this->quoter->quoteFields($this->values[0]));
+            $result = sprintf('%s INTO %s (%s) VALUES', $insert, $table, $this->quoter->quoteFields($this->values[0]));
             foreach ($this->values as $key => $row) {
-                $result .= sprintf("%s(%s)", ($key > 0) ? ',' : '', $this->quoter->quoteBulkValues($row));
+                $result .= sprintf('%s(%s)', ($key > 0) ? ',' : '', $this->quoter->quoteBulkValues($row));
             }
         } else {
             // single row
-            $result = sprintf("%s INTO %s SET %s", $insert, $table, $this->quoter->quoteSetValues($this->values));
+            $result = sprintf('%s INTO %s SET %s', $insert, $table, $this->quoter->quoteSetValues($this->values));
         }
 
         if ($this->duplicateValues) {
@@ -195,7 +197,8 @@ class InsertQuery implements QueryInterface
     /**
      * Returns the ID of the last inserted row or sequence value.
      *
-     * @param string $name [optional] Name of the sequence object from which the ID should be returned.
+     * @param string $name [optional] Name of the sequence object from which the ID should be returned
+     *
      * @return string Last inserted Id
      */
     public function lastInsertId($name = null): string
@@ -207,6 +210,7 @@ class InsertQuery implements QueryInterface
      * Insert new row(s) and return new Id.
      *
      * @param array $values Values
+     *
      * @return string Last inserted Id
      */
     public function insertGetId(array $values): string
@@ -221,6 +225,7 @@ class InsertQuery implements QueryInterface
      * Value list.
      *
      * @param array $values Value list
+     *
      * @return self
      */
     public function set(array $values): self

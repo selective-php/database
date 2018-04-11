@@ -5,11 +5,10 @@ namespace Odan\Database;
 use PDO;
 
 /**
- * Class Schema
+ * Class Schema.
  */
 class Schema
 {
-
     /** @var Connection */
     protected $db = null;
 
@@ -25,9 +24,10 @@ class Schema
     }
 
     /**
-     * Switch database
+     * Switch database.
      *
      * @param string $dbName
+     *
      * @return bool
      */
     public function setDatabase($dbName)
@@ -36,7 +36,7 @@ class Schema
     }
 
     /**
-     * Return current database name
+     * Return current database name.
      *
      * @return string
      */
@@ -46,16 +46,17 @@ class Schema
     }
 
     /**
-     * Check if a table exists
+     * Check if a table exists.
      *
      * @param string $dbName
+     *
      * @return bool
      */
     public function existDatabase($dbName)
     {
-        $sql = "SELECT SCHEMA_NAME
+        $sql = 'SELECT SCHEMA_NAME
             FROM INFORMATION_SCHEMA.SCHEMATA
-            WHERE SCHEMA_NAME = %s;";
+            WHERE SCHEMA_NAME = %s;';
 
         $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
         $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
@@ -64,9 +65,10 @@ class Schema
     }
 
     /**
-     * Returns all databases
+     * Returns all databases.
      *
      * @param string $like (optional) e.g. 'information%schema';
+     *
      * @return array
      */
     public function getDatabases($like = null)
@@ -85,15 +87,16 @@ class Schema
      * @param string $dbName The database name
      * @param string $characterSet
      * @param string $collate
+     *
      * @return bool Success
      */
     public function createDatabase(string $dbName, $characterSet = 'utf8', $collate = 'utf8_unicode_ci'): bool
     {
-        $sql = "CREATE DATABASE %s CHARACTER SET %s COLLATE %s;";
+        $sql = 'CREATE DATABASE %s CHARACTER SET %s COLLATE %s;';
         $sql = vsprintf($sql, [
             $this->quoter->quoteName($dbName),
             $this->quoter->quoteValue($characterSet),
-            $this->quoter->quoteValue($collate)
+            $this->quoter->quoteValue($collate),
         ]);
 
         return $this->db->exec($sql);
@@ -103,62 +106,66 @@ class Schema
      * Create a database.
      *
      * @param string $dbName The database name
+     *
      * @return bool Success
      */
     public function useDatabase(string $dbName): bool
     {
-        $sql = sprintf("USE %s;", $this->quoter->quoteName($dbName));
+        $sql = sprintf('USE %s;', $this->quoter->quoteName($dbName));
 
         return $this->db->exec($sql);
     }
 
     /**
-     * Return all Tables from Database
+     * Return all Tables from Database.
      *
      * @param string $like (optional) e.g. 'information%'
+     *
      * @return array
      */
     public function getTables($like = null)
     {
         if ($like === null) {
-            $sql = "SELECT table_name
+            $sql = 'SELECT table_name
                 FROM information_schema.tables
-                WHERE table_schema = database()";
+                WHERE table_schema = database()';
         } else {
-            $sql = sprintf("SELECT table_name
+            $sql = sprintf('SELECT table_name
                 FROM information_schema.tables
                 WHERE table_schema = database()
-                AND table_name LIKE %s;", $this->quoter->quoteValue($like));
-        };
+                AND table_name LIKE %s;', $this->quoter->quoteValue($like));
+        }
 
         return $this->db->queryValues($sql, 'table_name');
     }
 
     /**
-     * Check if table exist
+     * Check if table exist.
      *
      * @param string $tableName
+     *
      * @return bool
      */
     public function existTable($tableName)
     {
-        list($dbName, $tableName) = $this->parseTableName($tableName);
+        [$dbName, $tableName] = $this->parseTableName($tableName);
 
-        $sql = "SELECT table_name
+        $sql = 'SELECT table_name
             FROM information_schema.tables
             WHERE table_schema = %s
-            AND table_name = %s;";
+            AND table_name = %s;';
 
         $sql = sprintf($sql, $dbName, $tableName);
         $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
 
-        return (isset($row['table_name']));
+        return isset($row['table_name']);
     }
 
     /**
-     * Split table into dbname and table name
+     * Split table into dbname and table name.
      *
      * @param string $tableName table
+     *
      * @return array
      */
     protected function parseTableName($tableName)
@@ -176,9 +183,10 @@ class Schema
     }
 
     /**
-     * Delete a table
+     * Delete a table.
      *
      * @param string $tableName
+     *
      * @return int affected
      */
     public function dropTable($tableName)
@@ -190,6 +198,7 @@ class Schema
      * Clear table content. Delete all rows.
      *
      * @param string $tableName
+     *
      * @return bool
      */
     public function clearTable($tableName)
@@ -202,6 +211,7 @@ class Schema
      * Any AUTO_INCREMENT value is reset to its start value.
      *
      * @param string $tableName
+     *
      * @return int
      */
     public function truncateTable($tableName)
@@ -210,10 +220,11 @@ class Schema
     }
 
     /**
-     * Rename table
+     * Rename table.
      *
      * @param string $tableSource
      * @param string $tableTarget
+     *
      * @return bool Status
      */
     public function renameTable($tableSource, $tableTarget)
@@ -226,10 +237,11 @@ class Schema
     }
 
     /**
-     * Copy an existing table to a new table
+     * Copy an existing table to a new table.
      *
      * @param string $tableNameSource source table name
      * @param string $tableNameDestination new table name
+     *
      * @return bool Status
      */
     public function copyTable($tableNameSource, $tableNameDestination)
@@ -242,9 +254,10 @@ class Schema
     }
 
     /**
-     * Returns the column names of a table as an array
+     * Returns the column names of a table as an array.
      *
      * @param string $tableName
+     *
      * @return array
      */
     public function getColumnNames($tableName)
@@ -259,9 +272,10 @@ class Schema
     }
 
     /**
-     * Returns all columns in a table
+     * Returns all columns in a table.
      *
      * @param string $tableName
+     *
      * @return array
      */
     public function getColumns($tableName)
@@ -286,17 +300,18 @@ class Schema
             WHERE table_schema = %s
             AND table_name = %s;';
 
-        list($dbName, $tableName) = $this->parseTableName($tableName);
+        [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
 
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Compare two tables and returns true if the table schema match
+     * Compare two tables and returns true if the table schema match.
      *
      * @param string $tableName1
      * @param string $tableName2
+     *
      * @return bool
      */
     public function compareTableSchema($tableName1, $tableName2)
@@ -309,9 +324,10 @@ class Schema
 
     /**
      * Calculate a hash key (SHA1) using a table schema
-     * Used to quickly compare table structures or schema versions
+     * Used to quickly compare table structures or schema versions.
      *
      * @param string $tableName
+     *
      * @return string
      */
     public function getTableSchemaId($tableName)

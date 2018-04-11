@@ -3,7 +3,7 @@
 namespace Odan\Database;
 
 /**
- * Class Operator
+ * Class Operator.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/non-typed-operators.html
  */
