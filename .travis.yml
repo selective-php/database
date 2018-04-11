@@ -22,7 +22,7 @@ before_script:
 script:
   - ant check-style
   - ant phpstan
-  - ant phpunit-coverage
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 #after_success:
 #  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
