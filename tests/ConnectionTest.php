@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Odan\Test;
+namespace Odan\Database\Test;
 
 use Odan\Database\Connection;
 use PDO;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Odan\Test;
+namespace Odan\Database\Test;
 
 use Odan\Database\Schema;
 use PDO;

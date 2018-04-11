@@ -231,6 +231,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      *
      * @param string $table Table name
      * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
+     *
      * @return self
      */
     public function joinRaw(string $table, string $conditions): self
@@ -245,6 +246,7 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      *
      * @param string $table Table name
      * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
+     *
      * @return self
      */
     public function leftJoinRaw(string $table, string $conditions): self
