@@ -592,7 +592,7 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()
             ->columns('id')
             ->from('test')
-            ->joinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
+            ->joinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame("SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
     }
@@ -611,7 +611,7 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()
             ->columns('id')
             ->from('test')
-            ->leftJoinRaw('users u', new RawExp('t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL'));
+            ->leftJoinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame("SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);", $select->build());
     }
