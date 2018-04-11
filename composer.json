@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Odan\\Database\\": "src/Database"
+      "Odan\\Database\\": "src/Database/"
     }
   },
   "autoload-dev": {
