@@ -14,7 +14,6 @@ class InsertQueryTest extends BaseTest
      * Test create object.
      *
      * @return void
-     * @covers ::__construct
      */
     public function testInstance()
     {
@@ -31,12 +30,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::execute
      */
     public function testInto()
     {
@@ -51,13 +44,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::lastInsertId
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::execute
      */
     public function testLastInsertId()
     {
@@ -68,13 +54,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::insertGetId
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::execute
      */
     public function testInsertGetId()
     {
@@ -84,13 +63,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::lowPriority
-     * @covers ::highPriority
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testPriority()
     {
@@ -103,13 +75,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::lowPriority
-     * @covers ::ignore
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testIgnore()
     {
@@ -122,13 +87,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::delayed
-     * @covers ::ignore
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testDelayed()
     {
@@ -138,12 +96,6 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::into
-     * @covers ::set
-     * @covers ::onDuplicateKeyUpdate
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testOnDuplicateKeyUpdate()
     {

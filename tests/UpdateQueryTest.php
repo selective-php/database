@@ -15,7 +15,6 @@ class UpdateQueryTest extends BaseTest
      * Test create object.
      *
      * @return void
-     * @covers ::__construct
      */
     public function testInstance()
     {
@@ -32,13 +31,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::getUpdateSql
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::execute
      */
     public function testFrom()
     {
@@ -50,13 +42,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::lowPriority
-     * @covers ::getUpdateSql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLowPriority()
     {
@@ -66,14 +51,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::lowPriority
-     * @covers ::getUpdateSql
-     * @covers ::ignore
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testIgnore()
     {
@@ -86,13 +63,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::orderBy
-     * @covers ::getOrderBySql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testOrderBy()
     {
@@ -111,13 +81,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::limit
-     * @covers ::getLimitSql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLimit()
     {
@@ -127,18 +90,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::set
-     * @covers ::where
-     * @covers ::orWhere
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::getUpdateSql
-     * @covers ::getSetSql
-     * @covers ::getOrderBySql
-     * @covers ::getLimitSql
-     * @covers ::getUpdateSql
      */
     public function testWhere()
     {
@@ -150,20 +101,6 @@ class UpdateQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::table
-     * @covers ::increment
-     * @covers ::decrement
-     * @covers ::where
-     * @covers ::orWhere
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::getUpdateSql
-     * @covers ::getSetSql
-     * @covers ::getOrderBySql
-     * @covers ::getLimitSql
-     * @covers ::getUpdateSql
-     * @covers \Odan\Database\Quoter::quoteSetValues
      */
     public function testIncrementDecrement()
     {
@@ -184,6 +121,9 @@ class UpdateQueryTest extends BaseTest
         $this->assertSame("UPDATE `users` SET `votes`=votes+1 WHERE `id` = '1';", $update->build());
     }
 
+    /**
+     * Set up.
+     */
     protected function setUp()
     {
         parent::setUp();

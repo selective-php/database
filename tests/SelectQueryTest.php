@@ -14,9 +14,6 @@ class SelectQueryTest extends BaseTest
 {
     /**
      * Test create object.
-     *
-     * @return void
-     * @covers ::__construct
      */
     public function testInstance()
     {
@@ -25,13 +22,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::distinct
-     * @covers ::distinctRow
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testDistinct()
     {
@@ -46,11 +36,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::straightJoin
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testStraightJoin()
     {
@@ -61,11 +46,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::highPriority
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testHighPriority()
     {
@@ -76,11 +56,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::smallResult
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testSmallResult()
     {
@@ -91,11 +66,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::bigResult
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testBigResult()
     {
@@ -106,11 +76,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::bufferResult
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testBufferResult()
     {
@@ -121,11 +86,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::calcFoundRows
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testCalcFoundRows()
     {
@@ -136,12 +96,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::columns
-     * @covers ::getColumnsSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testColumns()
     {
@@ -162,19 +116,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers ::alias
-     * @covers ::getAliasSql
-     * @covers ::getColumnsSql
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testSubselect()
     {
@@ -182,7 +123,8 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()
             ->columns('id', new RawExp('(SELECT MAX(payments.amount) FROM payments) AS max_amount'))
             ->from('test');
-        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;', $select->build());
+        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;',
+            $select->build());
 
         // With a sub query object
         $select = $this->select()
@@ -193,19 +135,12 @@ class SelectQueryTest extends BaseTest
             })
             ->from('test');
 
-        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;', $select->build());
+        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;',
+            $select->build());
     }
 
     /**
      * Test.
-     *
-     * @covers ::union
-     * @covers ::unionAll
-     * @covers ::unionDistinct
-     * @covers ::getUnionSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testUnion()
     {
@@ -227,11 +162,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testFrom()
     {
@@ -248,16 +178,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhere()
     {
@@ -304,16 +224,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhereIn()
     {
@@ -326,16 +236,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhereFunction()
     {
@@ -351,16 +251,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhereBetween()
     {
@@ -370,16 +260,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test Simple pattern matching.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhereLike()
     {
@@ -395,16 +275,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test Simple pattern matching.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testWhereRegexp()
     {
@@ -417,18 +287,8 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
-    public function testWhereRaw()
+    public function testWhereRawExp()
     {
         $select = $this->select()->columns('id')->from('test')->where(new RawExp("STRCMP('text', 'text2')"));
         $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
@@ -439,18 +299,88 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers ::whereColumn
-     * @covers ::orWhereColumn
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
+     */
+    public function testWhereRaw()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->whereRaw("STRCMP('text', 'text2')");
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
+    }
+
+    /**
+     * Test.
+     */
+    public function testOrWhereRaw()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->whereRaw("STRCMP('text', 'text2')")
+            ->orWhereRaw('1=1');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2') OR 1=1;", $select->build());
+    }
+
+    /**
+     * Test.
+     */
+    public function testOrWhereRawClosure()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->where(function (SelectQuery $query) {
+                $query->where('field2', '=', 'value2');
+            });
+
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $sql = $select->build();
+        $this->assertSame("SELECT `id` FROM `test` WHERE (  `field2` = 'value2' );", $sql);
+    }
+
+    /**
+     * Test.
+     */
+    public function testOrWhereRawClosure2()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->where(function (SelectQuery $query) {
+                $query->where('field2', '=', 'value2')
+                ->whereRaw('0=0')
+                ->orWhereRaw('1=1');
+            });
+
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $sql = $select->build();
+        $this->assertSame("SELECT `id` FROM `test` WHERE (  `field2` = 'value2' AND 0=0 OR 1=1 );", $sql);
+    }
+
+    /**
+     * Test.
+     */
+    public function testOrWhereRawClosure3()
+    {
+        $select = $this->select()
+            ->columns('id')
+            ->from('test')
+            ->where('field', '=', 'value')
+            ->where(function (SelectQuery $query) {
+                $query->whereRaw('0=0')
+                    ->orWhereRaw('1=1');
+            });
+
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $sql = $select->build();
+        $this->assertSame("SELECT `id` FROM `test` WHERE `field` = 'value' AND (  0=0 OR 1=1 );", $sql);
+    }
+
+    /**
+     * Test.
      */
     public function testWhereColumn()
     {
@@ -458,7 +388,8 @@ class SelectQueryTest extends BaseTest
         $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name`;', $select->build());
 
         $select = $select->orWhereColumn('votes', '>=', 'vote_max');
-        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;', $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;',
+            $select->build());
 
         $select = $this->select()->from('users')->whereColumn('users.email', '=', 'table2.email');
         $this->assertSame('SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`;', $select->build());
@@ -466,35 +397,12 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->from('users')
             ->whereColumn('first_name', '=', 'last_name')
             ->whereColumn('updated_at', '=', 'created_at');
-        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;', $select->build());
+        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;',
+            $select->build());
     }
 
     /**
      * Test.
-     *
-     * @covers ::where
-     * @covers ::orWhere
-     * @covers ::having
-     * @covers ::orHaving
-     * @covers ::groupBy
-     * @covers ::orderBy
-     * @covers ::limit
-     * @covers ::offset
-     * @covers ::getLimitSql
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::getOrderBySql
-     * @covers ::getGroupBySql
-     * @covers \Odan\Database\Quoter::quoteByFields
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
-     * @covers \Odan\Database\RawExp::__construct
-     * @covers \Odan\Database\RawExp::getValue
-     * @covers \Odan\Database\RawExp::__toString
      */
     public function testWhereClosure()
     {
@@ -556,12 +464,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::join
-     * @covers ::getJoinSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testJoin()
     {
@@ -570,7 +472,8 @@ class SelectQueryTest extends BaseTest
             ->from('test AS t')
             ->join('users AS u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;', $select->build());
+        $this->assertSame('SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;',
+            $select->build());
 
         $select->join('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
@@ -579,12 +482,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::joinRaw
-     * @covers ::getJoinSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testJoinRaw()
     {
@@ -593,17 +490,12 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->joinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);', $select->build());
+        $this->assertSame('SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            $select->build());
     }
 
     /**
      * Test.
-     *
-     * @covers ::leftJoinRaw
-     * @covers ::getJoinSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLeftJoinRaw()
     {
@@ -612,17 +504,12 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);', $select->build());
+        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            $select->build());
     }
 
     /**
      * Test.
-     *
-     * @covers ::leftJoin
-     * @covers ::getJoinSql
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLeftJoin()
     {
@@ -631,7 +518,8 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoin('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;', $select->build());
+        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;',
+            $select->build());
 
         $select->leftJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = 'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
@@ -640,17 +528,6 @@ class SelectQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::limit
-     * @covers ::getLimitSql
-     * @covers \Odan\Database\Condition::addClauseCondClosure
-     * @covers \Odan\Database\Condition::getRightFieldValue
-     * @covers \Odan\Database\Condition::getWhereSql
-     * @covers \Odan\Database\Condition::getConditionSql
-     * @covers ::columns
-     * @covers ::from
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLimit()
     {
@@ -658,6 +535,11 @@ class SelectQueryTest extends BaseTest
         $this->assertSame('SELECT `id` FROM `test` LIMIT 10;', $select->build());
     }
 
+    /**
+     * Set Up.
+     *
+     * @return void
+     */
     protected function setUp()
     {
         parent::setUp();

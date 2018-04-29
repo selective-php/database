@@ -43,8 +43,6 @@ class CompressionTest extends BaseTest
      * Test compress method.
      *
      * @return void
-     * @covers ::compress
-     * @covers ::uncompress
      */
     public function testCompress()
     {

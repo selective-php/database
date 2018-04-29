@@ -11,8 +11,6 @@ class RawExpTest extends BaseTest
 {
     /**
      * Test.
-     *
-     * @covers ::getValue
      */
     public function testGetValue()
     {
@@ -22,8 +20,6 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::__toString
      */
     public function testToString()
     {
@@ -33,8 +29,6 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::getValue
      */
     public function testColumnsRaw()
     {
@@ -52,8 +46,6 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::getValue
      */
     public function testColumnsRaw2()
     {

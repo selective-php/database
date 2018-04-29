@@ -14,7 +14,6 @@ class DeleteQueryTest extends BaseTest
      * Test create object.
      *
      * @return void
-     * @covers ::__construct
      */
     public function testInstance()
     {
@@ -31,13 +30,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::from
-     * @covers ::getDeleteSql
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::execute
      */
     public function testFrom()
     {
@@ -48,12 +40,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::lowPriority
-     * @covers ::getDeleteSql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLowPriority()
     {
@@ -64,14 +50,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::where
-     * @covers ::lowPriority
-     * @covers ::getDeleteSql
-     * @covers ::ignore
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testIgnore()
     {
@@ -84,14 +62,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::where
-     * @covers ::quick
-     * @covers ::getDeleteSql
-     * @covers ::ignore
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testQuick()
     {
@@ -101,13 +71,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::where
-     * @covers ::orderBy
-     * @covers ::getOrderBySql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testOrderBy()
     {
@@ -126,13 +89,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::where
-     * @covers ::limit
-     * @covers ::getLimitSql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testLimit()
     {
@@ -142,16 +98,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::where
-     * @covers ::orWhere
-     * @covers ::prepare
-     * @covers ::build
-     * @covers ::getDeleteSql
-     * @covers ::getOrderBySql
-     * @covers ::getLimitSql
-     * @covers ::getDeleteSql
      */
     public function testWhere()
     {
@@ -163,12 +109,6 @@ class DeleteQueryTest extends BaseTest
 
     /**
      * Test.
-     *
-     * @covers ::from
-     * @covers ::truncate
-     * @covers ::getTruncateSql
-     * @covers ::prepare
-     * @covers ::build
      */
     public function testTruncate()
     {

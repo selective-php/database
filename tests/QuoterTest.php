@@ -28,7 +28,6 @@ class QuoterTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::quoteValue
      */
     public function testEsc()
     {
@@ -67,9 +66,6 @@ class QuoterTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::quoteName
-     * @covers ::quoteNameWithSeparator
-     * @covers ::quoteIdentifier
      */
     public function testIdent()
     {
@@ -109,7 +105,6 @@ class QuoterTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::quoteArray
      */
     public function testQuoteArray()
     {
@@ -124,7 +119,6 @@ class QuoterTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::quoteNames
      */
     public function testQuoteNames()
     {

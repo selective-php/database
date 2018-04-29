@@ -273,6 +273,20 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * Add a raw AND WHERE condition.
+     *
+     * @param string $condition The raw where conditions e.g. 'user.id = article.user_id'
+     *
+     * @return self
+     */
+    public function whereRaw(string $condition): self
+    {
+        $this->condition->where([new RawExp($condition)]);
+
+        return $this;
+    }
+
+    /**
      * Where OR condition.
      *
      * @param array ...$conditions (field, comparison, value)
@@ -284,6 +298,20 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     public function orWhere(...$conditions): self
     {
         $this->condition->orWhere($conditions);
+
+        return $this;
+    }
+
+    /**
+     * Add a raw OR WHERE condition.
+     *
+     * @param string $condition The raw where conditions e.g. 'user.id = article.user_id'
+     *
+     * @return self
+     */
+    public function orWhereRaw(string $condition): self
+    {
+        $this->condition->orWhere([new RawExp($condition)]);
 
         return $this;
     }

@@ -25,11 +25,6 @@ class SchemaTest extends BaseTest
      * Test setDbName method.
      *
      * @return void
-     * @covers ::setDatabase
-     * @covers ::getDatabase
-     * @covers ::existDatabase
-     * @covers ::getDatabase
-     * @covers ::getDatabases
      */
     public function testSetDbName()
     {
@@ -56,30 +51,6 @@ class SchemaTest extends BaseTest
      * Test getTables method.
      *
      * @return void
-     * @covers ::getTables
-     * @covers ::existTable
-     * @covers ::dropTable
-     * @covers ::clearTable
-     * @covers ::renameTable
-     * @covers ::parseTableName
-     * @covers ::truncateTable
-     * @covers ::copyTable
-     * @covers ::getColumns
-     * @covers ::getTableSchemaId
-     * @covers ::compareTableSchema
-     * @covers \Odan\Database\Connection::queryValue
-     * @covers \Odan\Database\Connection::queryValues
-     * @covers \Odan\Database\Connection::queryMapColumn
-     * @covers \Odan\Database\InsertQuery::into
-     * @covers \Odan\Database\InsertQuery::set
-     * @covers \Odan\Database\InsertQuery::onDuplicateKeyUpdate
-     * @covers \Odan\Database\InsertQuery::execute
-     * @covers \Odan\Database\InsertQuery::prepare
-     * @covers \Odan\Database\InsertQuery::build
-     * @covers \Odan\Database\Quoter::quoteSetValues
-     * @covers \Odan\Database\Quoter::quoteBulkValues
-     * @covers \Odan\Database\Quoter::quoteFields
-     * @covers \Odan\Database\RawExp::__toString
      */
     public function testTables()
     {
@@ -290,7 +261,6 @@ class SchemaTest extends BaseTest
      * Test getTables method.
      *
      * @return void
-     * @covers ::getColumnNames
      */
     public function testGetColumnNames()
     {
@@ -304,7 +274,6 @@ class SchemaTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::renameTable
      */
     public function testRenameTable()
     {
@@ -318,7 +287,6 @@ class SchemaTest extends BaseTest
      * Test.
      *
      * @return void
-     * @covers ::copyTable
      */
     public function testCopyTable()
     {

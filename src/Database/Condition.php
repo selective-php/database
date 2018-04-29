@@ -80,6 +80,10 @@ class Condition
         }
         foreach ($where as $index => $item) {
             if ($item instanceof RawExp) {
+                if ($index == 0) {
+                    $sql[] = $conditionType . ' ' . $item->getValue();
+                    continue;
+                }
                 $sql[] = $item->getValue();
                 continue;
             }
