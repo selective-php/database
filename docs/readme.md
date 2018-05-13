@@ -444,8 +444,6 @@ $users = $db->select()
 SELECT * FROM `users` WHERE `updated_at` IS NULL;
 ```
 
- 
-
 ```php
 $users = $db->select()
     ->from('users')
@@ -660,8 +658,6 @@ A number of commonly used functions can be created with the func() method:
 * min() Calculate the min of a column. The arguments will be treated as literal values.
 * max() Calculate the max of a column. The arguments will be treated as literal values.
 * count() Calculate the count. The arguments will be treated as literal values.
-* coalesce() Coalesce values. The arguments are treated as bound parameters unless marked as literal.
-* dateDiff() Get the difference between two dates/times. The arguments are treated as bound parameters unless marked as literal.
 * now() Returns a Expression representing a call that will return the current date and time (ISO).
 
 Example:
