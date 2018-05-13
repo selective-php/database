@@ -473,4 +473,14 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     {
         return $this->db->prepare($this->build());
     }
+
+    /**
+     * SQL functions.
+     *
+     * @return FunctionBuilder
+     */
+    public function func()
+    {
+        return new FunctionBuilder($this->db);
+    }
 }
