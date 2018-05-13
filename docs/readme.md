@@ -133,7 +133,7 @@ SELECT `id`,`username`,`first_name` AS `firstName` FROM `users`;
 Select columns by array:
 
 ```php
-$db->select()->columns(['id', 'first_name', $query, 'tablename.fieldname']);
+$db->select()->columns(['id', 'first_name', 'tablename.fieldname']);
 ```
 
 Select columns with alias:
