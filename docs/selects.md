@@ -97,7 +97,7 @@ Select columns with alias:
 $db->select()->columns('first_name AS firstName', 'last_name AS lastName', 'tablename.fieldname as fieldName');
 ```
 
-Add multiple columns in a different time:
+Add fields one after another:
 
 ```php
 $query = $db->select()->columns('first_name')->from('users');
@@ -105,7 +105,7 @@ $query->columns('last_name', 'email');
 ```
 
 ```sql
-SELECT `first_name`,`last_name`,`email` AS `firstName` FROM `users`;
+SELECT `first_name`,`last_name`,`email` FROM `users`;
 ```
 
 #### Raw Expressions
