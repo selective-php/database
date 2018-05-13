@@ -106,7 +106,15 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
-     * Columns.
+     * Adds new fields to be returned by a `SELECT` statement when this query is
+     * executed. Fields can be passed as an array of strings, array of expression
+     * objects, a single expression or a single string.
+     *
+     * If an array is passed, keys will be used to alias fields using the value as the
+     * real field to be aliased. It is possible to alias strings, Expression objects or
+     * even other Query objects.
+     *
+     * This method will append any passed argument to the list of fields to be selected.
      *
      * @param array ...$columns field1, field2, field3, ...
      *
@@ -118,10 +126,10 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
             $columns = $columns[0];
         }
 
-        if(empty($this->columns)) {
+        if (empty($this->columns)) {
             $this->columns = $columns;
         } else {
-            $this->columns = array_keys(array_replace(array_flip ($this->columns), array_flip ($columns)));
+            $this->columns = array_keys(array_replace(array_flip($this->columns), array_flip($columns)));
         }
 
         return $this;
