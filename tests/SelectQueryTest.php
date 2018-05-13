@@ -106,12 +106,29 @@ class SelectQueryTest extends BaseTest
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;', $select->build());
 
+        $select = $this->select()->columns(['id', 'username', 'first_name AS firstName'])->from('test');
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;', $select->build());
+
         // queries without table
         $select = $this->select()->columns(new RawExp('ISNULL(1+1)'));
         $this->assertSame('SELECT ISNULL(1+1);', $select->build());
 
         $select = $this->select()->columns(new RawExp('INTERVAL(23, 1, 15, 17, 30, 44, 200)'));
         $this->assertSame('SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200);', $select->build());
+    }
+
+    /**
+     * Test.
+     */
+    public function testMultipleColumns()
+    {
+        $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
+        $select = $select->columns(['username AS username2', 'first_name AS firstName', 'id', 'table.fieldname']);
+
+        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+        $sql = $select->build();
+        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;', $sql);
     }
 
     /**

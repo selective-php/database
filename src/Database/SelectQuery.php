@@ -114,7 +114,15 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function columns(...$columns): self
     {
-        $this->columns = $columns;
+        if (isset($columns[0]) && is_array($columns[0])) {
+            $columns = $columns[0];
+        }
+
+        if(empty($this->columns)) {
+            $this->columns = $columns;
+        } else {
+            $this->columns = array_keys(array_replace(array_flip ($this->columns), array_flip ($columns)));
+        }
 
         return $this;
     }
