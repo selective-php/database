@@ -31,13 +31,14 @@ class FunctionBuilder
      *
      * @param string $field Field name
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function sum(string $field): RawExp
+    public function sum(string $field): FunctionExpression
     {
-        $expression = sprintf('SUM(%s)', $this->db->getQuoter()->quoteName($field));
+        $quoter = $this->db->getQuoter();
+        $expression = sprintf('SUM(%s)', $quoter->quoteName($field));
 
-        return new RawExp($expression);
+        return new FunctionExpression($expression, $quoter);
     }
 
     /**
@@ -45,13 +46,14 @@ class FunctionBuilder
      *
      * @param string $field Field name
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function avg(string $field): RawExp
+    public function avg(string $field): FunctionExpression
     {
-        $expression = sprintf('AVG(%s)', $this->db->getQuoter()->quoteName($field));
+        $quoter = $this->db->getQuoter();
+        $expression = sprintf('AVG(%s)', $quoter->quoteName($field));
 
-        return new RawExp($expression);
+        return new FunctionExpression($expression, $quoter);
     }
 
     /**
@@ -59,13 +61,14 @@ class FunctionBuilder
      *
      * @param string $field Field name
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function min(string $field): RawExp
+    public function min(string $field): FunctionExpression
     {
-        $expression = sprintf('MIN(%s)', $this->db->getQuoter()->quoteName($field));
+        $quoter = $this->db->getQuoter();
+        $expression = sprintf('MIN(%s)', $quoter->quoteName($field));
 
-        return new RawExp($expression);
+        return new FunctionExpression($expression, $quoter);
     }
 
     /**
@@ -73,52 +76,43 @@ class FunctionBuilder
      *
      * @param string $field Field name
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function max(string $field): RawExp
+    public function max(string $field): FunctionExpression
     {
-        $expression = sprintf('MAX(%s)', $this->db->getQuoter()->quoteName($field));
+        $quoter = $this->db->getQuoter();
+        $expression = sprintf('MAX(%s)', $quoter->quoteName($field));
 
-        return new RawExp($expression);
+        return new FunctionExpression($expression, $quoter);
     }
 
     /**
      * Calculate the count. The arguments will be treated as literal values.
      *
      * @param string $field Field name (Default is *)
+     * @param string|null $alias Alias
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function count(string $field = '*'): RawExp
+    public function count(string $field = '*', string $alias = null): RawExp
     {
-        $expression = sprintf('COUNT(%s)', $this->db->getQuoter()->quoteName($field));
+        $quoter = $this->db->getQuoter();
+        $expression = sprintf('COUNT(%s)', $quoter->quoteName($field));
 
-        return new RawExp($expression);
-    }
+        if ($alias !== null) {
+            $expression .= sprintf(' %s AS %s', $expression, $quoter->quoteName($alias));
+        }
 
-    /**
-     * Calculate the count. The arguments will be treated as literal values.
-     *
-     * @param string $field Field name (Default is *)
-     * @param string ...$fields Field names
-     *
-     * @return RawExp Expression
-     */
-    public function concat(string $field, string ...$fields): RawExp
-    {
-        $names = $this->db->getQuoter()->quoteNames(array_merge([$field], $fields));
-        $expression = sprintf('CONCAT(%s)', implode(', ', $names));
-
-        return new RawExp($expression);
+        return new FunctionExpression($expression, $quoter);
     }
 
     /**
      * Returns a Expression representing a call that will return the current date and time (ISO).
      *
-     * @return RawExp Expression
+     * @return FunctionExpression Expression
      */
-    public function now(): RawExp
+    public function now(): FunctionExpression
     {
-        return new RawExp('NOW()');
+        return new FunctionExpression('NOW()', $this->db->getQuoter());
     }
 }

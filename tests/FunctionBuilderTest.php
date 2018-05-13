@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Odan\Database\Test;
 
 use Odan\Database\FunctionBuilder;
+use Odan\Database\RawExp;
 
 /**
  * @coversDefaultClass \Odan\Database\FunctionBuilder
@@ -33,6 +34,10 @@ class FunctionBuilderTest extends BaseTest
 
         $this->assertEquals('SUM(`field`)', $func->sum('field'));
         $this->assertEquals('SUM(`table`.`field`)', $func->sum('table.field'));
+
+        $query = $this->getConnection()->select()->from('payments');
+        $query->columns($query->func()->count('amount'));
+        $this->assertEquals('SELECT COUNT(`amount`) FROM `payments`;', $query->build());
     }
 
     /**
@@ -85,19 +90,10 @@ class FunctionBuilderTest extends BaseTest
 
         $this->assertEquals('COUNT(*)', $func->count());
         $this->assertEquals('COUNT(`field`)', $func->count('field'));
-    }
 
-    /**
-     * Test.
-     *
-     * @return void
-     */
-    public function testConcat()
-    {
-        $func = $this->getConnection()->select()->func();
-
-        $this->assertEquals('CONCAT(`field`)', $func->concat('field'));
-        $this->assertEquals('CONCAT(`field`, `field2`, `field3`)', $func->concat('field', 'field2', 'field3'));
+        $query = $this->getConnection()->select()->from('users');
+        $query->columns($query->func()->count());
+        $this->assertEquals('SELECT COUNT(*) FROM `users`;', $query->build());
     }
 
     /**
@@ -109,6 +105,8 @@ class FunctionBuilderTest extends BaseTest
     {
         $func = $this->getConnection()->select()->func();
 
+        $this->assertInstanceOf(RawExp::class, $func->now());
         $this->assertEquals('NOW()', $func->now());
+        $this->assertEquals('NOW() AS `alias_field`', $func->now()->alias('alias_field')->getValue());
     }
 }
