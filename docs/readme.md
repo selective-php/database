@@ -118,6 +118,41 @@ The distinct method allows you to force the query to return distinct results:
 $users = $db->select()->distinct()->columns('id')->from('users')->execute()->fetchAll();
 ```
 
+#### Columns
+
+Select columns by name:
+
+```php
+$this->select()->columns('id', 'username', 'first_name AS firstName')->from('users')
+```
+
+```sql
+SELECT `id`,`username`,`first_name` AS `firstName` FROM `users`;
+```
+
+Select columns by array:
+
+```php
+$db->select()->columns(['id', 'first_name', $query, 'tablename.fieldname']);
+```
+
+Select columns with alias:
+
+```php
+$db->select()->columns('first_name AS firstName', 'last_name AS lastName', 'tablename.fieldname as fieldName');
+```
+
+Add multiple columns in a different time:
+
+```php
+$query = $db->select()->columns('first_name')->from('users');
+$query->columns('last_name', 'email');
+```
+
+```sql
+SELECT `first_name`,`last_name`,`email` AS `firstName` FROM `users`;
+```
+
 #### Raw Expressions
 
 Sometimes you may need to use a raw expression in a query. 
