@@ -90,6 +90,7 @@ class FunctionBuilderTest extends BaseTest
 
         $this->assertEquals('COUNT(*)', $func->count());
         $this->assertEquals('COUNT(`field`)', $func->count('field'));
+        $this->assertEquals('COUNT(`field`) AS `alias_field`', $func->count('field')->alias('alias_field'));
 
         $query = $this->getConnection()->select()->from('users');
         $query->columns($query->func()->count());
