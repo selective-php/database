@@ -133,16 +133,16 @@ SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROU
 Using whereRaw:
 
 ```php
-$users = $db->select()
+$query = $db->select()
     ->columns('id', 'username')
     ->from('users')
-    ->whereRaw('status <> 1')
-    ->execute()
-    ->fetchAll();
+    ->whereRaw('status <> 1');
+    
+$users = $query->execute()->fetchAll();
 ```
 
 ```sql
-SELECT `id`, username WHERE status <> 1 FROM `users`;
+SELECT `id`, `username` WHERE status <> 1 FROM `users`;
 ```
 
 Creating raw expressions with the function builder:
