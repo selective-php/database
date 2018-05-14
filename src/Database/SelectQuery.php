@@ -455,6 +455,18 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * Returns a Raw Expression.
+     *
+     * @param string $value A raw value. Be careful!
+     *
+     * @return RawExp Raw Expression
+     */
+    public function raw(string $value): RawExp
+    {
+        return new RawExp($value);
+    }
+
+    /**
      * Executes an SQL statement, returning a result set as a PDOStatement object.
      *
      * @return PDOStatement

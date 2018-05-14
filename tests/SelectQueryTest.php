@@ -553,6 +553,25 @@ class SelectQueryTest extends BaseTest
     }
 
     /**
+     * Test.
+     *
+     * @return void
+     */
+    public function testRaw()
+    {
+        $query = $this->getConnection()->select();
+
+        $this->assertInstanceOf(RawExp::class, $query->raw(''));
+        $this->assertEquals('value', $query->raw('value')->getValue());
+
+        $query = $this->getConnection()->select();
+        $query->columns($query->raw('count(*) AS user_count'), 'status');
+        $query->from('payments');
+
+        $this->assertEquals('SELECT count(*) AS user_count,`status` FROM `payments`;', $query->build());
+    }
+
+    /**
      * Set Up.
      *
      * @return void

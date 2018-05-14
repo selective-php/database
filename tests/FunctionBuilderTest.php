@@ -109,17 +109,4 @@ class FunctionBuilderTest extends BaseTest
         $this->assertEquals('NOW()', $func->now());
         $this->assertEquals('NOW() AS `alias_field`', $func->now()->alias('alias_field')->getValue());
     }
-
-    /**
-     * Test.
-     *
-     * @return void
-     */
-    public function testRaw()
-    {
-        $func = $this->getConnection()->select()->func();
-
-        $this->assertInstanceOf(RawExp::class, $func->raw(''));
-        $this->assertEquals('value', $func->raw('value')->getValue());
-    }
 }

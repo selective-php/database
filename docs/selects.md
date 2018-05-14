@@ -118,7 +118,7 @@ To create a raw expression, you may use the RawExp value object:
 
 ```php
 $users = $db->select()
-    ->columns(new RawExp('count(*) as user_count'), 'status')
+    ->columns(new RawExp('count(*) AS user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
     ->groupBy('status')
@@ -127,7 +127,19 @@ $users = $db->select()
 ```
 
 ```sql
-SELECT count(*) as user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
+SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
+```
+
+Creating raw expressions with the function builder:
+
+```php
+$query = $db->select();
+$query->columns($query->raw('count(*) AS user_count'), 'status');
+$query->from('payments');
+```
+
+```sql
+SELECT count(*) AS user_count,`status` FROM `payments`;
 ```
 
 #### Aggregates
