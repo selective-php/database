@@ -115,4 +115,15 @@ class FunctionBuilder
     {
         return new FunctionExpression('NOW()', $this->db->getQuoter());
     }
+
+    /**
+     * Returns a Raw Expression.
+     *
+     * @param string $value A raw value. Be careful!
+     * @return RawExp Raw Expression
+     */
+    public function raw(string $value): RawExp
+    {
+        return new RawExp($value);
+    }
 }
