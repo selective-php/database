@@ -130,6 +130,21 @@ $users = $db->select()
 SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
 ```
 
+Using whereRaw:
+
+```php
+$users = $db->select()
+    ->columns('id', 'username')
+    ->from('users')
+    ->whereRaw('status <> 1')
+    ->execute()
+    ->fetchAll();
+```
+
+```sql
+SELECT `id`, username WHERE status <> 1 FROM `users`;
+```
+
 Creating raw expressions with the function builder:
 
 ```php
