@@ -498,6 +498,22 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
+    public function testOrHavingRaw()
+    {
+        $query = $this->select();
+        $query->columns('state_id', $query->func()->count('*'));
+        $query->from('table');
+        $query->groupBy('state_id', 'locality');
+        $query->havingRaw('COUNT(*) > 1');
+        $query->orHavingRaw('brand LIKE %acme%');
+
+        $this->assertSame('SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1 OR brand LIKE %acme%;',
+            $query->build());
+    }
+
+    /**
+     * Test.
+     */
     public function testJoin()
     {
         $select = $this->select()
