@@ -226,6 +226,21 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * Inner Join (alias).
+     *
+     * @param string $table Table name
+     * @param string $leftField Name of the left field
+     * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
+     * @param mixed $rightField Value of the right field
+     *
+     * @return self
+     */
+    public function innerJoin(string $table, string $leftField, string $comparison, $rightField): self
+    {
+        return $this->join($table, $leftField, $comparison, $rightField);
+    }
+
+    /**
      * Left Join.
      *
      * @param string $table Table name
