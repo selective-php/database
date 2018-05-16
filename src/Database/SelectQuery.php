@@ -427,6 +427,20 @@ class SelectQuery extends SelectQueryBuilder implements QueryInterface
     }
 
     /**
+     * Add AND having condition.
+     *
+     * @param string $condition The raw HAVING conditions e.g. 'user.id = article.user_id'
+     *
+     * @return self
+     */
+    public function havingRaw(string $condition): self
+    {
+        $this->condition->having([new RawExp($condition)]);
+
+        return $this;
+    }
+
+    /**
      * Limit the number of rows returned.
      *
      * @param float $rowCount Row count

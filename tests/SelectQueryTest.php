@@ -128,7 +128,8 @@ class SelectQueryTest extends BaseTest
 
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
-        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;', $sql);
+        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;',
+            $sql);
     }
 
     /**
@@ -368,8 +369,8 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->where(function (SelectQuery $query) {
                 $query->where('field2', '=', 'value2')
-                ->whereRaw('0=0')
-                ->orWhereRaw('1=1');
+                    ->whereRaw('0=0')
+                    ->orWhereRaw('1=1');
             });
 
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -477,6 +478,21 @@ class SelectQueryTest extends BaseTest
             file_put_contents(__DIR__ . '/debug.sql', $sql);
         }
         $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Test.
+     */
+    public function testHavingRaw()
+    {
+        $query = $this->select();
+        $query->columns('state_id', $query->func()->count('*'));
+        $query->from('table');
+        $query->groupBy('state_id', 'locality');
+        $query->havingRaw('COUNT(*) > 1');
+
+        $this->assertSame('SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1;',
+            $query->build());
     }
 
     /**
