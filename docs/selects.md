@@ -130,21 +130,6 @@ $users = $db->select()
 SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
 ```
 
-Using whereRaw:
-
-```php
-$query = $db->select()
-    ->columns('id', 'username')
-    ->from('users')
-    ->whereRaw('status <> 1');
-    
-$users = $query->execute()->fetchAll();
-```
-
-```sql
-SELECT `id`, `username` WHERE status <> 1 FROM `users`;
-```
-
 Creating raw expressions with the function builder:
 
 ```php
@@ -184,7 +169,7 @@ function and define an alias for the subselect:
 ```php
 $payments = $this->select()
     ->columns('id', function (SelectQuery $subSelect) {
-        $subSelect->columns(new RawExp('MAX(payments.amount)'))
+        $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
         ->from('payments')
         ->alias('max_amount');
     })
@@ -522,6 +507,23 @@ $users = $db->select()
 ```
 
 #### Where Raw
+
+Using whereRaw:
+
+```php
+$query = $db->select()
+    ->columns('id', 'username')
+    ->from('users')
+    ->whereRaw('status <> 1');
+    
+$users = $query->execute()->fetchAll();
+```
+
+```sql
+SELECT `id`, `username` FROM `users` WHERE status <> 1;
+```
+
+Using RawExp:
 
 ```php
 $users = $db->select()
