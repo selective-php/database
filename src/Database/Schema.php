@@ -115,7 +115,7 @@ class Schema
     }
 
     /**
-     * Create a database.
+     * Change the database.
      *
      * @param string $dbName The database name
      *
@@ -124,8 +124,9 @@ class Schema
     public function useDatabase(string $dbName): bool
     {
         $sql = sprintf('USE %s;', $this->quoter->quoteName($dbName));
+        $result = $this->db->exec($sql);
 
-        return $this->db->exec($sql);
+        return (bool)$result;
     }
 
     /**
@@ -214,12 +215,14 @@ class Schema
      * @param string $tableName
      *
      * @return bool Success
+     *
+     * @deprecated Use DeleteQuery instead
      */
     public function clearTable(string $tableName): bool
     {
-        $this->db->exec(sprintf('DELETE FROM %s;', $this->quoter->quoteName($tableName)));
+        $delete = new DeleteQuery($this->db);
 
-        return true;
+        return $delete->from($tableName)->execute();
     }
 
     /**
