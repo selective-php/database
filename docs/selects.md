@@ -654,3 +654,5 @@ $query->columns($query->func()->sum('amount')->alias('sum_amount'));
 ```sql
 SELECT SUM(`amount`) AS `sum_amount` FROM `payments`;
 ```
+
+**Next page:** [Inserts](inserts.md)
