@@ -67,7 +67,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testIdent()
+    public function testQuoteName()
     {
         $quoter = $this->getConnection()->getQuoter();
 

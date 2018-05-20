@@ -524,7 +524,7 @@ class SelectQueryTest extends BaseTest
         $this->assertSame('SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;',
             $select->build());
 
-        $select->join('table2 AS t2', 't2.id', '=', 'test.user_id');
+        $select->innerJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
         $this->assertSame($expected, $select->build());
     }
