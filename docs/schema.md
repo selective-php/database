@@ -72,12 +72,6 @@ $tables = $schema->getTables('information%');
 $tableExists = $schema->existTable('test');
 ```
 
-### Clear table content. Delete all rows.
-
-```php
-$success = $schema->clearTable('test');
-```
-
 ### Delete all rows 
 
 *Deprecated: Use DeleteQuery instead*
