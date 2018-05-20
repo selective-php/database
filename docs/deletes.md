@@ -82,3 +82,5 @@ does not merge index leaves during delete, which may speed up some kinds of dele
 ```php
 $db->delete()->from('users')->quick()->execute();
 ```
+
+**Next page:** [Compression](compression.md)
