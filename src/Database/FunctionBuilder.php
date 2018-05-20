@@ -132,7 +132,7 @@ class FunctionBuilder
     /**
      * Returns a quoted field.
      *
-     * @param string $field Fiel name
+     * @param string $field Field name
      *
      * @return FunctionExpression Expression
      */
