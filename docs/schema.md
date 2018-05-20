@@ -82,6 +82,8 @@ $success = $schema->clearTable('test');
 
 ### Truncate a table
 
+Delete all rows and reset the auto increment value:
+
 ```php
 $success = $schema->truncateTable('test');
 ```

@@ -25,8 +25,8 @@ composer require odan/database
 
 ## Requirements
 
-* PHP 7.x
-* MySQL
+* PHP >= 7.1
+* MySQL, MariaDB
 
 ## Usage
 
