@@ -59,7 +59,7 @@ class SchemaTest extends BaseTest
 
         if ($schema->existTable('test')) {
             $result = $schema->dropTable('test');
-            $this->assertSame(0, $result);
+            $this->assertSame(true, $result);
         }
 
         $result = $schema->existTable('test');
@@ -170,7 +170,7 @@ class SchemaTest extends BaseTest
         $this->assertSame('3', $result);
 
         $result = $schema->truncateTable('test');
-        $this->assertSame(0, $result);
+        $this->assertSame(true, $result);
 
         $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('0', $result);
@@ -198,7 +198,7 @@ class SchemaTest extends BaseTest
         $this->assertSame($expected, $result);
 
         $result = $schema->clearTable('test');
-        $this->assertSame(2, $result);
+        $this->assertSame(true, $result);
 
         $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
         $this->assertSame('0', $result);

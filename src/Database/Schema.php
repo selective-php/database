@@ -9,14 +9,21 @@ use PDO;
  */
 class Schema
 {
-    /** @var Connection */
-    protected $db = null;
+    /**
+     * @var Connection
+     */
+    protected $db;
 
     /**
      * @var Quoter
      */
     protected $quoter;
 
+    /**
+     * Constructor.
+     *
+     * @param Connection $db
+     */
     public function __construct(Connection $db)
     {
         $this->db = $db;
@@ -30,9 +37,11 @@ class Schema
      *
      * @return bool
      */
-    public function setDatabase($dbName)
+    public function setDatabase(string $dbName): bool
     {
-        return $this->db->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
+        $this->db->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
+
+        return true;
     }
 
     /**
@@ -40,7 +49,7 @@ class Schema
      *
      * @return string
      */
-    public function getDatabase()
+    public function getDatabase(): string
     {
         return $this->db->query('SELECT database() AS dbname;')->fetchColumn(0);
     }
@@ -52,7 +61,7 @@ class Schema
      *
      * @return bool
      */
-    public function existDatabase($dbName)
+    public function existDatabase(string $dbName): bool
     {
         $sql = 'SELECT SCHEMA_NAME
             FROM INFORMATION_SCHEMA.SCHEMATA
@@ -67,11 +76,11 @@ class Schema
     /**
      * Returns all databases.
      *
-     * @param string $like (optional) e.g. 'information%schema';
+     * @param string|null $like (optional) e.g. 'information%schema';
      *
      * @return array
      */
-    public function getDatabases($like = null)
+    public function getDatabases(string $like = null): array
     {
         $sql = 'SHOW DATABASES;';
         if ($like !== null) {
@@ -90,8 +99,11 @@ class Schema
      *
      * @return bool Success
      */
-    public function createDatabase(string $dbName, $characterSet = 'utf8', $collate = 'utf8_unicode_ci'): bool
-    {
+    public function createDatabase(
+        string $dbName,
+        string $characterSet = 'utf8mb4',
+        string $collate = 'utf8_unicode_ci'
+    ): bool {
         $sql = 'CREATE DATABASE %s CHARACTER SET %s COLLATE %s;';
         $sql = vsprintf($sql, [
             $this->quoter->quoteName($dbName),
@@ -123,7 +135,7 @@ class Schema
      *
      * @return array
      */
-    public function getTables($like = null)
+    public function getTables($like = null): array
     {
         if ($like === null) {
             $sql = 'SELECT table_name
@@ -146,7 +158,7 @@ class Schema
      *
      * @return bool
      */
-    public function existTable($tableName)
+    public function existTable(string $tableName): bool
     {
         [$dbName, $tableName] = $this->parseTableName($tableName);
 
@@ -168,7 +180,7 @@ class Schema
      *
      * @return array
      */
-    protected function parseTableName($tableName)
+    protected function parseTableName(string $tableName): array
     {
         $dbName = 'database()';
         if (strpos($tableName, '.') !== false) {
@@ -187,11 +199,13 @@ class Schema
      *
      * @param string $tableName
      *
-     * @return int affected
+     * @return bool Success
      */
-    public function dropTable($tableName)
+    public function dropTable(string $tableName): bool
     {
-        return $this->db->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
+        $this->db->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
+
+        return true;
     }
 
     /**
@@ -199,11 +213,13 @@ class Schema
      *
      * @param string $tableName
      *
-     * @return bool
+     * @return bool Success
      */
-    public function clearTable($tableName)
+    public function clearTable(string $tableName): bool
     {
-        return $this->db->exec(sprintf('DELETE FROM %s;', $this->quoter->quoteName($tableName)));
+        $this->db->exec(sprintf('DELETE FROM %s;', $this->quoter->quoteName($tableName)));
+
+        return true;
     }
 
     /**
@@ -212,26 +228,28 @@ class Schema
      *
      * @param string $tableName
      *
-     * @return int
+     * @return bool Success
      */
-    public function truncateTable($tableName)
+    public function truncateTable(string $tableName): bool
     {
-        return $this->db->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
+        $this->db->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
+
+        return true;
     }
 
     /**
      * Rename table.
      *
-     * @param string $tableSource
-     * @param string $tableTarget
+     * @param string $from Old table name
+     * @param string $to New table name
      *
-     * @return bool Status
+     * @return bool Success
      */
-    public function renameTable($tableSource, $tableTarget)
+    public function renameTable(string $from, string $to): bool
     {
-        $tableSource = $this->quoter->quoteName($tableSource);
-        $tableTarget = $this->quoter->quoteName($tableTarget);
-        $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $tableSource, $tableTarget));
+        $from = $this->quoter->quoteName($from);
+        $to = $this->quoter->quoteName($to);
+        $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $from, $to));
 
         return true;
     }
@@ -242,9 +260,9 @@ class Schema
      * @param string $tableNameSource source table name
      * @param string $tableNameDestination new table name
      *
-     * @return bool Status
+     * @return bool Success
      */
-    public function copyTable($tableNameSource, $tableNameDestination)
+    public function copyTable(string $tableNameSource, string $tableNameDestination): bool
     {
         $tableNameSource = $this->quoter->quoteName($tableNameSource);
         $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
@@ -260,7 +278,7 @@ class Schema
      *
      * @return array
      */
-    public function getColumnNames($tableName)
+    public function getColumnNames(string $tableName): array
     {
         $result = [];
         foreach ($this->getColumns($tableName) as $value) {
@@ -278,7 +296,7 @@ class Schema
      *
      * @return array
      */
-    public function getColumns($tableName)
+    public function getColumns(string $tableName): array
     {
         $sql = 'SELECT
             column_name,
@@ -303,7 +321,9 @@ class Schema
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
 
-        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result ?: [];
     }
 
     /**
@@ -312,9 +332,9 @@ class Schema
      * @param string $tableName1
      * @param string $tableName2
      *
-     * @return bool
+     * @return bool Status
      */
-    public function compareTableSchema($tableName1, $tableName2)
+    public function compareTableSchema(string $tableName1, string $tableName2): bool
     {
         $schema1 = $this->getTableSchemaId($tableName1);
         $schema2 = $this->getTableSchemaId($tableName2);
@@ -330,7 +350,7 @@ class Schema
      *
      * @return string
      */
-    public function getTableSchemaId($tableName)
+    public function getTableSchemaId(string $tableName): string
     {
         $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
         $rows = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
