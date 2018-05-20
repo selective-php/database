@@ -139,7 +139,7 @@ class FunctionBuilder
     public function field(string $field): FunctionExpression
     {
         $quoter = $this->db->getQuoter();
-        $expression = $this->db->getQuoter()->quoteName($field);
+        $expression = $quoter->quoteName($field);
 
         return new FunctionExpression($expression, $quoter);
     }
