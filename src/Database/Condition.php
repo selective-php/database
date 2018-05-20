@@ -123,6 +123,7 @@ class Condition
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
         } elseif ($comparison == 'greatest' ||
             $comparison == 'least' ||
+            $comparison == 'coalesce' ||
             $comparison == 'interval' ||
             $comparison === 'strcmp') {
             $comparison = '= ' . $comparison;
