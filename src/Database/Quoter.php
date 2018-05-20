@@ -39,6 +39,11 @@ class Quoter
             return [];
         }
         foreach ($array as $key => $value) {
+            if ($value instanceof RawExp) {
+                $array[$key] = $value->getValue();
+                continue;
+            }
+
             $array[$key] = $this->quoteValue($value);
         }
 

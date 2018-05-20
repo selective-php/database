@@ -113,6 +113,9 @@ class QuoterTest extends BaseTest
 
         $row = ['1', '2', '3', null];
         $this->assertSame(["'1'", "'2'", "'3'", 'NULL'], $quoter->quoteArray($row));
+
+        $row = ['1', '2', '3', new RawExp('a.b')];
+        $this->assertSame(["'1'", "'2'", "'3'", 'a.b'], $quoter->quoteArray($row));
     }
 
     /**
