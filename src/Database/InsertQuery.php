@@ -130,7 +130,7 @@ class InsertQuery implements QueryInterface
      *
      * @return self
      */
-    public function onDuplicateKeyUpdate($values): self
+    public function onDuplicateKeyUpdate(array $values): self
     {
         $this->duplicateValues = $values;
 
@@ -201,7 +201,7 @@ class InsertQuery implements QueryInterface
      *
      * @return string Last inserted Id
      */
-    public function lastInsertId($name = null): string
+    public function lastInsertId(string $name = null): string
     {
         return $this->pdo->lastInsertId($name);
     }
