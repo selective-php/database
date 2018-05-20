@@ -90,18 +90,13 @@ class FunctionBuilder
      * Calculate the count. The arguments will be treated as literal values.
      *
      * @param string $field Field name (Default is *)
-     * @param string|null $alias Alias
      *
      * @return FunctionExpression Expression
      */
-    public function count(string $field = '*', string $alias = null): RawExp
+    public function count(string $field = '*'): FunctionExpression
     {
         $quoter = $this->db->getQuoter();
         $expression = sprintf('COUNT(%s)', $quoter->quoteName($field));
-
-        if ($alias !== null) {
-            $expression .= sprintf(' %s AS %s', $expression, $quoter->quoteName($alias));
-        }
 
         return new FunctionExpression($expression, $quoter);
     }
