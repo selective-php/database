@@ -7,8 +7,10 @@ namespace Odan\Database;
  */
 class Compression
 {
-    /** @var Connection */
-    protected $db = null;
+    /**
+     * @var Connection
+     */
+    protected $db;
 
     /**
      * Compression constructor.

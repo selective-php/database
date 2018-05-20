@@ -46,7 +46,7 @@ class Schema
     }
 
     /**
-     * Check if a table exists.
+     * Check if a database exists.
      *
      * @param string $dbName
      *

@@ -18,6 +18,14 @@ $database = $schema->getDatabase();
 $schema->setDatabase('my_database');
 ```
 
+### Check if a database exists
+
+```php
+$exits = $schema->existDatabase('my_database');
+```
+
+
+
 Todo: Write more documentation
 
 **Next page:** [Compression](compression.md)
