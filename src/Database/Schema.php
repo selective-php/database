@@ -102,7 +102,7 @@ class Schema
     public function createDatabase(
         string $dbName,
         string $characterSet = 'utf8mb4',
-        string $collate = 'utf8_unicode_ci'
+        string $collate = 'utf8mb4_unicode_ci'
     ): bool {
         $sql = 'CREATE DATABASE %s CHARACTER SET %s COLLATE %s;';
         $sql = vsprintf($sql, [
