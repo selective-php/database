@@ -69,3 +69,5 @@ $stmt = $db->insert()
 $stmt->execute();
 $rowCount = $stmt->rowCount(); // 1
 ```
+
+**Next page:** [Updates](updates.md)

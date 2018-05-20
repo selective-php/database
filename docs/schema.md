@@ -20,3 +20,4 @@ $schema->setDatabase('my_database');
 
 Todo: Write more documentation
 
+**Next page:** [Compression](compression.md)

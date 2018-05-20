@@ -109,3 +109,5 @@ the rows are updated in the order specified by the clause.
 ```php
 $db->update()->table('users')->set(['votes' => '1'])->orderBy('created_at DESC', 'id DESC')->execute();
 ```
+
+**Next page:** [Deletes](deletes.md)
