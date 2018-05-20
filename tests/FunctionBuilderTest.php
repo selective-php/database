@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Odan\Database\Test;
 
 use Odan\Database\FunctionBuilder;
+use Odan\Database\FunctionExpression;
 use Odan\Database\RawExp;
 
 /**
@@ -109,5 +110,42 @@ class FunctionBuilderTest extends BaseTest
         $this->assertInstanceOf(RawExp::class, $func->now());
         $this->assertEquals('NOW()', $func->now());
         $this->assertEquals('NOW() AS `alias_field`', $func->now()->alias('alias_field')->getValue());
+    }
+
+    /**
+     * Test.
+     *
+     * @return void
+     */
+    public function testCustom()
+    {
+        $query = $this->getConnection()->select();
+        $func = $query->func();
+
+        // Only values
+        $function = $func->custom('ifnull', null, 'test')->alias('alias_field');
+        $this->assertInstanceOf(FunctionExpression::class, $function);
+        $this->assertEquals("IFNULL(NULL, 'test') AS `alias_field`", $function->getValue());
+
+        // only values
+        $function = $func->custom('repeat', 'a', 1000);
+        $this->assertEquals("REPEAT('a', '1000')", $function->getValue());
+
+        // with fields
+        $function = $func->custom('ifnull', $func->field('users.email'), 'test');
+        $this->assertEquals("IFNULL(`users`.`email`, 'test')", $function->getValue());
+
+        // Full query
+        $query->columns($func->custom('concat', $func->field('users.first_name'), '-', $func->field('users.last_name')));
+        $query->from('users');
+
+        $this->assertEquals("SELECT CONCAT(`users`.`first_name`, '-', `users`.`last_name`) FROM `users`;", $query->build());
+
+        // nested functions
+        $query = $this->getConnection()->select();
+        $func = $query->func();
+
+        $query->columns($func->custom('length', $func->custom('compress', "a'b"))->alias('l'));
+        $this->assertEquals("SELECT LENGTH(COMPRESS('a\'b')) AS `l`;", $query->build());
     }
 }

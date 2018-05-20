@@ -110,4 +110,37 @@ class FunctionBuilder
     {
         return new FunctionExpression('NOW()', $this->db->getQuoter());
     }
+
+    /**
+     * Custom function.
+     *
+     * @param string $name The name of the function
+     * @param mixed ...$parameters The parameters for the function
+     *
+     * @return FunctionExpression Expression
+     */
+    public function custom(string $name, ...$parameters): FunctionExpression
+    {
+        $quoter = $this->db->getQuoter();
+
+        $list = implode(', ', $quoter->quoteArray($parameters));
+        $expression = sprintf('%s(%s)', strtoupper($name), $list);
+
+        return new FunctionExpression($expression, $quoter);
+    }
+
+    /**
+     * Returns a quoted field.
+     *
+     * @param string $field Fiel name
+     *
+     * @return FunctionExpression Expression
+     */
+    public function field(string $field): FunctionExpression
+    {
+        $quoter = $this->db->getQuoter();
+        $expression = $this->db->getQuoter()->quoteName($field);
+
+        return new FunctionExpression($expression, $quoter);
+    }
 }
