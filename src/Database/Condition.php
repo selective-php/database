@@ -121,7 +121,10 @@ class Condition
     {
         if ($comparison == 'in' || $comparison == 'not in') {
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
-        } elseif ($comparison == 'greatest' || $comparison == 'interval' || $comparison === 'strcmp') {
+        } elseif ($comparison == 'greatest' ||
+            $comparison == 'least' ||
+            $comparison == 'interval' ||
+            $comparison === 'strcmp') {
             $comparison = '= ' . $comparison;
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
         } elseif ($comparison === '=' && $rightField === null) {
