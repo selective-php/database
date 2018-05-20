@@ -31,8 +31,6 @@ composer require odan/database
 ## Usage
 
 ```php
-require_once 'vendor/autoload.php';
-
 $dsn = "mysql:host=127.0.0.1;dbname=test;charset=utf8";
 $username = 'root';
 $password = '';
