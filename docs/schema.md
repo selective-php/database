@@ -100,13 +100,13 @@ Copy an existing table to a new table:
 $success = $schema->copyTable('from', 'to');
 ```
 
-### Get the column names of a table 
+### Get all column names of a table 
 
 ```php
 $columns = $schema->getColumnNames('my_table');
 ```
 
-### Get all columns in a table
+### Get all column details of a table
 
 ```php
 $columns = $schema->getColumns('my_table');
