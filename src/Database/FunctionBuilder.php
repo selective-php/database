@@ -112,14 +112,14 @@ class FunctionBuilder
     }
 
     /**
-     * Custom function.
+     * Create custom SQL function call.
      *
      * @param string $name The name of the function
      * @param mixed ...$parameters The parameters for the function
      *
      * @return FunctionExpression Expression
      */
-    public function custom(string $name, ...$parameters): FunctionExpression
+    public function call(string $name, ...$parameters): FunctionExpression
     {
         $quoter = $this->db->getQuoter();
 
