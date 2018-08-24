@@ -151,7 +151,7 @@ You may call any of these methods after constructing your query:
 
 ```php
 $payments = $db->select()
-    ->columns($query->raw('MAX(amount)'), new RawExp('MIN(amount)'))
+    ->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
     ->from('payments')
     ->execute()
     ->fetchAll();
@@ -498,8 +498,8 @@ $users = $db->select()
         $db->where('t.b', '=', null);
         $db->where('t.c', '>', '5');
         $db->orWhere(function (SelectQuery $query) {
-            $db->where(new RawExp('a.id = b.id'));
-            $db->orWhere(new RawExp('c.id = u.id'));
+            $db->where($query->raw('a.id = b.id'));
+            $db->orWhere($query->raw('c.id = u.id'));
         });
     })
     ->execute()
@@ -523,12 +523,12 @@ $users = $query->execute()->fetchAll();
 SELECT `id`, `username` FROM `users` WHERE status <> 1;
 ```
 
-Using RawExp:
+Using a raw expression:
 
 ```php
-$users = $db->select()
-    ->from('users')
-    ->where(new RawExp('users.id = posts.user_id'))
+$query = $db->select();
+$users = $query->from('users')
+    ->where($query->raw('users.id = posts.user_id'))
     ->execute()
     ->fetchAll();
 ```
@@ -625,8 +625,8 @@ $users = $db->select()
         $query->having('y', '=', null);
         $query->having('z', '<>', '5');
         $query->orHaving(function(SelectQuery $query2) {
-            $query2->having(new RawExp('a.id = b.id'));
-            $query2->orHaving(new RawExp('c.id = u.id'));
+            $query2->having($query2->raw('a.id = b.id'));
+            $query2->orHaving($query2->raw('c.id = u.id'));
         });
     })
     ->execute()
