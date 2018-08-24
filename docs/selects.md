@@ -118,7 +118,7 @@ To create a raw expression, you may use the RawExp value object:
 
 ```php
 $users = $db->select()
-    ->columns(new RawExp('count(*) AS user_count'), 'status')
+    ->columns($query->raw('count(*) AS user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
     ->groupBy('status')
@@ -144,14 +144,14 @@ SELECT count(*) AS user_count,`status` FROM `payments`;
 
 #### Aggregates
 
-The query builder also provides a RawExp for aggregate methods 
-such as count, max, min, avg, and sum. 
+The query builder also provides a raw expression for aggregate methods 
+such as count, max, min, avg, and sum.
 
 You may call any of these methods after constructing your query:
 
 ```php
 $payments = $db->select()
-    ->columns(new RawExp('MAX(amount)'), new RawExp('MIN(amount)'))
+    ->columns($query->raw('MAX(amount)'), new RawExp('MIN(amount)'))
     ->from('payments')
     ->execute()
     ->fetchAll();
