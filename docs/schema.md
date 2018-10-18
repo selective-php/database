@@ -45,7 +45,7 @@ $success = $schema->createDatabase('my_database');
 Create a table with custom character set and collation:
 
 ```php
-$success = $schema->createDatabase('my_database', 'utf8mb4', 'utf8_unicode_ci');
+$success = $schema->createDatabase('my_database', 'utf8mb4', 'utf8mb4_unicode_ci');
 ```
 
 ### Change the database
