@@ -3,12 +3,18 @@
 Create a select query object with the connection object.
 
 ```php
-$query = $db->select();
+use Odan\Database\Connection;
+
+$connection = new Connection($dsn, $username, $password, $options);
+$query = $connection->select();
 ```
 
 Creating a SelectQuery object manually:
 
 ```php
+use Odan\Database\Connection;
+
+$connection = new Connection($dsn, $username, $password, $options);
 $query = new \Odan\Database\SelectQuery($connection);
 ```
 
@@ -17,7 +23,7 @@ $query = new \Odan\Database\SelectQuery($connection);
 Getting the generated SQL string:
 
 ```php
-echo $db->select()->from('users AS user')->build();
+echo $connection->select()->from('users AS user')->build();
 ```
 Output:
 
@@ -35,7 +41,7 @@ the given table, allowing you to chain more constraints onto
 the query and then finally get the results using the get method:
 
 ```php
-$stmt = $db->select()
+$stmt = $connection->select()
     ->columns('id', 'username', 'email')
     ->from('users')
     ->execute();
@@ -48,7 +54,7 @@ where each result is an instance of the Array or PHP StdClass object.
 You may access each column's value by accessing the column as a property of the object:
 
 ```php
-$stmt = $db->select()->from('users')->execute();
+$stmt = $connection->select()->from('users')->execute();
 while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     echo $row->id;
 }
@@ -57,13 +63,13 @@ while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 #### Retrieving A Single Row From A Table
 
 ```php
-$row = $db->select()->from('users')->execute()->fetch();
+$row = $connection->select()->from('users')->execute()->fetch();
 ```
 
 #### Retrieving A Single Column From A Table
 
 ```php
-$value = $db->select()->from('users')->execute()->fetchColumn(0);
+$value = $connection->select()->from('users')->execute()->fetchColumn(0);
 ```
 
 #### Distinct
@@ -71,7 +77,7 @@ $value = $db->select()->from('users')->execute()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$users = $db->select()->distinct()->columns('id')->from('users')->execute()->fetchAll();
+$users = $connection->select()->distinct()->columns('id')->from('users')->execute()->fetchAll();
 ```
 
 #### Columns
@@ -79,7 +85,7 @@ $users = $db->select()->distinct()->columns('id')->from('users')->execute()->fet
 Select columns by name:
 
 ```php
-$this->select()->columns('id', 'username', 'first_name AS firstName')->from('users')
+$connection->select()->columns('id', 'username', 'first_name AS firstName')->from('users')
 ```
 
 ```sql
@@ -89,19 +95,19 @@ SELECT `id`,`username`,`first_name` AS `firstName` FROM `users`;
 Select columns by array:
 
 ```php
-$db->select()->columns(['id', 'first_name', 'tablename.fieldname']);
+$connection->select()->columns(['id', 'first_name', 'tablename.fieldname']);
 ```
 
 Select columns with alias:
 
 ```php
-$db->select()->columns('first_name AS firstName', 'last_name AS lastName', 'tablename.fieldname as fieldName');
+$connection->select()->columns('first_name AS firstName', 'last_name AS lastName', 'tablename.fieldname as fieldName');
 ```
 
 Add fields one after another:
 
 ```php
-$query = $db->select()->columns('first_name')->from('users');
+$query = $connection->select()->columns('first_name')->from('users');
 $query->columns('last_name', 'email');
 ```
 
@@ -118,7 +124,7 @@ so be careful not to create any SQL injection points!
 To create a raw expression, you may use the RawExp value object:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->columns($query->raw('count(*) AS user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
@@ -134,7 +140,7 @@ SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROU
 Creating raw expressions with the function builder:
 
 ```php
-$query = $db->select();
+$query = $connection->select();
 $query->columns($query->raw('count(*) AS user_count'), 'status');
 $query->from('payments');
 ```
@@ -151,7 +157,7 @@ such as count, max, min, avg, and sum.
 You may call any of these methods after constructing your query:
 
 ```php
-$payments = $db->select()
+$payments = $connection->select()
     ->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
     ->from('payments')
     ->execute()
@@ -168,7 +174,7 @@ If you want to SELECT FROM a subselect, do so by passing a callback
 function and define an alias for the subselect:
 
 ```php
-$payments = $this->select()
+$payments = $connection->select()
     ->columns('id', function (SelectQuery $subSelect) {
         $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
         ->from('payments')
@@ -196,7 +202,7 @@ for the join. Of course, as you can see, you can join to
 multiple tables in a single query:
 
 ```php
-$users = $this->select()
+$users = $connection->select()
     ->columns('users.*', 'contacts.phone', 'orders.price')
     ->from('users')
     ->join('contacts', 'users.id', '=', 'contacts.user_id')
@@ -218,7 +224,7 @@ If you would like to perform a "left join" instead of an "inner join",
 use the leftJoin method. The  leftJoin method has the same signature as the join method:
 
 ```php
-$users = $this->select()
+$users = $connection->select()
     ->from('users')
     ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
     ->execute()
@@ -249,7 +255,7 @@ To get started, pass a (raw) string as the second argument into
 the `joinRaw` and `leftJoinRaw` method.
 
 ```php
-$users = $this->select()
+$users = $connection->select()
     ->from('users AS u')
     ->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL')
     ->execute()
@@ -268,8 +274,8 @@ For example, you may create an initial query and use the
 `union()`, `unionAll()` and `unionDistinct() `method to union it with a second query:
 
 ```php
-$select = $db->select()->columns('id')->from('table1');
-$select2 = $this->select()->columns('id')->from('table2');
+$select = $connection->select()->columns('id')->from('table1');
+$select2 = $connection->select()->columns('id')->from('table2');
 $select->union($select2);
 ```
 
@@ -293,7 +299,7 @@ For example, here is a query that verifies the value
 of the "votes" column is equal to 100:
 
 ```php
-$users = $db->select()->from('users')->where('votes', '=', 100)->execute()->fetchAll();
+$users = $connection->select()->from('users')->where('votes', '=', 100)->execute()->fetchAll();
 ```
 
 ```sql
@@ -303,15 +309,15 @@ SELECT * FROM `users` WHERE `votes` = 100;
 Of course, you may use a variety of other operators when writing a where clause:
 
 ```php
-$users = $db->select()->from('users')->where('votes', '>=', 100)->execute()->fetchAll();
-$users = $db->select()->from('users')->where('votes', '<>', 100)->execute()->fetchAll();
-$users = $db->select()->from('users')->where('name', 'like', 'D%')->execute()->fetchAll();
+$users = $connection->select()->from('users')->where('votes', '>=', 100)->execute()->fetchAll();
+$users = $connection->select()->from('users')->where('votes', '<>', 100)->execute()->fetchAll();
+$users = $connection->select()->from('users')->where('name', 'like', 'D%')->execute()->fetchAll();
 ```
 
 You may also pass multiple AND conditions:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('status', '=', 1)
     ->where('subscribed', '<>', 1)
@@ -329,7 +335,7 @@ ou may chain where constraints together as well as add OR clauses to the query.
 The orWhere method accepts the same arguments as the where method:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('votes', '>', 100)
     ->orWhere('name', '=', 'John')
@@ -346,7 +352,7 @@ SELECT * FROM `users` WHERE `votes` > '100' OR `name` = 'John';
 ##### Between and not between
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('votes', 'between', [1, 100])
     ->execute()
@@ -359,7 +365,7 @@ SELECT * FROM `users` WHERE `votes` BETWEEN '1' AND '100';
  
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('votes', 'not between', [1, 100])
     ->execute()
@@ -373,7 +379,7 @@ SELECT * FROM `users` WHERE `votes` NOT BETWEEN '1' AND '100';
 ##### In and not in
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('id', 'in', [1, 2, 3])
     ->execute()
@@ -387,7 +393,7 @@ SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
  
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('votes', 'not in', [1, 2, 3])
     ->execute()
@@ -401,7 +407,7 @@ SELECT * FROM `users` WHERE `id` NOT IN ('1', '2', '3');
 ##### Is null and is not null
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('updated_at', 'is', null)
     ->execute()
@@ -413,7 +419,7 @@ SELECT * FROM `users` WHERE `updated_at` IS NULL;
 ```
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('updated_at', 'is not', null)
     ->execute()
@@ -427,7 +433,7 @@ SELECT * FROM `users` WHERE `updated_at` IS NOT NULL;
 If you use the '=' or '<>' for comparison and pass a null value you get the same result.
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->where('updated_at', '=', null) // IS NULL
     ->execute()
@@ -444,7 +450,7 @@ SELECT * FROM `users` WHERE `updated_at` IS NULL;
 The whereColumn method may be used to verify that two columns are equal:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->whereColumn('users.id', '=', 'posts.user_id')
     ->execute()
@@ -459,7 +465,7 @@ The whereColumn method can also be called multiple times to add multiple conditi
 These conditions will be joined using the and operator:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->whereColumn('first_name', '=', 'last_name')
     ->whereColumn('updated_at', '=', 'created_at')
@@ -477,7 +483,7 @@ AND `updated_at` = `created_at`;
 #### Complex Where Conditions
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->columns('id', 'username')
     ->from('users u')
     ->join('customers c', 'c.created_by', '=', 'u.id')
@@ -512,7 +518,7 @@ $users = $db->select()
 Using whereRaw:
 
 ```php
-$query = $db->select()
+$query = $connection->select()
     ->columns('id', 'username')
     ->from('users')
     ->whereRaw('status <> 1');
@@ -527,7 +533,7 @@ SELECT `id`, `username` FROM `users` WHERE status <> 1;
 Using a raw expression:
 
 ```php
-$query = $db->select();
+$query = $connection->select();
 $users = $query->from('users')
     ->where($query->raw('users.id = posts.user_id'))
     ->execute()
@@ -541,7 +547,7 @@ SELECT * FROM `users` WHERE users.id = posts.user_id;
 #### Order By
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->orderBy('updated_at ASC')
     ->execute()
@@ -555,7 +561,7 @@ SELECT * FROM `users` ORDER BY `updated_at` ASC;
 #### Group By
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->groupBy('role')
     ->execute()
@@ -569,7 +575,7 @@ SELECT * FROM `users` GROUP BY `role`;
 #### Limit and Offset
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->limit(10)
     ->execute()
@@ -583,7 +589,7 @@ SELECT * FROM `users` LIMIT 10;
  
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->limit(10)
     ->offset(25)
@@ -598,7 +604,7 @@ SELECT * FROM `users` LIMIT 25, 10;
 #### Having
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->groupBy('id', 'username ASC')
     ->having('username', '=', 'admin')
@@ -616,7 +622,7 @@ HAVING `username` = 'admin';
 Complex having conditions:
 
 ```php
-$users = $db->select()
+$users = $connection->select()
     ->from('users')
     ->groupBy(['id', 'username ASC'])
     ->having('u.username', '=', 'admin')
@@ -648,7 +654,7 @@ A number of commonly used functions can be created with the func() method:
 Example:
 
 ```php
-$query = $db->select()->from('payments');
+$query = $connection->select()->from('payments');
 $query->columns($query->func()->sum('amount')->alias('sum_amount'));
 ```
 
