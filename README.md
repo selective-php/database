@@ -73,3 +73,10 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 [Composer]: https://getcomposer.org/
 [PHPUnit]: https://phpunit.de/
+
+## Similar libraries
+
+* [cakephp/database](https://github.com/cakephp/database)
+* [illuminate/database](https://github.com/illuminate/database)
+* [zendframework/zend-db](https://github.com/zendframework/zend-db)
+
