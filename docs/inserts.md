@@ -41,7 +41,9 @@ If the table has an auto-incrementing id,
 use the insertGetId method to insert a record and then retrieve the ID:
 
 ```php
-$userId = $connection->insert()->into('users')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
+$userId = $connection->insert()
+    ->into('users')
+    ->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
 ```
 
 Another way to get the last inserted ID:
