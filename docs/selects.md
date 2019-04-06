@@ -43,8 +43,7 @@ the query and then finally get the results using the get method:
 ```php
 $query = $connection->select()
     ->columns('id', 'username', 'email')
-    ->from('users')
-    ->execute();
+    ->from('users');
     
 $rows = $query->execute()->fetchAll() ?: [];
 ```
