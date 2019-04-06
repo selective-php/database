@@ -12,9 +12,8 @@ A fluent SQL query builder.
 
 ## Features
 
-* Extended PDO connection
-* SQL query builder (select, insert, update, delete)
-* Table schema informations and manipulation
+* Fluent SQL query builder (select, insert, update, delete)
+* Table schema information and manipulation
 * Data compression
 
 ## Installation
@@ -42,24 +41,24 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8 COLLATE utf8_unicode_ci"
 ];
 
-$db = new \Odan\Database\Connection($dsn, $username, $password, $options);
+$connection = new \Odan\Database\Connection($dsn, $username, $password, $options);
 
-$users = $db->select()
+$query = $connection->select()
     ->columns('id', 'username', 'email')
-    ->from('users')
-    ->execute()
-    ->fetchAll();
+    ->from('users');
+
+$rows = $query->execute()->fetchAll() ?: [];
     
-foreach ($users as $user) {
-    var_dump($user);
+foreach ($rows as $row) {
+    var_dump($row);
 }
 ```
 
 ## Documentation
 
-The database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application, and works on all supported database systems.
+The database query builder provides a convenient, fluent interface for creating and executing database queries. It can be used to perform most database operations in your PHP website and application.
 
-For more details how to build queries read the **[documentation](https://odan.github.io/database/)**.
+For more details how to build queries please read the **[documentation](https://odan.github.io/database/)**.
 
 ## Security
 
@@ -73,5 +72,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
-[Composer]: http://getcomposer.org/
-[PHPUnit]: http://phpunit.de/
+[Composer]: https://getcomposer.org/
+[PHPUnit]: https://phpunit.de/
