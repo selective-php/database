@@ -5,8 +5,8 @@ Create a insert object:
 ```php
 use Odan\Database\Connection;
 
-$db = new Connection($dsn, $username, $password, $options);
-$insert = $db->insert();
+$connection = new Connection($dsn, $username, $password, $options);
+$query = $connection->insert();
 ```
 
 ### Insert A Single Row
@@ -17,7 +17,7 @@ records into the database table.
 The insert method accepts an array of column names and values:
 
 ```php
-$db->insert()
+$connection->insert()
     ->into('test')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
@@ -28,7 +28,7 @@ to insert by passing an array of arrays. Each array represents a
 row to be inserted into the table:
 
 ```php
-$db->insert()
+$connection->insert()
     ->into('test')->set([
         ['email' => 'daniel@example.com', 'votes' => 0],
         ['email' => 'john@example.com', 'votes' => 0]
@@ -41,13 +41,13 @@ If the table has an auto-incrementing id,
 use the insertGetId method to insert a record and then retrieve the ID:
 
 ```php
-$userId = $db->insert()->into('users')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
+$userId = $connection->insert()->into('users')->insertGetId(['email' => 'john@example.com', 'votes' => 0]);
 ```
 
 Another way to get the last inserted ID:
 
 ```php
-$db->insert()
+$connection->insert()
     ->into('users')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
@@ -61,7 +61,7 @@ Sometimes you need more then just the last inserted ID, for example the number o
 You can find this information in the Statement object:
 
 ```php
-$stmt = $db->insert()
+$stmt = $connection->insert()
     ->into('users')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->prepare();
