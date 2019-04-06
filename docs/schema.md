@@ -3,7 +3,10 @@
 This class is a utility to modify database and table schemas. 
 
 ```php
-$schema = new \Odan\Database\Schema($db);
+use Odan\Database\Connection;
+
+$connection = new Connection($dsn, $username, $password, $options);
+$schema = new \Odan\Database\Schema($connection);
 ```
 
 ### Get Current database
