@@ -144,8 +144,8 @@ so be careful not to create any SQL injection points!
 To create a raw expression, you can use the `raw` method:
 
 ```php
-$query = $connection->select()
-    ->columns($query->raw('count(*) AS user_count'), 'status')
+$query = $connection->select();
+$query->columns($query->raw('count(*) AS user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
     ->groupBy('status');
@@ -160,8 +160,8 @@ SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROU
 Another example using the a raw expression:
 
 ```php
-$query = $connection->select()
-    ->columns($query->raw('count(*) AS user_count'), 'status');
+$query = $connection->select();
+$query->columns($query->raw('count(*) AS user_count'), 'status');
     ->from('payments');
 
 $rows = $query->execute()->fetchAll() ?: [];
