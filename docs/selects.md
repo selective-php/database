@@ -3,12 +3,13 @@
 Create a select query object with the connection object.
 
 ```php
-$statement = $db->select()->from('users')->execute();
+$query = $db->select();
 ```
+
 Creating a SelectQuery object manually:
 
 ```php
-$select = new \Odan\Database\SelectQuery($db);
+$query = new \Odan\Database\SelectQuery($db);
 ```
 
 ## Inspecting The Query
