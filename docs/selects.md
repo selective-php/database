@@ -41,21 +41,22 @@ the given table, allowing you to chain more constraints onto
 the query and then finally get the results using the get method:
 
 ```php
-$stmt = $connection->select()
+$query = $connection->select()
     ->columns('id', 'username', 'email')
     ->from('users')
     ->execute();
     
-$rows = $stmt->fetchAll();
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 The PDO `fetch()` method returns an row containing the results 
-where each result is an instance of the Array or PHP StdClass object. 
+where each result is an instance of the Array or PHP `stdClass` object. 
 You may access each column's value by accessing the column as a property of the object:
 
 ```php
-$stmt = $connection->select()->from('users')->execute();
-while($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+$statement = $connection->select()->from('users')->execute();
+
+while($row = $statement->fetch(PDO::FETCH_OBJ)) {
     echo $row->id;
 }
 ```
@@ -77,7 +78,12 @@ $value = $connection->select()->from('users')->execute()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$users = $connection->select()->distinct()->columns('id')->from('users')->execute()->fetchAll();
+$rows = $connection->select()
+    ->distinct()
+    ->columns('id')
+    ->from('users')
+    ->execute()
+    ->fetchAll();
 ```
 
 #### Columns
