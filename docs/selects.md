@@ -497,16 +497,16 @@ $users = $connection->select()
     ->orWhere('u.id', '=', null)
     ->orWhere('u.id', '!=', null)
     ->where(function (SelectQuery $query) {
-        $db->where('t2.field', '=', '1');
-        $db->where('t2.field2', '>', '1');
+        $query->where('t2.field', '=', '1');
+        $query->where('t2.field2', '>', '1');
     })
     ->orWhere(function (SelectQuery $query) {
-        $db->where('t.a', '<>', '2');
-        $db->where('t.b', '=', null);
-        $db->where('t.c', '>', '5');
-        $db->orWhere(function (SelectQuery $query) {
-            $db->where($query->raw('a.id = b.id'));
-            $db->orWhere($query->raw('c.id = u.id'));
+        $query->where('t.a', '<>', '2');
+        $query->where('t.b', '=', null);
+        $query->where('t.c', '>', '5');
+        $query->orWhere(function (SelectQuery $query) {
+            $query->where($query->raw('a.id = b.id'));
+            $query->orWhere($query->raw('c.id = u.id'));
         });
     })
     ->execute()
