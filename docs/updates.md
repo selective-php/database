@@ -37,9 +37,14 @@ $connection->update()
 ### Get number of affected rows:
 
 ```php
-$stmt = $connection->update()->table('users')->set(['votes' => '1'])->where('id', '=', '1')->prepare();
-$stmt->execute();
-$affectedRowCount = $stmt->rowCount();
+$statement = $connection->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->where('id', '=', '1')
+    ->prepare();
+
+$statement->execute();
+$affectedRowCount = $statement->rowCount();
 ```
 
 ### Increment & Decrement
@@ -54,21 +59,37 @@ A second argument may optionally be passed to control the amount by
 which the column should be incremented or decremented:
 
 ```php
-$connection->update()->table('users')->increment('voted')->execute();
-$connection->update()->table('users')->increment('voted', 10)->execute();
-$connection->update()->table('users')->increment('voted', 1)->where('id', '=', 1)->execute();
+$connection->update()
+    ->table('users')
+    ->increment('voted')
+    ->execute();
+    
+$connection->update()
+    ->table('users')
+    ->increment('voted', 10)
+    ->execute();
+    
+$connection->update()
+    ->table('users')
+    ->increment('voted', 1)
+    ->where('id', '=', 1)
+    ->execute();
 ```
 
 ```php
-$connection->update()->table('users')->decrement('voted', 1)->where('id', '=', 1)->execute();
+$connection->update()
+    ->table('users')
+    ->decrement('voted', 1)
+    ->where('id', '=', 1)
+    ->execute();
 ```
 
 Incrementing without the convenient methods:
 
 ```php
-$connection->update()
-    ->table('users')
-    ->set(['votes' => new RawExp('votes+1')])
+$query = $connection->update();
+$query->table('users')
+    ->set(['votes' => $query->raw('votes+1')])
     ->where('id', '=', '1')
     ->execute();
 ```
@@ -78,7 +99,11 @@ $connection->update()
 The `limit` clause places a limit on the number of rows that can be updated.
 
 ```php
-$connection->update()->table('users')->set(['votes' => '1'])->limit(10)->execute();
+$connection->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->limit(10)
+    ->execute();
 ```
 
 ### Update Low Priority
@@ -88,7 +113,11 @@ other clients are reading from the table. This affects only storage engines
 that use only table-level locking (such as MyISAM, MEMORY, and MERGE).
 
 ```php
-$connection->update()->table('users')->set(['votes' => '1'])->lowPriority()->execute();
+$connection->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->lowPriority()
+    ->execute();
 ```
 
 ### Update and ignore errors
@@ -98,7 +127,11 @@ even if errors occur during the update. Rows for which duplicate-key
 conflicts occur on a unique key value are not updated. 
 
 ```php
-$connection->update()->table('users')->set(['votes' => '1'])->ignore()->execute();
+$connection->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->ignore()
+    ->execute();
 ```
 
 ### Update with order by
@@ -107,7 +140,11 @@ If an UPDATE statement includes an ORDER BY clause,
 the rows are updated in the order specified by the clause. 
 
 ```php
-$connection->update()->table('users')->set(['votes' => '1'])->orderBy('created_at DESC', 'id DESC')->execute();
+$connection->update()
+    ->table('users')
+    ->set(['votes' => '1'])
+    ->orderBy('created_at DESC', 'id DESC')
+    ->execute();
 ```
 
 **Next page:** [Deletes](deletes.md)
