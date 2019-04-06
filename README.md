@@ -12,9 +12,8 @@ A fluent SQL query builder.
 
 ## Features
 
-* Fluent SQL query builder (select, insert, update, delete)
+* Fluent SQL query builder
 * Table schema information and manipulation
-* Data compression
 
 ## Installation
 
