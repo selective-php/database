@@ -24,7 +24,6 @@ Create a new database Connection:
 <?php
 
 use Odan\Database\Connection;
-use Odan\Database\RawExp;
 
 $host = '127.0.0.1';
 $database = 'test';
@@ -33,6 +32,7 @@ $password = '';
 $charset = 'utf8';
 $collate = 'utf8_unicode_ci';
 $dsn = "mysql:host=$host;dbname=$database;charset=$charset";
+
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_PERSISTENT => false,
@@ -40,7 +40,7 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
 ];
 
-$db = new Connection($dsn, $username, $password, $options);
+$connection = new Connection($dsn, $username, $password, $options);
 ```
 
 **Next page:** [Select](selects.md)
