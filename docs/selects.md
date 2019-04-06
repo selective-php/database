@@ -9,7 +9,7 @@ $query = $db->select();
 Creating a SelectQuery object manually:
 
 ```php
-$query = new \Odan\Database\SelectQuery($db);
+$query = new \Odan\Database\SelectQuery($connection);
 ```
 
 ## Inspecting The Query
