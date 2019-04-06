@@ -54,7 +54,7 @@ $connection->insert()
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
     
-$userId = $db->lastInsertId();
+$userId = $connection->lastInsertId();
 ```
 
 ### Number of rows affected by the last statement
