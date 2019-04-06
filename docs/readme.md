@@ -10,11 +10,10 @@
 
 ## Introduction
 
-The database query builder provides a convenient, fluent interface to creating and running database queries. 
-It can be used to perform most database operations in your application and works on all supported database systems.
+The database query builder provides a convenient, fluent interface for creating and executing database queries. 
+It can be used to perform most database operations in your application and works on all supported database systems (MySql).
 
-The query builder uses PDO parameter binding to protect your application against SQL injection attacks. 
-There is no need to clean strings being passed as bindings.
+The query builder uses quoting to protect your application against SQL injection attacks.
 
 ## Connection
 
