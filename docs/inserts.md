@@ -1,6 +1,6 @@
 ## Inserts
 
-Create a insert object:
+Create an insert object:
 
 ```php
 use Odan\Database\Connection;
