@@ -28,7 +28,7 @@ echo $connection->select()->from('users AS user')->build();
 Output:
 
 ```sql
-SELECT * FROM `users` as `u`;
+SELECT * FROM `users` as `user`;
 ```
 
 ### Retrieving Results
