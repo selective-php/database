@@ -141,28 +141,30 @@ Sometimes you may need to use a raw expression in a query.
 These expressions will be injected into the query as strings, 
 so be careful not to create any SQL injection points! 
 
-To create a raw expression, you may use the RawExp value object:
+To create a raw expression, you can use the `raw` method:
 
 ```php
-$users = $connection->select()
+$query = $connection->select()
     ->columns($query->raw('count(*) AS user_count'), 'status')
     ->from('payments')
     ->where('status', '<>', 1)
-    ->groupBy('status')
-    ->execute()
-    ->fetchAll();
+    ->groupBy('status');
+    
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
 SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
 ```
 
-Creating raw expressions with the function builder:
+Another example using the a raw expression:
 
 ```php
-$query = $connection->select();
-$query->columns($query->raw('count(*) AS user_count'), 'status');
-$query->from('payments');
+$query = $connection->select()
+    ->columns($query->raw('count(*) AS user_count'), 'status');
+    ->from('payments');
+
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
