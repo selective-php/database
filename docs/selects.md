@@ -41,9 +41,8 @@ the given table, allowing you to chain more constraints onto
 the query and then finally get the results using the get method:
 
 ```php
-$query = $connection->select()
-    ->columns('id', 'username', 'email')
-    ->from('users');
+$query = $connection->select()->from('users');
+$query->columns('id', 'username', 'email');
     
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -77,12 +76,11 @@ $value = $connection->select()->from('users')->execute()->fetchColumn(0);
 The distinct method allows you to force the query to return distinct results:
 
 ```php
-$rows = $connection->select()
-    ->distinct()
-    ->columns('id')
-    ->from('users')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('users')->distinct();
+
+$query->columns('id');
+
+$rows = $query->execute()->fetchAll();
 ```
 
 #### Columns
@@ -90,11 +88,11 @@ $rows = $connection->select()
 Select columns by name:
 
 ```php
-$rows = $connection->select()
-    ->columns('id', 'username', 'first_name AS firstName')
-    ->from('users')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('users');
+
+$query->columns('id', 'username', 'first_name AS firstName');
+
+$rows = $query->execute()->fetchAll();
 ```
 
 ```sql
@@ -104,19 +102,25 @@ SELECT `id`,`username`,`first_name` AS `firstName` FROM `users`;
 Select columns by array:
 
 ```php
-$rows = $connection->select()
-    ->columns(['id', 'first_name', 'tablename.fieldname'])
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('test');
+
+$query->columns(['id', 'first_name', 'tablename.fieldname']);
+
+$rows = $query->execute()->fetchAll();
 ```
 
 Select columns with alias:
 
 ```php
-$rows = $connection->select()
-    ->columns('first_name AS firstName', 'last_name AS lastName', 'tablename.fieldname as fieldName')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('test');
+
+$query->columns(
+    'first_name AS firstName',
+    'last_name AS lastName',
+    'tablename.fieldname as fieldName'
+);
+
+$rows = $query->execute()->fetchAll();
 ```
 
 Select columns with alias as array:
@@ -170,11 +174,12 @@ so be careful not to create any SQL injection points!
 To create a raw expression, you can use the `raw` method:
 
 ```php
-$query = $connection->select();
-$query->columns($query->raw('count(*) AS user_count'), 'status')
-    ->from('payments')
-    ->where('status', '<>', 1)
-    ->groupBy('status');
+$query = $connection->select()->from('payments');
+
+$query->columns($query->raw('count(*) AS user_count'), 'status');
+
+$query->where('status', '<>', 1);
+$query->groupBy('status');
     
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -186,9 +191,8 @@ SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROU
 Another example using the a raw expression:
 
 ```php
-$query = $connection->select();
+$query = $connection->select()->from('payments');
 $query->columns($query->raw('count(*) AS user_count'), 'status');
-    ->from('payments');
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -205,11 +209,11 @@ such as count, max, min, avg, and sum.
 You may call any of these methods after constructing your query:
 
 ```php
-$query = $connection->select();
-$rows = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
-    ->from('payments')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('payments');
+
+$query = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
+    
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
@@ -222,15 +226,15 @@ If you want to SELECT FROM a subselect, do so by passing a callback
 function and define an alias for the subselect:
 
 ```php
-$rows = $connection->select()
-    ->columns('id', function (SelectQuery $subSelect) {
-        $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
+$query = $connection->select()->from('test');
+
+$query->columns('id', function (SelectQuery $subSelect) {
+    $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
         ->from('payments')
         ->alias('max_amount');
-    })
-    ->from('test')
-    ->execute()
-    ->fetchAll();
+});
+    
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
@@ -250,13 +254,14 @@ for the join. Of course, as you can see, you can join to
 multiple tables in a single query:
 
 ```php
-$users = $connection->select()
-    ->columns('users.*', 'contacts.phone', 'orders.price')
-    ->from('users')
-    ->join('contacts', 'users.id', '=', 'contacts.user_id')
-    ->join('orders', 'users.id', '=', 'orders.user_id')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('users');
+
+$query->columns('users.*', 'contacts.phone', 'orders.price')
+
+$query->join('contacts', 'users.id', '=', 'contacts.user_id')
+$query->join('orders', 'users.id', '=', 'orders.user_id');
+    
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
@@ -272,11 +277,11 @@ If you would like to perform a "left join" instead of an "inner join",
 use the leftJoin method. The  leftJoin method has the same signature as the join method:
 
 ```php
-$rows = $connection->select()
-    ->from('users')
-    ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('users');
+    
+$query->leftJoin('posts', 'users.id', '=', 'posts.user_id');
+    
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
@@ -303,11 +308,11 @@ To get started, pass a (raw) string as the second argument into
 the `joinRaw` and `leftJoinRaw` method.
 
 ```php
-$rows = $connection->select()
-    ->from('users AS u')
-    ->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL')
-    ->execute()
-    ->fetchAll();
+$query = $connection->select()->from('users AS u');
+    
+$query->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL');
+
+$rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
@@ -323,12 +328,12 @@ For example, you may create an initial query and use the
 
 ```php
 $select = $connection->select()
-    ->columns('id')
-    ->from('table1');
+    ->from('table1')
+    ->columns('id');
     
 $select2 = $connection->select()
-    ->columns('id')
-    ->from('table2');
+    ->from('table2')
+    ->columns('id');
 
 $select->union($select2);
 ```
@@ -461,8 +466,6 @@ $rows = $connection->select()
 ```sql
 SELECT * FROM `users` WHERE `id` IN ('1', '2', '3');
 ```
-
- 
 
 ```php
 $rows = $connection->select()
