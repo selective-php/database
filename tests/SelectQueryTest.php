@@ -129,7 +129,7 @@ class SelectQueryTest extends BaseTest
             'firstName' => 'first_name',
             'last_name' => 'test.last_name',
             'email' => 'database.test.email',
-            'value' => $query->raw('CONCAT("1","2")')
+            'value' => $query->raw('CONCAT("1","2")'),
         ]);
 
         $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`test`.`last_name` AS `last_name`,' .
