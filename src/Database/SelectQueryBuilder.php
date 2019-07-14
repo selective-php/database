@@ -16,11 +16,6 @@ final class SelectQueryBuilder implements QueryInterface
     private $connection;
 
     /**
-     * @var PDO
-     */
-    private $pdo;
-
-    /**
      * @var Quoter
      */
     private $quoter;
