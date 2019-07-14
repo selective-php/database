@@ -131,14 +131,4 @@ class QuoterTest extends BaseTest
         $row = ['a', 'a.b', 'a.b.c', new RawExp('a.z')];
         $this->assertSame(['`a`', '`a`.`b`', '`a`.`b`.`c`', 'a.z'], $quoter->quoteNames($row));
     }
-
-    /**
-     * @param PDO $pdo
-     *
-     * @return PDO
-     */
-    protected function pdoMethod(PDO $pdo)
-    {
-        return $pdo;
-    }
 }

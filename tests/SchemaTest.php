@@ -39,12 +39,12 @@ class SchemaTest extends BaseTest
         $this->assertSame($dbName, $schema->getDatabase());
 
         $databases = $schema->getDatabases();
-        $this->assertSame(true, in_array('information_schema', $databases));
-        $this->assertSame(true, in_array('database_test', $databases));
+        $this->assertContains('information_schema', $databases);
+        $this->assertContains('database_test', $databases);
 
         $databases = $schema->getDatabases('information_sch%');
-        $this->assertSame(true, in_array('information_schema', $databases));
-        $this->assertSame(1, count($databases));
+        $this->assertContains('information_schema', $databases);
+        $this->assertCount(1, $databases);
     }
 
     /**
@@ -59,26 +59,26 @@ class SchemaTest extends BaseTest
 
         if ($schema->existTable('test')) {
             $result = $schema->dropTable('test');
-            $this->assertSame(true, $result);
+            $this->assertTrue($result);
         }
 
         $result = $schema->existTable('test');
-        $this->assertSame(false, $result);
+        $this->assertFalse($result);
 
         $result = $schema->existTable('database_test.test_not_existing');
-        $this->assertSame(false, $result);
+        $this->assertFalse($result);
 
         $result = $schema->existTable('notexistingdb.noexistingtable');
-        $this->assertSame(false, $result);
+        $this->assertFalse($result);
 
         $result = $this->createTestTable();
         $this->assertSame(0, $result);
 
         $result = $schema->existTable('database_test.test');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->existTable('notexistingdb.noexistingtable');
-        $this->assertSame(false, $result);
+        $this->assertFalse($result);
 
         $result = $schema->getTableSchemaId('test');
         $this->assertSame('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
@@ -87,16 +87,16 @@ class SchemaTest extends BaseTest
         $this->assertSame('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
 
         $result = $schema->compareTableSchema('test', 'test');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->compareTableSchema('database_test.test', 'test');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->compareTableSchema('information_schema.tables', 'information_schema.tables');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->compareTableSchema('information_schema.tables', 'information_schema.views');
-        $this->assertSame(false, $result);
+        $this->assertFalse($result);
 
         $tables = $schema->getTables();
         $this->assertSame([0 => 'test'], $tables);
@@ -105,16 +105,16 @@ class SchemaTest extends BaseTest
         $this->assertSame([0 => 'test'], $tables);
 
         $columns = $schema->getColumns('test');
-        $this->assertSame(true, !empty($columns));
-        $this->assertSame(10, count($columns));
+        $this->assertNotEmpty($columns);
+        $this->assertCount(10, $columns);
         $this->assertSame('id', $columns[0]['column_name']);
         $this->assertSame('keyname', $columns[1]['column_name']);
         $this->assertSame('keyvalue', $columns[2]['column_name']);
         $this->assertSame('boolvalue', $columns[3]['column_name']);
 
         $columns = $schema->getColumns('database_test.test');
-        $this->assertSame(true, !empty($columns));
-        $this->assertSame(10, count($columns));
+        $this->assertNotEmpty($columns);
+        $this->assertCount(10, $columns);
 
         $insert = $this->getConnection()->insert()->into('test')->set([
             'keyname' => 'test',
@@ -232,25 +232,25 @@ class SchemaTest extends BaseTest
         $this->assertSame(0, $stmt->rowCount());
 
         $result = $schema->renameTable('test', 'temp');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->renameTable('temp', 'test');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->copyTable('test', 'test_copy');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->existTable('test_copy');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $schema->dropTable('test_copy');
 
         // With data
         $result = $schema->copyTable('test', 'test_copy');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $result = $schema->existTable('test_copy');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
         $schema->dropTable('test_copy');
     }

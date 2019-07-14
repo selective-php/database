@@ -35,12 +35,11 @@ class ConnectionTest extends BaseTest
             ->where('TABLE_NAME', '=', 'TABLES');
 
         $statement = $select->prepare();
-        $this->assertInstanceOf(PDOStatement::class, $statement);
 
         $statement->execute();
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $this->assertTrue(!empty($row['TABLE_NAME']));
+        $this->assertNotEmpty($row['TABLE_NAME']);
         $this->assertSame('TABLES', $row['TABLE_NAME']);
     }
 }

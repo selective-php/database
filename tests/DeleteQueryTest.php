@@ -44,7 +44,6 @@ class DeleteQueryTest extends BaseTest
     public function testLowPriority()
     {
         $delete = $this->delete()->lowPriority()->from('test');
-        $this->assertInstanceOf(PDOStatement::class, $delete->prepare());
         $this->assertSame('DELETE LOW_PRIORITY FROM `test`;', $delete->build());
     }
 

@@ -80,7 +80,6 @@ class SelectQueryTest extends BaseTest
     public function testBufferResult()
     {
         $select = $this->select()->bufferResult()->from('users');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT SQL_BUFFER_RESULT * FROM `users`;', $select->build());
     }
 
@@ -90,7 +89,6 @@ class SelectQueryTest extends BaseTest
     public function testCalcFoundRows()
     {
         $select = $this->select()->calcFoundRows()->from('users');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT SQL_CALC_FOUND_ROWS * FROM `users`;', $select->build());
     }
 
@@ -144,7 +142,6 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
         $select = $select->columns(['username AS username2', 'first_name AS firstName', 'id', 'table.fieldname']);
 
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
         $this->assertSame(
             'SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;',
@@ -208,7 +205,6 @@ class SelectQueryTest extends BaseTest
     public function testFrom()
     {
         $select = $this->select()->columns('id')->from('test');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT `id` FROM `test`;', $select->build());
 
         $select = $this->select()->columns('id')->from('test AS t');
@@ -224,7 +220,6 @@ class SelectQueryTest extends BaseTest
     public function testWhere()
     {
         $select = $this->select()->columns('id')->from('test')->where('id', '=', 1);
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` = '1';", $select->build());
 
         $select = $this->select()->columns('id')->from('test')->where('id', '>=', 3);
@@ -348,7 +343,6 @@ class SelectQueryTest extends BaseTest
             ->columns('id')
             ->from('test')
             ->whereRaw("STRCMP('text', 'text2')");
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
     }
 
@@ -362,7 +356,6 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->whereRaw("STRCMP('text', 'text2')")
             ->orWhereRaw('1=1');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2') OR 1=1;", $select->build());
     }
 
@@ -378,7 +371,6 @@ class SelectQueryTest extends BaseTest
                 $query->where('field2', '=', 'value2');
             });
 
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
         $this->assertSame("SELECT `id` FROM `test` WHERE (  `field2` = 'value2' );", $sql);
     }
@@ -397,7 +389,6 @@ class SelectQueryTest extends BaseTest
                     ->orWhereRaw('1=1');
             });
 
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
         $this->assertSame("SELECT `id` FROM `test` WHERE (  `field2` = 'value2' AND 0=0 OR 1=1 );", $sql);
     }
@@ -416,7 +407,6 @@ class SelectQueryTest extends BaseTest
                     ->orWhereRaw('1=1');
             });
 
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
         $this->assertSame("SELECT `id` FROM `test` WHERE `field` = 'value' AND (  0=0 OR 1=1 );", $sql);
     }
@@ -555,7 +545,7 @@ class SelectQueryTest extends BaseTest
             ->columns('id')
             ->from('test AS t')
             ->join('users AS u', 'u.id', '=', 'test.user_id');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+
         $this->assertSame(
             'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;',
             $select->build()
@@ -575,7 +565,7 @@ class SelectQueryTest extends BaseTest
             ->columns('id')
             ->from('test')
             ->joinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+
         $this->assertSame(
             'SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
             $select->build()
@@ -591,7 +581,7 @@ class SelectQueryTest extends BaseTest
             ->columns('id')
             ->from('test')
             ->leftJoinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+
         $this->assertSame(
             'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
             $select->build()
@@ -607,7 +597,7 @@ class SelectQueryTest extends BaseTest
             ->columns('id')
             ->from('test')
             ->leftJoin('users u', 'u.id', '=', 'test.user_id');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
+
         $this->assertSame(
             'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;',
             $select->build()
@@ -636,7 +626,6 @@ class SelectQueryTest extends BaseTest
     {
         $query = $this->getConnection()->select();
 
-        $this->assertInstanceOf(RawExp::class, $query->raw(''));
         $this->assertEquals('value', $query->raw('value')->getValue());
 
         $query = $this->getConnection()->select();
