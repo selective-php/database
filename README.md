@@ -2,13 +2,12 @@
  
 A fluent SQL query builder.
 
-[![Latest Version on Packagist](https://img.shields.io/github/release/odan/database.svg)](https://github.com/odan/database/releases)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Build Status](https://travis-ci.org/odan/database.svg?branch=master)](https://travis-ci.org/odan/database)
-[![Coverage Status](https://scrutinizer-ci.com/g/odan/database/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/odan/database/code-structure)
-[![Quality Score](https://scrutinizer-ci.com/g/odan/database/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/odan/database/?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/odan/database.svg)](https://packagist.org/packages/odan/database/stats)
-
+[![Latest Version on Packagist](https://img.shields.io/github/release/odan/database.svg?style=flat-square)](https://packagist.org/packages/odan/database)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/odan/database/master.svg?style=flat-square)](https://travis-ci.org/odan/database)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/odan/database.svg?style=flat-square)](https://scrutinizer-ci.com/g/odan/database/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/quality/g/odan/database.svg?style=flat-square)](https://scrutinizer-ci.com/g/odan/database/?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/odan/database.svg?style=flat-square)](https://packagist.org/packages/odan/database/stats)
 
 ## Features
 
@@ -67,12 +66,6 @@ If you discover any security related issues, please email instead of using the i
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-
-[PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
-[PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
-[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
-[Composer]: https://getcomposer.org/
-[PHPUnit]: https://phpunit.de/
 
 ## Similar libraries
 

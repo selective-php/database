@@ -71,15 +71,15 @@ abstract class BaseTest extends TestCase
     /**
      * @return Connection
      */
-    protected function getConnection()
+    protected function getConnection(): Connection
     {
-        if (!$this->connection) {
+        if ($this->connection === null) {
             $host = '127.0.0.1';
-            $dbname = 'database_test';
             $username = 'root';
             $password = '';
             $charset = 'utf8';
             $collate = 'utf8_unicode_ci';
+
             $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_PERSISTENT => false,

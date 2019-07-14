@@ -128,8 +128,10 @@ class SelectQueryTest extends BaseTest
 
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $sql = $select->build();
-        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;',
-            $sql);
+        $this->assertSame(
+            'SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`table`.`fieldname` FROM `test`;',
+            $sql
+        );
     }
 
     /**
@@ -141,8 +143,10 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()
             ->columns('id', new RawExp('(SELECT MAX(payments.amount) FROM payments) AS max_amount'))
             ->from('test');
-        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id`,(SELECT MAX(payments.amount) FROM payments) AS max_amount FROM `test`;',
+            $select->build()
+        );
 
         // With a sub query object
         $select = $this->select()
@@ -153,8 +157,10 @@ class SelectQueryTest extends BaseTest
             })
             ->from('test');
 
-        $this->assertSame('SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `test`;',
+            $select->build()
+        );
     }
 
     /**
@@ -406,8 +412,10 @@ class SelectQueryTest extends BaseTest
         $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name`;', $select->build());
 
         $select = $select->orWhereColumn('votes', '>=', 'vote_max');
-        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT * FROM `users` WHERE `first_name` = `last_name` OR `votes` >= `vote_max`;',
+            $select->build()
+        );
 
         $select = $this->select()->from('users')->whereColumn('users.email', '=', 'table2.email');
         $this->assertSame('SELECT * FROM `users` WHERE `users`.`email` = `table2`.`email`;', $select->build());
@@ -415,8 +423,10 @@ class SelectQueryTest extends BaseTest
         $select = $this->select()->from('users')
             ->whereColumn('first_name', '=', 'last_name')
             ->whereColumn('updated_at', '=', 'created_at');
-        $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT * FROM `users` WHERE `first_name` = `last_name` AND `updated_at` = `created_at`;',
+            $select->build()
+        );
     }
 
     /**
@@ -491,8 +501,10 @@ class SelectQueryTest extends BaseTest
         $query->groupBy('state_id', 'locality');
         $query->havingRaw('COUNT(*) > 1');
 
-        $this->assertSame('SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1;',
-            $query->build());
+        $this->assertSame(
+            'SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1;',
+            $query->build()
+        );
     }
 
     /**
@@ -507,8 +519,10 @@ class SelectQueryTest extends BaseTest
         $query->havingRaw('COUNT(*) > 1');
         $query->orHavingRaw('brand LIKE %acme%');
 
-        $this->assertSame('SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1 OR brand LIKE %acme%;',
-            $query->build());
+        $this->assertSame(
+            'SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1 OR brand LIKE %acme%;',
+            $query->build()
+        );
     }
 
     /**
@@ -521,8 +535,10 @@ class SelectQueryTest extends BaseTest
             ->from('test AS t')
             ->join('users AS u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id`;',
+            $select->build()
+        );
 
         $select->innerJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
@@ -539,8 +555,10 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->joinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id` FROM `test` INNER JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            $select->build()
+        );
     }
 
     /**
@@ -553,8 +571,10 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoinRaw('users u', 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            $select->build()
+        );
     }
 
     /**
@@ -567,8 +587,10 @@ class SelectQueryTest extends BaseTest
             ->from('test')
             ->leftJoin('users u', 'u.id', '=', 'test.user_id');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
-        $this->assertSame('SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;',
-            $select->build());
+        $this->assertSame(
+            'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id`;',
+            $select->build()
+        );
 
         $select->leftJoin('table2 AS t2', 't2.id', '=', 'test.user_id');
         $expected = 'SELECT `id` FROM `test` LEFT JOIN `users` `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';

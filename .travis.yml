@@ -3,27 +3,18 @@ language: php
 php:
   - 7.1
   - 7.2
+  - 7.3
 
-# This triggers builds to run on the new TravisCI infrastructure.
-# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
-sudo: false
+dist: xenial
 
-## Cache composer
 cache:
   directories:
     - $HOME/.composer/cache
 
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
-  - mysql -e 'create database database_test;'
+  - composer self-update
+  - composer install --no-interaction --prefer-dist --no-progress
   - cd $TRAVIS_BUILD_DIR
 
 script:
-  - ant check-style
-  - ant phpstan
-  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
-
-#after_success:
-#  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-#  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - composer check-all
