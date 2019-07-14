@@ -11,44 +11,44 @@ final class Condition
      *
      * @var Connection
      */
-    protected $pdo;
+    private $pdo;
 
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * PDO Connection.
      *
      * @var QueryInterface
      */
-    protected $query;
+    private $query;
 
     /**
      * Where clause.
      *
      * @var array
      */
-    protected $where = [];
+    private $where = [];
 
     /**
      * Having clause.
      *
      * @var array
      */
-    protected $having = [];
+    private $having = [];
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $connection
      * @param QueryInterface $query
      */
-    public function __construct(Connection $pdo, QueryInterface $query)
+    public function __construct(Connection $connection, QueryInterface $query)
     {
-        $this->pdo = $pdo;
-        $this->quoter = $pdo->getQuoter();
+        $this->pdo = $connection;
+        $this->quoter = $connection->getQuoter();
         $this->query = $query;
     }
 
@@ -117,7 +117,7 @@ final class Condition
      *
      * @return array
      */
-    protected function getRightFieldValue($rightField, $comparison): array
+    private function getRightFieldValue($rightField, $comparison): array
     {
         if ($comparison == 'in' || $comparison == 'not in') {
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
@@ -189,7 +189,7 @@ final class Condition
      *
      * @return void
      */
-    protected function addClauseCondClosure(string $clause, string $andor, callable $closure): void
+    private function addClauseCondClosure(string $clause, string $andor, callable $closure): void
     {
         // retain the prior set of conditions, and temporarily reset the clause
         // for the closure to work with (otherwise there will be an extraneous

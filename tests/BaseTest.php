@@ -48,7 +48,7 @@ abstract class BaseTest extends TestCase
             $schema->dropTable($table);
         }
 
-        $result = $db->exec('CREATE TABLE `test` (
+        $result = $db->getPdo()->exec('CREATE TABLE `test` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `keyname` VARCHAR(255) COLLATE utf8_unicode_ci,
             `keyvalue` VARCHAR(255) COLLATE utf8_unicode_ci,
@@ -69,23 +69,31 @@ abstract class BaseTest extends TestCase
     }
 
     /**
+     * @return PDO
+     */
+    protected function getPdo(): PDO
+    {
+        $host = '127.0.0.1';
+        $username = 'root';
+        $password = '';
+        $charset = 'utf8';
+        $collate = 'utf8_unicode_ci';
+
+        return new PDO("mysql:host=$host;charset=$charset", $username, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_PERSISTENT => false,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate",
+        ]);
+    }
+
+    /**
      * @return Connection
      */
     protected function getConnection(): Connection
     {
         if ($this->connection === null) {
-            $host = '127.0.0.1';
-            $username = 'root';
-            $password = '';
-            $charset = 'utf8';
-            $collate = 'utf8_unicode_ci';
-
-            $this->connection = new Connection("mysql:host=$host;charset=$charset", $username, $password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_PERSISTENT => false,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate",
-            ]);
+            $this->connection = new Connection($this->getPdo());
         }
 
         return $this->connection;

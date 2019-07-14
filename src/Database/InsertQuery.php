@@ -2,6 +2,7 @@
 
 namespace Odan\Database;
 
+use PDO;
 use PDOStatement;
 
 /**
@@ -12,53 +13,51 @@ use PDOStatement;
 final class InsertQuery implements QueryInterface
 {
     /**
-     * Connection.
-     *
-     * @var Connection
+     * @var PDO
      */
-    protected $pdo;
+    private $pdo;
 
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * @var string Table name
      */
-    protected $table;
+    private $table;
 
     /**
      * @var array Value list
      */
-    protected $values;
+    private $values;
 
     /**
      * @var array Assignment list
      */
-    protected $duplicateValues;
+    private $duplicateValues;
 
     /**
      * @var string Priority modifier
      */
-    protected $priority;
+    private $priority;
 
     /**
      * Errors that occur while executing the INSERT statement are ignored.
      *
      * @var string Ignore modifier
      */
-    protected $ignore;
+    private $ignore;
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo The pdo connection
+     * @param Connection $connection The pdo connection
      */
-    public function __construct(Connection $pdo)
+    public function __construct(Connection $connection)
     {
-        $this->pdo = $pdo;
-        $this->quoter = $pdo->getQuoter();
+        $this->pdo = $connection->getPdo();
+        $this->quoter = $connection->getQuoter();
     }
 
     /**

@@ -6,7 +6,6 @@
 * [Update](updates.md)
 * [Delete](deletes.md)
 * [Schema](schema.md)
-* [Compression](compression.md)
 
 ## Introduction
 
@@ -23,6 +22,7 @@ Create a new database Connection:
 <?php
 
 use Odan\Database\Connection;
+use PDO;
 
 $host = '127.0.0.1';
 $database = 'test';
@@ -39,7 +39,9 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
 ];
 
-$connection = new Connection($dsn, $username, $password, $options);
+$pdo = new PDO($dsn, $username, $password, $options);
+
+$connection = new Connection($pdo);
 ```
 
 **Next page:** [Select](selects.md)

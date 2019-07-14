@@ -22,18 +22,6 @@ class ConnectionTest extends BaseTest
     {
         $connection = $this->getConnection();
         $this->assertInstanceOf(Connection::class, $connection);
-        $pdo = $this->pdoMethod($connection);
-        $this->assertInstanceOf(PDO::class, $pdo);
-    }
-
-    /**
-     * @param PDO $pdo
-     *
-     * @return PDO
-     */
-    protected function pdoMethod(PDO $pdo)
-    {
-        return $pdo;
     }
 
     /**

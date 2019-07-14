@@ -10,24 +10,24 @@ use PDO;
 final class Schema
 {
     /**
-     * @var Connection
+     * @var PDO
      */
-    protected $db;
+    private $pdo;
 
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * Constructor.
      *
-     * @param Connection $db The connection
+     * @param Connection $connection The connection
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $connection)
     {
-        $this->db = $db;
-        $this->quoter = $db->getQuoter();
+        $this->pdo = $connection->getPdo();
+        $this->quoter = $connection->getQuoter();
     }
 
     /**
@@ -39,7 +39,7 @@ final class Schema
      */
     public function setDatabase(string $dbName): bool
     {
-        $this->db->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
+        $this->pdo->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
 
         return true;
     }
@@ -51,7 +51,7 @@ final class Schema
      */
     public function getDatabase(): string
     {
-        return $this->db->query('SELECT database() AS dbname;')->fetchColumn(0);
+        return $this->pdo->query('SELECT database() AS dbname;')->fetchColumn(0);
     }
 
     /**
@@ -68,7 +68,7 @@ final class Schema
             WHERE SCHEMA_NAME = %s;';
 
         $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
-        $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
 
         return !empty($row['SCHEMA_NAME']);
     }
@@ -87,7 +87,14 @@ final class Schema
             $sql = sprintf('SHOW DATABASES WHERE `database` LIKE %s;', $this->quoter->quoteValue($like));
         }
 
-        return $this->db->queryValues($sql, 'Database');
+        $statement = $this->pdo->query($sql);
+
+        $result = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row['Database'];
+        }
+
+        return $result;
     }
 
     /**
@@ -111,7 +118,7 @@ final class Schema
             $this->quoter->quoteValue($collate),
         ]);
 
-        $this->db->exec($sql);
+        $this->pdo->exec($sql);
 
         return true;
     }
@@ -126,7 +133,7 @@ final class Schema
     public function useDatabase(string $dbName): bool
     {
         $sql = sprintf('USE %s;', $this->quoter->quoteName($dbName));
-        $result = $this->db->exec($sql);
+        $result = $this->pdo->exec($sql);
 
         return (bool)$result;
     }
@@ -151,7 +158,14 @@ final class Schema
                 AND table_name LIKE %s;', $this->quoter->quoteValue($like));
         }
 
-        return $this->db->queryValues($sql, 'table_name');
+        $statement = $this->pdo->query($sql);
+
+        $result = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row['table_name'];
+        }
+
+        return $result;
     }
 
     /**
@@ -171,7 +185,7 @@ final class Schema
             AND table_name = %s;';
 
         $sql = sprintf($sql, $dbName, $tableName);
-        $row = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
 
         return isset($row['table_name']);
     }
@@ -183,7 +197,7 @@ final class Schema
      *
      * @return array The database name and table name
      */
-    protected function parseTableName(string $tableName): array
+    private function parseTableName(string $tableName): array
     {
         $dbName = 'database()';
         if (strpos($tableName, '.') !== false) {
@@ -206,7 +220,7 @@ final class Schema
      */
     public function dropTable(string $tableName): bool
     {
-        $this->db->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
+        $this->pdo->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
 
         return true;
     }
@@ -221,7 +235,7 @@ final class Schema
      */
     public function truncateTable(string $tableName): bool
     {
-        $this->db->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
+        $this->pdo->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
 
         return true;
     }
@@ -238,7 +252,7 @@ final class Schema
     {
         $from = $this->quoter->quoteName($from);
         $to = $this->quoter->quoteName($to);
-        $this->db->exec(sprintf('RENAME TABLE %s TO %s;', $from, $to));
+        $this->pdo->exec(sprintf('RENAME TABLE %s TO %s;', $from, $to));
 
         return true;
     }
@@ -255,7 +269,7 @@ final class Schema
     {
         $tableNameSource = $this->quoter->quoteName($tableNameSource);
         $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
-        $this->db->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
+        $this->pdo->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
 
         return true;
     }
@@ -310,7 +324,7 @@ final class Schema
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
 
-        $result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return $result ?: [];
     }
@@ -342,7 +356,7 @@ final class Schema
     public function getTableSchemaId(string $tableName): string
     {
         $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
-        $rows = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return sha1(json_encode($rows));
     }

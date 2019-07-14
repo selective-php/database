@@ -143,17 +143,19 @@ class SchemaTest extends BaseTest
         $result = $stmt->rowCount();
         $this->assertSame(2, $result);
 
-        $result = $db->lastInsertId();
+        $result = $db->getPdo()->lastInsertId();
         $this->assertSame('1', $result);
 
-        $result = $db->query('SELECT COUNT(*) AS count FROM `test`')->fetchAll(PDO::FETCH_ASSOC);
+        $result = $db->getPdo()->query('SELECT COUNT(*) AS count FROM `test`')->fetchAll(PDO::FETCH_ASSOC);
         $this->assertSame([0 => ['count' => '1']], $result);
 
-        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
+        $query = $db->select()->from('test');
+        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
         $this->assertSame('1', $result);
 
-        $result = $db->queryValue('SELECT * FROM `test` WHERE id = 9999999;', 'id');
-        $this->assertSame(null, $result);
+        $query = $db->select()->from('test');
+        $result = $query->columns('id')->where('id', '=', 9999999)->execute()->fetchColumn() ?: null;
+        $this->assertNull($result);
 
         $rows = [
             0 => ['keyname' => 'test', 'keyvalue' => '123'],
@@ -163,47 +165,44 @@ class SchemaTest extends BaseTest
         $result->execute();
         $this->assertSame(2, $result->rowCount());
 
-        $result = $db->lastInsertId();
+        $result = $db->getPdo()->lastInsertId();
         $this->assertSame('2', $result);
 
-        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
+        $query = $db->select()->from('test');
+        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
         $this->assertSame('3', $result);
 
         $result = $schema->truncateTable('test');
-        $this->assertSame(true, $result);
+        $this->assertTrue($result);
 
-        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
+        $query = $db->select()->from('test');
+        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
         $this->assertSame('0', $result);
 
         $result = $db->insert()->into('test')->set($rows)->prepare();
         $result->execute();
         $this->assertSame(2, $result->rowCount());
 
-        $result = $db->queryValues('SELECT id,keyvalue FROM `test`', 'keyvalue');
-        $this->assertSame(['123', '1234'], $result);
-
-        $result = $db->queryMapColumn('SELECT id,keyname,keyvalue FROM `test`', 'keyname');
-        $expected = [
-            'test' => [
-                'id' => '1',
-                'keyname' => 'test',
-                'keyvalue' => '123',
-            ],
-            'test2' => [
-                'id' => '2',
-                'keyname' => 'test2',
-                'keyvalue' => '1234',
-            ],
-        ];
-        $this->assertSame($expected, $result);
+        $result = $db->select()->from('test')->columns('id', 'keyvalue')->execute()->fetchAll();
+        $this->assertSame([
+            0 => [
+                    'id' => '1',
+                    'keyvalue' => '123',
+                ],
+            1 => [
+                    'id' => '2',
+                    'keyvalue' => '1234',
+                ],
+        ], $result);
 
         $db->delete()->from('test')->execute();
 
-        $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');
+        $query = $db->select()->from('test');
+        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
         $this->assertSame('0', $result);
 
-        $result = $db->queryValue("SHOW TABLE STATUS FROM `database_test` LIKE 'test'; ", 'Auto_increment');
-        $this->assertSame('3', $result);
+        $result = $db->getPdo()->query("SHOW TABLE STATUS FROM `database_test` LIKE 'test';")->fetch();
+        $this->assertSame('3', $result['Auto_increment']);
 
         $rows = [];
         for ($i = 0; $i < 100; $i++) {
@@ -213,8 +212,8 @@ class SchemaTest extends BaseTest
         $result->execute();
         $this->assertSame(100, $result->rowCount());
 
-        $result = $db->query('SELECT keyname,keyvalue FROM test;')->fetchAll(PDO::FETCH_ASSOC);
-        $this->assertSame(true, $rows == $result);
+        $result = $db->getPdo()->query('SELECT keyname,keyvalue FROM test;')->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertEquals($rows, $result);
 
         $fields = [
             'keyname' => 'test-new',

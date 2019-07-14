@@ -4,7 +4,6 @@ namespace Odan\Database\Test;
 
 use Odan\Database\RawExp;
 use Odan\Database\UpdateQuery;
-use PDOStatement;
 
 /**
  * @coversDefaultClass \Odan\Database\UpdateQuery
@@ -36,7 +35,6 @@ class UpdateQueryTest extends BaseTest
     {
         $update = $this->update()->table('test')->set(['keyname' => 'admin'])->where('id', '=', '1');
         $this->assertSame("UPDATE `test` SET `keyname`='admin' WHERE `id` = '1';", $update->build());
-        $this->assertInstanceOf(PDOStatement::class, $update->prepare());
         $this->assertTrue($update->execute());
     }
 

@@ -2,13 +2,125 @@
 
 namespace Odan\Database;
 
+use Closure;
+use PDO;
 use PDOStatement;
 
 /**
  * Select Query.
  */
-final class SelectQuery extends SelectQueryBuilder implements QueryInterface
+final class SelectQuery implements QueryInterface
 {
+    /**
+     * PDO Connection.
+     *
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var PDO
+     */
+    private $pdo;
+
+    /**
+     * @var Quoter
+     */
+    private $quoter;
+
+    /**
+     * @var array
+     */
+    private $columns = [];
+
+    /**
+     * @var string|null
+     */
+    private $alias;
+
+    /**
+     * @var string
+     */
+    private $from = '';
+
+    /**
+     * @var array
+     */
+    private $join = [];
+
+    /**
+     * @var array
+     */
+    private $union = [];
+
+    /**
+     * @var Condition Where conditions
+     */
+    private $condition;
+
+    /**
+     * @var array
+     */
+    private $orderBy = [];
+
+    /**
+     * @var array
+     */
+    private $groupBy = [];
+
+    /**
+     * @var int
+     */
+    private $limit;
+
+    /**
+     * @var int|null
+     */
+    private $offset;
+
+    /**
+     * @var string
+     */
+    private $distinct = '';
+
+    /**
+     * @var string
+     */
+    private $calcFoundRows = '';
+
+    /**
+     * @var string
+     */
+    private $bufferResult = '';
+
+    /**
+     * @var string
+     */
+    private $resultSize = '';
+
+    /**
+     * @var string
+     */
+    private $straightJoin = '';
+
+    /**
+     * @var string
+     */
+    private $highPriority = '';
+
+    /**
+     * Constructor.
+     *
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+        $this->pdo = $connection->getPdo();
+        $this->quoter = $connection->getQuoter();
+        $this->condition = new Condition($connection, $this);
+    }
+
     /**
      * Distinct.
      *
@@ -516,7 +628,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function execute(): PDOStatement
     {
-        return $this->db->query($this->build());
+        return $this->pdo->query($this->build());
     }
 
     /**
@@ -526,7 +638,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function prepare(): PDOStatement
     {
-        return $this->db->prepare($this->build());
+        return $this->pdo->prepare($this->build());
     }
 
     /**
@@ -536,6 +648,224 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      */
     public function func(): FunctionBuilder
     {
-        return new FunctionBuilder($this->db);
+        return new FunctionBuilder($this->connection);
+    }
+
+    /**
+     * Build a SQL string.
+     *
+     * @param bool $complete
+     *
+     * @return string SQL string
+     */
+    public function build(bool $complete = true): string
+    {
+        $sql = [];
+        $sql = $this->getSelectSql($sql);
+        $sql = $this->getColumnsSql($sql);
+        $sql = $this->getFromSql($sql);
+        $sql = $this->getJoinSql($sql);
+        $sql = $this->condition->getWhereSql($sql);
+        $sql = $this->getGroupBySql($sql);
+        $sql = $this->condition->getHavingSql($sql);
+        $sql = $this->getOrderBySql($sql);
+        $sql = $this->getLimitSql($sql);
+        $sql = $this->getUnionSql($sql);
+        $result = trim(implode(' ', $sql));
+        $result = $this->getAliasSql($result);
+        if ($complete) {
+            $result = trim($result) . ';';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getSelectSql(array $sql): array
+    {
+        $sql[] = trim('SELECT ' . trim(implode(' ', [
+                $this->distinct,
+                $this->highPriority,
+                $this->straightJoin,
+                $this->resultSize,
+                $this->bufferResult,
+                $this->calcFoundRows,
+            ])));
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getColumnsSql(array $sql): array
+    {
+        if (empty($this->columns)) {
+            $sql[] = '*';
+
+            return $sql;
+        }
+        $columns = [];
+        foreach ($this->columns as $key => $column) {
+            if ($column instanceof Closure) {
+                // Sub Select
+                $query = new SelectQuery($this->connection);
+                $column($query);
+                $column = new RawExp($query->build(false));
+            }
+
+            if (!is_int($key)) {
+                $column = sprintf('%s AS %s', (string)$column, $key);
+            }
+
+            $columns[] = $column;
+        }
+        $sql[] = implode(',', $this->quoter->quoteNames($columns));
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getFromSql(array $sql): array
+    {
+        if (!empty($this->from)) {
+            $sql[] = 'FROM ' . $this->quoter->quoteName($this->from);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getJoinSql(array $sql): array
+    {
+        if (empty($this->join)) {
+            return $sql;
+        }
+        foreach ($this->join as $item) {
+            [$type, $table, $leftField, $operator, $rightField] = $item;
+            $joinType = strtoupper($type) . ' JOIN';
+            $table = $this->quoter->quoteName($table);
+            if ($leftField instanceof RawExp) {
+                $sql[] = sprintf('%s %s ON (%s)', $joinType, $table, $leftField->getValue());
+            } else {
+                $leftField = $this->quoter->quoteName($leftField);
+                $rightField = $this->quoter->quoteName($rightField);
+                $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
+            }
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getGroupBySql(array $sql): array
+    {
+        if (empty($this->groupBy)) {
+            return $sql;
+        }
+        $sql[] = 'GROUP BY ' . implode(', ', $this->quoter->quoteByFields($this->groupBy));
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getOrderBySql(array $sql): array
+    {
+        if (empty($this->orderBy)) {
+            return $sql;
+        }
+        $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getLimitSql(array $sql): array
+    {
+        if (!isset($this->limit)) {
+            return $sql;
+        }
+        if ($this->offset > 0) {
+            $sql[] = sprintf('LIMIT %s OFFSET %s', (float)$this->limit, (float)$this->offset);
+        } else {
+            $sql[] = sprintf('LIMIT %s', (float)$this->limit);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param array $sql
+     *
+     * @return array
+     */
+    private function getUnionSql(array $sql): array
+    {
+        if (empty($this->union)) {
+            return $sql;
+        }
+        foreach ($this->union as $union) {
+            $sql[] = 'UNION ' . trim($union[0] . ' ' . $union[1]);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Get sql.
+     *
+     * @param string $sql
+     *
+     * @return string $sql
+     */
+    private function getAliasSql(string $sql): string
+    {
+        if (!isset($this->alias)) {
+            return $sql;
+        }
+
+        return sprintf('(%s) AS %s', $sql, $this->quoter->quoteName($this->alias));
     }
 }

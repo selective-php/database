@@ -3,7 +3,6 @@
 namespace Odan\Database\Test;
 
 use Odan\Database\InsertQuery;
-use PDOStatement;
 
 /**
  * @coversDefaultClass \Odan\Database\InsertQuery
@@ -36,10 +35,9 @@ class InsertQueryTest extends BaseTest
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
         $this->assertSame("INSERT INTO `test` SET `keyname`='admin-007';", $insert->build());
         $stmt = $insert->prepare();
-        $this->assertInstanceOf(PDOStatement::class, $stmt);
         $this->assertTrue($stmt->execute());
         $this->assertSame(1, $stmt->rowCount());
-        $this->assertSame('1', $this->getConnection()->lastInsertId());
+        $this->assertSame('1', $this->getConnection()->getPdo()->lastInsertId());
     }
 
     /**

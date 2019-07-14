@@ -2,6 +2,7 @@
 
 namespace Odan\Database;
 
+use PDO;
 use PDOStatement;
 
 /**
@@ -12,9 +13,7 @@ use PDOStatement;
 final class UpdateQuery implements QueryInterface
 {
     /**
-     * Connection.
-     *
-     * @var Connection
+     * @var PDO
      */
     private $pdo;
 
@@ -36,55 +35,55 @@ final class UpdateQuery implements QueryInterface
     /**
      * @var array Assignment list
      */
-    protected $duplicateValues;
+    private $duplicateValues;
 
     /**
      * @var string Priority modifier
      */
-    protected $priority;
+    private $priority;
 
     /**
      * Errors that occur while executing the INSERT statement are ignored.
      *
      * @var string Ignore modifier
      */
-    protected $ignore;
+    private $ignore;
 
     /**
      * @var Condition Where conditions
      */
-    protected $condition;
+    private $condition;
 
     /**
      * @var array Order by
      */
-    protected $orderBy = [];
+    private $orderBy = [];
 
     /**
      * @var int Limit
      */
-    protected $limit;
+    private $limit;
 
     /**
      * @var array Increment
      */
-    protected $increment = [];
+    private $increment = [];
 
     /**
      * @var array Decrement
      */
-    protected $decrement = [];
+    private $decrement = [];
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $connection The connection
      */
-    public function __construct(Connection $pdo)
+    public function __construct(Connection $connection)
     {
-        $this->pdo = $pdo;
-        $this->quoter = $pdo->getQuoter();
-        $this->condition = new Condition($pdo, $this);
+        $this->pdo = $connection->getPdo();
+        $this->quoter = $connection->getQuoter();
+        $this->condition = new Condition($connection, $this);
     }
 
     /**

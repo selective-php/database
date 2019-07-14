@@ -2,6 +2,7 @@
 
 namespace Odan\Database;
 
+use PDO;
 use RuntimeException;
 
 /**
@@ -10,20 +11,18 @@ use RuntimeException;
 final class Quoter
 {
     /**
-     * Connection.
-     *
-     * @var Connection
+     * @var PDO
      */
     private $pdo;
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo The connection instance
+     * @param Connection $connection The connection instance
      */
-    public function __construct(Connection $pdo)
+    public function __construct(Connection $connection)
     {
-        $this->pdo = $pdo;
+        $this->pdo = $connection->getPdo();
     }
 
     /**
@@ -126,7 +125,7 @@ final class Quoter
      *
      * @return string The quoted identifier name
      */
-    protected function quoteNameWithSeparator(string $spec, string $sep, int $pos): string
+    private function quoteNameWithSeparator(string $spec, string $sep, int $pos): string
     {
         $len = strlen($sep);
         $part1 = $this->quoteName(substr($spec, 0, $pos));

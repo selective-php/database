@@ -2,6 +2,7 @@
 
 namespace Odan\Database;
 
+use PDO;
 use PDOStatement;
 
 /**
@@ -12,69 +13,67 @@ use PDOStatement;
 final class DeleteQuery implements QueryInterface
 {
     /**
-     * Connection.
-     *
-     * @var Connection
+     * @var PDO
      */
-    protected $pdo;
+    private $pdo;
 
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * @var string Table name
      */
-    protected $table;
+    private $table;
 
     /**
      * @var string Priority modifier
      */
-    protected $priority;
+    private $priority;
 
     /**
      * Errors that occur while executing the DELETE statement are ignored.
      *
      * @var string Ignore modifier
      */
-    protected $ignore;
+    private $ignore;
 
     /**
      * @var string Ignore modifier
      */
-    protected $quick;
+    private $quick;
 
     /**
      * @var Condition Where conditions
      */
-    protected $condition;
+    private $condition;
 
     /**
      * @var array Order by
      */
-    protected $orderBy = [];
+    private $orderBy = [];
 
     /**
      * @var int Row count
      */
-    protected $limit;
+    private $limit;
 
     /**
      * @var bool Truncate
      */
-    protected $truncate;
+    private $truncate;
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $connection
      */
-    public function __construct(Connection $pdo)
+    public function __construct(Connection $connection)
     {
-        $this->pdo = $pdo;
-        $this->quoter = $pdo->getQuoter();
-        $this->condition = new Condition($pdo, $this);
+        $this->pdo = $connection->getPdo();
+        $this->quoter = $connection->getQuoter();
+        $this->condition = new Condition($connection, $this);
     }
 
     /**
