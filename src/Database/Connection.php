@@ -14,7 +14,7 @@ class Connection extends PDO
     /**
      * @return SelectQuery
      */
-    public function select()
+    public function select(): SelectQuery
     {
         return new SelectQuery($this);
     }
@@ -22,7 +22,7 @@ class Connection extends PDO
     /**
      * @return InsertQuery
      */
-    public function insert()
+    public function insert(): InsertQuery
     {
         return new InsertQuery($this);
     }
@@ -30,7 +30,7 @@ class Connection extends PDO
     /**
      * @return UpdateQuery
      */
-    public function update()
+    public function update(): UpdateQuery
     {
         return new UpdateQuery($this);
     }
@@ -38,7 +38,7 @@ class Connection extends PDO
     /**
      * @return DeleteQuery
      */
-    public function delete()
+    public function delete(): DeleteQuery
     {
         return new DeleteQuery($this);
     }
@@ -48,9 +48,9 @@ class Connection extends PDO
      *
      * @return Quoter
      */
-    public function getQuoter()
+    public function getQuoter(): Quoter
     {
-        if (!$this->quoter) {
+        if ($this->quoter === null) {
             $this->quoter = new Quoter($this);
         }
 
@@ -63,10 +63,10 @@ class Connection extends PDO
      * sample:
      * $lists = $db->queryValues('SELECT id FROM table;', 'id');
      *
-     * @param string $sql
-     * @param string $key
+     * @param string $sql The sql
+     * @param string $key The key
      *
-     * @return array
+     * @return array The values
      */
     public function queryValues(string $sql, string $key): array
     {

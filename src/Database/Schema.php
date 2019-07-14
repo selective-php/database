@@ -111,7 +111,9 @@ class Schema
             $this->quoter->quoteValue($collate),
         ]);
 
-        return $this->db->exec($sql);
+        $this->db->exec($sql);
+
+        return true;
     }
 
     /**

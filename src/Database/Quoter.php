@@ -67,7 +67,7 @@ class Quoter
 
         $result = $this->pdo->quote($value);
 
-        if ($result === false) {
+        if (!is_string($result)) {
             throw new RuntimeException('The database driver does not support quoting in this way.');
         }
 
@@ -230,7 +230,7 @@ class Quoter
                 continue;
             }
             // table.id ASC
-            if (preg_match('/^([\w-\.]+)(\s)*(.*)$/', $identifier, $match)) {
+            if (preg_match('/^([\w\-\.]+)(\s)*(.*)$/', $identifier, $match)) {
                 $identifiers[$key] = $this->quoteName($match[1]) . $match[2] . $match[3];
                 continue;
             }

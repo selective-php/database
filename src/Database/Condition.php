@@ -199,7 +199,7 @@ class Condition
         // invoke the closure, which will re-populate the $this->$clause
         $closure($this->query);
         // are there new clause elements?
-        if (!$this->$clause) {
+        if (empty($this->$clause)) {
             // no: restore the old ones, and done
             $this->$clause = $set;
 

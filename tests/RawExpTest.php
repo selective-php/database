@@ -52,7 +52,8 @@ class RawExpTest extends BaseTest
         $select = $this->select()
             ->columns(
                 new RawExp('MAX(amount)'),
-                new RawExp('MIN(amount)'))
+                new RawExp('MIN(amount)')
+            )
             ->from('payments')
             ->build();
         $this->assertSame('SELECT MAX(amount),MIN(amount) FROM `payments`;', $select);
