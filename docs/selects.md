@@ -119,7 +119,7 @@ $rows = $connection->select()
     ->fetchAll();
 ```
 
-Select columns with alias as:
+Select columns with alias as array:
 
 ```php
 $query = $this->select()->from('test');
