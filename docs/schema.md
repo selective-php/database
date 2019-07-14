@@ -126,4 +126,4 @@ Used to quickly compare table structures or schema versions.
 $hash = $schema->getTableSchemaId('my_table1', 'my_table2');
 ```
 
-**Next page:** [Compression](compression.md)
+**Next page:** [Index](readme.md)
