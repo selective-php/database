@@ -39,11 +39,13 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8 COLLATE utf8_unicode_ci"
 ];
 
-$connection = new \Odan\Database\Connection($dsn, $username, $password, $options);
+$pdo = new \PDO($dsn, $username, $password, $options);
 
-$query = $connection->select()
-    ->columns('id', 'username', 'email')
-    ->from('users');
+$connection = new \Odan\Database\Connection($pdo);
+
+$query = $connection->select()->from('users');
+
+$query->columns('id', 'username', 'email');
 
 $rows = $query->execute()->fetchAll() ?: [];
     
