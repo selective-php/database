@@ -197,7 +197,7 @@ class SchemaTest extends BaseTest
         ];
         $this->assertSame($expected, $result);
 
-        $result = $schema->clearTable('test');
+        $db->delete()->from('test')->execute();
         $this->assertSame(true, $result);
 
         $result = $db->queryValue('SELECT COUNT(*) AS count FROM `test`', 'count');

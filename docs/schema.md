@@ -75,14 +75,6 @@ $tables = $schema->getTables('information%');
 $tableExists = $schema->existTable('test');
 ```
 
-### Delete all rows 
-
-*Deprecated: Use DeleteQuery instead*
-
-```php
-$success = $schema->clearTable('test');
-```
-
 ### Truncate a table
 
 Delete all rows and reset the auto increment value:

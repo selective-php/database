@@ -212,22 +212,6 @@ class Schema
     }
 
     /**
-     * Clear table content. Delete all rows.
-     *
-     * @param string $tableName
-     *
-     * @return bool Success
-     *
-     * @deprecated Use DeleteQuery instead
-     */
-    public function clearTable(string $tableName): bool
-    {
-        $delete = new DeleteQuery($this->db);
-
-        return $delete->from($tableName)->execute();
-    }
-
-    /**
      * Truncate (drop and re-create) a table
      * Any AUTO_INCREMENT value is reset to its start value.
      *
