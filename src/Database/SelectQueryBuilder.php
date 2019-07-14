@@ -187,6 +187,11 @@ abstract class SelectQueryBuilder implements QueryInterface
                 $column($query);
                 $column = new RawExp($query->build(false));
             }
+
+            if(!is_int($key)) {
+                $column = sprintf('%s AS %s', (string)$column, $key);
+            }
+
             $columns[] = $column;
         }
         $sql[] = implode(',', $this->quoter->quoteNames($columns));

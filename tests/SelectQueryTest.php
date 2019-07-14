@@ -103,11 +103,9 @@ class SelectQueryTest extends BaseTest
         $this->assertSame('SELECT * FROM `users`;', $select->build());
 
         $select = $this->select()->columns('id', 'username', 'first_name AS firstName')->from('test');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;', $select->build());
 
         $select = $this->select()->columns(['id', 'username', 'first_name AS firstName'])->from('test');
-        $this->assertInstanceOf(PDOStatement::class, $select->prepare());
         $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName` FROM `test`;', $select->build());
 
         // queries without table
@@ -116,6 +114,26 @@ class SelectQueryTest extends BaseTest
 
         $select = $this->select()->columns(new RawExp('INTERVAL(23, 1, 15, 17, 30, 44, 200)'));
         $this->assertSame('SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200);', $select->build());
+    }
+
+    /**
+     * Test.
+     */
+    public function testColumnsArray()
+    {
+        $query = $this->select()->from('test');
+
+        $query->columns([
+            'id',
+            'username',
+            'firstName' => 'first_name',
+            'last_name' => 'test.last_name',
+            'email' => 'database.test.email',
+            'value' => $query->raw('CONCAT("1","2")')
+        ]);
+
+        $this->assertSame('SELECT `id`,`username`,`first_name` AS `firstName`,`test`.`last_name` AS `last_name`,' .
+            '`database`.`test`.`email` AS `email`,`CONCAT("1","2")` AS `value` FROM `test`;', $query->build());
     }
 
     /**

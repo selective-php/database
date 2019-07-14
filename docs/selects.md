@@ -119,6 +119,32 @@ $rows = $connection->select()
     ->fetchAll();
 ```
 
+Select columns with alias as:
+
+```php
+$query = $this->select()->from('test');
+
+$query->columns([
+    'id',
+    'username',
+    'firstName' => 'first_name',
+    'last_name' => 'test.last_name',
+    'email' => 'database.test.email',
+    'value' => $query->raw('CONCAT("1","2")')
+]);
+```
+
+```sql
+SELECT
+  `id`,
+  `username`,
+  `first_name` AS `firstName`,
+  `test`.`last_name` AS `last_name`,
+  `database`.`test`.`email` AS `email`,
+  `CONCAT("1","2")` AS `value`
+FROM
+  `test`;
+```
 Add fields one after another:
 
 ```php
