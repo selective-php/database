@@ -2,7 +2,6 @@
 
 namespace Odan\Database;
 
-use Closure;
 use PDO;
 use PDOStatement;
 
@@ -12,8 +11,6 @@ use PDOStatement;
 final class SelectQuery implements QueryInterface
 {
     /**
-     * PDO Connection.
-     *
      * @var Connection
      */
     private $connection;
@@ -69,7 +66,7 @@ final class SelectQuery implements QueryInterface
     private $groupBy = [];
 
     /**
-     * @var int
+     * @var int|null
      */
     private $limit;
 
@@ -660,212 +657,33 @@ final class SelectQuery implements QueryInterface
      */
     public function build(bool $complete = true): string
     {
+        $builder = new SelectQueryBuilder($this->connection);
+
         $sql = [];
-        $sql = $this->getSelectSql($sql);
-        $sql = $this->getColumnsSql($sql);
-        $sql = $this->getFromSql($sql);
-        $sql = $this->getJoinSql($sql);
+        $sql = $builder->getSelectSql($sql, [
+            $this->distinct,
+            $this->highPriority,
+            $this->straightJoin,
+            $this->resultSize,
+            $this->bufferResult,
+            $this->calcFoundRows,
+        ]);
+        $sql = $builder->getColumnsSql($sql, $this->columns);
+        $sql = $builder->getFromSql($sql, $this->from);
+        $sql = $builder->getJoinSql($sql, $this->join);
         $sql = $this->condition->getWhereSql($sql);
-        $sql = $this->getGroupBySql($sql);
+        $sql = $builder->getGroupBySql($sql, $this->groupBy);
         $sql = $this->condition->getHavingSql($sql);
-        $sql = $this->getOrderBySql($sql);
-        $sql = $this->getLimitSql($sql);
-        $sql = $this->getUnionSql($sql);
+        $sql = $builder->getOrderBySql($sql, $this->orderBy);
+        $sql = $builder->getLimitSql($sql, $this->limit, $this->offset);
+        $sql = $builder->getUnionSql($sql, $this->union);
         $result = trim(implode(' ', $sql));
-        $result = $this->getAliasSql($result);
+        $result = $builder->getAliasSql($result, $this->alias);
+
         if ($complete) {
             $result = trim($result) . ';';
         }
 
         return $result;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getSelectSql(array $sql): array
-    {
-        $sql[] = trim('SELECT ' . trim(implode(' ', [
-                $this->distinct,
-                $this->highPriority,
-                $this->straightJoin,
-                $this->resultSize,
-                $this->bufferResult,
-                $this->calcFoundRows,
-            ])));
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getColumnsSql(array $sql): array
-    {
-        if (empty($this->columns)) {
-            $sql[] = '*';
-
-            return $sql;
-        }
-        $columns = [];
-        foreach ($this->columns as $key => $column) {
-            if ($column instanceof Closure) {
-                // Sub Select
-                $query = new SelectQuery($this->connection);
-                $column($query);
-                $column = new RawExp($query->build(false));
-            }
-
-            if (!is_int($key)) {
-                $column = sprintf('%s AS %s', (string)$column, $key);
-            }
-
-            $columns[] = $column;
-        }
-        $sql[] = implode(',', $this->quoter->quoteNames($columns));
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getFromSql(array $sql): array
-    {
-        if (!empty($this->from)) {
-            $sql[] = 'FROM ' . $this->quoter->quoteName($this->from);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getJoinSql(array $sql): array
-    {
-        if (empty($this->join)) {
-            return $sql;
-        }
-        foreach ($this->join as $item) {
-            [$type, $table, $leftField, $operator, $rightField] = $item;
-            $joinType = strtoupper($type) . ' JOIN';
-            $table = $this->quoter->quoteName($table);
-            if ($leftField instanceof RawExp) {
-                $sql[] = sprintf('%s %s ON (%s)', $joinType, $table, $leftField->getValue());
-            } else {
-                $leftField = $this->quoter->quoteName($leftField);
-                $rightField = $this->quoter->quoteName($rightField);
-                $sql[] = sprintf('%s %s ON %s %s %s', $joinType, $table, $leftField, $operator, $rightField);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getGroupBySql(array $sql): array
-    {
-        if (empty($this->groupBy)) {
-            return $sql;
-        }
-        $sql[] = 'GROUP BY ' . implode(', ', $this->quoter->quoteByFields($this->groupBy));
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getOrderBySql(array $sql): array
-    {
-        if (empty($this->orderBy)) {
-            return $sql;
-        }
-        $sql[] = 'ORDER BY ' . implode(', ', $this->quoter->quoteByFields($this->orderBy));
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getLimitSql(array $sql): array
-    {
-        if (!isset($this->limit)) {
-            return $sql;
-        }
-        if ($this->offset > 0) {
-            $sql[] = sprintf('LIMIT %s OFFSET %s', (float)$this->limit, (float)$this->offset);
-        } else {
-            $sql[] = sprintf('LIMIT %s', (float)$this->limit);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param array $sql
-     *
-     * @return array
-     */
-    private function getUnionSql(array $sql): array
-    {
-        if (empty($this->union)) {
-            return $sql;
-        }
-        foreach ($this->union as $union) {
-            $sql[] = 'UNION ' . trim($union[0] . ' ' . $union[1]);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Get sql.
-     *
-     * @param string $sql
-     *
-     * @return string $sql
-     */
-    private function getAliasSql(string $sql): string
-    {
-        if (!isset($this->alias)) {
-            return $sql;
-        }
-
-        return sprintf('(%s) AS %s', $sql, $this->quoter->quoteName($this->alias));
     }
 }

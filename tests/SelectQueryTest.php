@@ -499,12 +499,15 @@ class SelectQueryTest extends BaseTest
             ->offset(5);
 
         $sql = $select->build();
+
         $expected = 'c2b7274a1f54189f25d87590b2250d55534c31f4';
         $actual = sha1($sql);
-        if ($expected != $actual) {
+
+        if ($expected !== $actual) {
             echo "\nSQL: $sql\n";
             file_put_contents(__DIR__ . '/debug.sql', $sql);
         }
+
         $this->assertSame($expected, $actual);
     }
 

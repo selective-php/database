@@ -7,13 +7,6 @@ use Closure;
 final class Condition
 {
     /**
-     * PDO Connection.
-     *
-     * @var Connection
-     */
-    private $pdo;
-
-    /**
      * @var Quoter
      */
     private $quoter;
@@ -47,7 +40,6 @@ final class Condition
      */
     public function __construct(Connection $connection, QueryInterface $query)
     {
-        $this->pdo = $connection;
         $this->quoter = $connection->getQuoter();
         $this->query = $query;
     }
