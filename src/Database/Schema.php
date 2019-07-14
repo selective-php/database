@@ -7,7 +7,7 @@ use PDO;
 /**
  * Class Schema.
  */
-class Schema
+final class Schema
 {
     /**
      * @var Connection

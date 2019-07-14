@@ -9,7 +9,7 @@ use PDOStatement;
  *
  * https://dev.mysql.com/doc/refman/5.7/en/insert.html
  */
-class InsertQuery implements QueryInterface
+final class InsertQuery implements QueryInterface
 {
     /**
      * Connection.

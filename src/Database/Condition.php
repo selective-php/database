@@ -4,7 +4,7 @@ namespace Odan\Database;
 
 use Closure;
 
-class Condition
+final class Condition
 {
     /**
      * PDO Connection.

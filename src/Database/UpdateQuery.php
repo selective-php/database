@@ -9,7 +9,7 @@ use PDOStatement;
  *
  * https://dev.mysql.com/doc/refman/5.7/en/update.html
  */
-class UpdateQuery implements QueryInterface
+final class UpdateQuery implements QueryInterface
 {
     /**
      * Connection.

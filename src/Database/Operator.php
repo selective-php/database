@@ -7,7 +7,7 @@ namespace Odan\Database;
  *
  * https://dev.mysql.com/doc/refman/5.7/en/non-typed-operators.html
  */
-class Operator
+final class Operator
 {
     const EQ = '=';
     const NOT_EQ = '<>';

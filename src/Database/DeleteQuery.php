@@ -9,7 +9,7 @@ use PDOStatement;
  *
  * @see https://dev.mysql.com/doc/refman/5.7/en/delete.html
  */
-class DeleteQuery implements QueryInterface
+final class DeleteQuery implements QueryInterface
 {
     /**
      * Connection.

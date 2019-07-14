@@ -23,10 +23,29 @@ abstract class SelectQueryBuilder implements QueryInterface
      */
     protected $quoter;
 
+    /**
+     * @var array
+     */
     protected $columns = [];
-    protected $alias = null;
+
+    /**
+     * @var string|null
+     */
+    protected $alias;
+
+    /**
+     * @var string
+     */
     protected $from = '';
+
+    /**
+     * @var array
+     */
     protected $join = [];
+
+    /**
+     * @var array
+     */
     protected $union = [];
 
     /**
@@ -37,7 +56,7 @@ abstract class SelectQueryBuilder implements QueryInterface
     protected $orderBy = [];
     protected $groupBy = [];
     protected $limit;
-    protected $offset = null;
+    protected $offset;
     protected $distinct = '';
     protected $calcFoundRows = '';
     protected $bufferResult = '';

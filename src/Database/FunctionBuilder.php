@@ -7,7 +7,7 @@ namespace Odan\Database;
  * with most commonly used SQL functions.
  * This acts as a factory for RawExp objects.
  */
-class FunctionBuilder
+final class FunctionBuilder
 {
     /**
      * Connection.

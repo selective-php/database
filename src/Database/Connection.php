@@ -4,7 +4,7 @@ namespace Odan\Database;
 
 use PDO;
 
-class Connection extends PDO
+final class Connection extends PDO
 {
     /**
      * @var Quoter

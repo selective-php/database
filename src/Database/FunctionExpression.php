@@ -7,7 +7,7 @@ namespace Odan\Database;
  * with most commonly used SQL functions.
  * This acts as a factory for RawExp objects.
  */
-class FunctionExpression extends RawExp
+final class FunctionExpression extends RawExp
 {
     /**
      * @var Quoter

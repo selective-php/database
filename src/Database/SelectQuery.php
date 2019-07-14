@@ -7,7 +7,7 @@ use PDOStatement;
 /**
  * Class SelectQuery.
  */
-class SelectQuery extends SelectQueryBuilder implements QueryInterface
+final class SelectQuery extends SelectQueryBuilder implements QueryInterface
 {
     /**
      * Distinct.

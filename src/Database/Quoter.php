@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * Quoter.
  */
-class Quoter
+final class Quoter
 {
     /**
      * Connection.
