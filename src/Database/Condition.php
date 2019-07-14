@@ -80,7 +80,7 @@ final class Condition
         }
         foreach ($where as $index => $item) {
             if ($item instanceof RawExp) {
-                if ($index == 0) {
+                if ($index === 0) {
                     $sql[] = $conditionType . ' ' . $item->getValue();
                     continue;
                 }
@@ -189,7 +189,7 @@ final class Condition
      *
      * @return void
      */
-    protected function addClauseCondClosure($clause, $andor, $closure)
+    protected function addClauseCondClosure(string $clause, string $andor, callable $closure): void
     {
         // retain the prior set of conditions, and temporarily reset the clause
         // for the closure to work with (otherwise there will be an extraneous
@@ -224,8 +224,6 @@ final class Condition
 
         // ... then put the full set of conditions back into $this->$clause
         $this->$clause = $set;
-
-        return;
     }
 
     /**

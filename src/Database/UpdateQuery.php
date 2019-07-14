@@ -5,7 +5,7 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * UpdateQuery.
+ * Update Query.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/update.html
  */
@@ -16,22 +16,22 @@ final class UpdateQuery implements QueryInterface
      *
      * @var Connection
      */
-    protected $pdo;
+    private $pdo;
 
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * @var string Table name
      */
-    protected $table;
+    private $table;
 
     /**
      * @var array Value list
      */
-    protected $values;
+    private $values;
 
     /**
      * @var array Assignment list
@@ -128,7 +128,7 @@ final class UpdateQuery implements QueryInterface
     /**
      * Values (key value).
      *
-     * @param array $values
+     * @param array $values The values
      *
      * @return self
      */
@@ -232,7 +232,7 @@ final class UpdateQuery implements QueryInterface
     /**
      * Executes a prepared statement.
      *
-     * @return bool
+     * @return bool Success
      */
     public function execute(): bool
     {
@@ -242,7 +242,7 @@ final class UpdateQuery implements QueryInterface
     /**
      * Prepares a statement for execution and returns a statement object.
      *
-     * @return PDOStatement
+     * @return PDOStatement The PDOStatement
      */
     public function prepare(): PDOStatement
     {
@@ -270,11 +270,11 @@ final class UpdateQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    public function getUpdateSql(array $sql)
+    private function getUpdateSql(array $sql): array
     {
         $update = 'UPDATE';
         if (!empty($this->priority)) {
@@ -291,11 +291,11 @@ final class UpdateQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    public function getSetSql(array $sql): array
+    private function getSetSql(array $sql): array
     {
         // single row
         $sql[] = 'SET ' . $this->quoter->quoteSetValues($this->values);
@@ -306,11 +306,11 @@ final class UpdateQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    protected function getOrderBySql(array $sql): array
+    private function getOrderBySql(array $sql): array
     {
         if (empty($this->orderBy)) {
             return $sql;
@@ -323,11 +323,11 @@ final class UpdateQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    protected function getLimitSql(array $sql): array
+    private function getLimitSql(array $sql): array
     {
         if (!isset($this->limit)) {
             return $sql;

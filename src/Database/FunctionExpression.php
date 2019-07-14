@@ -12,13 +12,13 @@ final class FunctionExpression extends RawExp
     /**
      * @var Quoter
      */
-    protected $quoter;
+    private $quoter;
 
     /**
      * Constructor.
      *
-     * @param string $value
-     * @param Quoter $quoter
+     * @param string $value The value
+     * @param Quoter $quoter The quoter
      */
     public function __construct(string $value, Quoter $quoter)
     {
@@ -31,9 +31,9 @@ final class FunctionExpression extends RawExp
      *
      * @param string|null $alias Alias
      *
-     * @return $this
+     * @return $this The self instance
      */
-    public function alias(string $alias = null)
+    public function alias(string $alias = null): self
     {
         $clone = clone $this;
         $clone->value = sprintf('%s AS %s', $clone->value, $this->quoter->quoteName($alias));

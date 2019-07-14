@@ -5,7 +5,7 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class SelectQuery.
+ * Select Query.
  */
 final class SelectQuery extends SelectQueryBuilder implements QueryInterface
 {
@@ -167,7 +167,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query the query to combine
+     * @param SelectQuery $query The query to combine
      *
      * @return self
      */
@@ -182,7 +182,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION ALL is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query the query to combine
+     * @param SelectQuery $query The query to combine
      *
      * @return self
      */
@@ -197,7 +197,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
      * UNION DISTINCT is used to combine the result from multiple
      * SELECT statements into a single result set.
      *
-     * @param SelectQuery $query the query to combine
+     * @param SelectQuery $query The query to combine
      *
      * @return self
      */
@@ -472,11 +472,11 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Limit the number of rows returned.
      *
-     * @param float $rowCount Row count
+     * @param int $rowCount Row count
      *
      * @return self
      */
-    public function limit(float $rowCount): self
+    public function limit(int $rowCount): self
     {
         $this->limit = $rowCount;
 
@@ -486,11 +486,11 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Offset of the first row to return.
      *
-     * @param float $offset Offset
+     * @param int $offset Offset
      *
      * @return self
      */
-    public function offset(float $offset): self
+    public function offset(int $offset): self
     {
         $this->offset = $offset;
 
@@ -512,7 +512,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object.
      *
-     * @return PDOStatement
+     * @return PDOStatement The pdo statement
      */
     public function execute(): PDOStatement
     {
@@ -522,7 +522,7 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * Prepares a statement for execution and returns a statement object.
      *
-     * @return PDOStatement
+     * @return PDOStatement The pdo statement
      */
     public function prepare(): PDOStatement
     {
@@ -532,9 +532,9 @@ final class SelectQuery extends SelectQueryBuilder implements QueryInterface
     /**
      * SQL functions.
      *
-     * @return FunctionBuilder
+     * @return FunctionBuilder The function builder
      */
-    public function func()
+    public function func(): FunctionBuilder
     {
         return new FunctionBuilder($this->db);
     }

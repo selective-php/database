@@ -15,7 +15,7 @@ class RawExp
     /**
      * Constructor.
      *
-     * @param string $value
+     * @param string $value The value
      */
     public function __construct(string $value)
     {
@@ -25,7 +25,7 @@ class RawExp
     /**
      * To string.
      *
-     * @return string
+     * @return string The string value
      */
     public function __toString()
     {
@@ -35,9 +35,9 @@ class RawExp
     /**
      * Get value.
      *
-     * @return string
+     * @return string The string value
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

@@ -14,12 +14,12 @@ final class Quoter
      *
      * @var Connection
      */
-    protected $pdo;
+    private $pdo;
 
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $pdo The connection instance
      */
     public function __construct(Connection $pdo)
     {
@@ -53,11 +53,11 @@ final class Quoter
     /**
      * Quotes a value for use in a query.
      *
-     * @param mixed $value
+     * @param mixed $value The value
      *
      * @throws RuntimeException
      *
-     * @return string a quoted string
+     * @return string A quoted string
      */
     public function quoteValue($value): string
     {
@@ -77,9 +77,9 @@ final class Quoter
     /**
      * Quote array of names.
      *
-     * @param array $identifiers
+     * @param array $identifiers The identifiers
      *
-     * @return array
+     * @return array The quoted identifiers
      */
     public function quoteNames(array $identifiers): array
     {
@@ -120,11 +120,11 @@ final class Quoter
     /**
      * Quotes an identifier that has a separator.
      *
-     * @param string $spec the identifier name to quote
-     * @param string $sep the separator, typically a dot or space
-     * @param int $pos the position of the separator
+     * @param string $spec The identifier name to quote
+     * @param string $sep The separator, typically a dot or space
+     * @param int $pos The position of the separator
      *
-     * @return string the quoted identifier name
+     * @return string The quoted identifier name
      */
     protected function quoteNameWithSeparator(string $spec, string $sep, int $pos): string
     {
@@ -144,9 +144,9 @@ final class Quoter
      *
      * After such formatting, it is safe to insert the $table variable into query.
      *
-     * @param string $name the identifier name to quote
+     * @param string $name The identifier name to quote
      *
-     * @return string the quoted identifier name
+     * @return string The quoted identifier name
      *
      * @see quoteName()
      */
@@ -218,9 +218,9 @@ final class Quoter
     /**
      * Get sql.
      *
-     * @param array $identifiers
+     * @param array $identifiers The identifiers
      *
-     * @return array
+     * @return array The quoted identifiers
      */
     public function quoteByFields(array $identifiers): array
     {

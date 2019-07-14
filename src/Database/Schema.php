@@ -5,7 +5,7 @@ namespace Odan\Database;
 use PDO;
 
 /**
- * Class Schema.
+ * Schema.
  */
 final class Schema
 {
@@ -22,7 +22,7 @@ final class Schema
     /**
      * Constructor.
      *
-     * @param Connection $db
+     * @param Connection $db The connection
      */
     public function __construct(Connection $db)
     {
@@ -33,9 +33,9 @@ final class Schema
     /**
      * Switch database.
      *
-     * @param string $dbName
+     * @param string $dbName The database name
      *
-     * @return bool
+     * @return bool Success
      */
     public function setDatabase(string $dbName): bool
     {
@@ -47,7 +47,7 @@ final class Schema
     /**
      * Return current database name.
      *
-     * @return string
+     * @return string The database name
      */
     public function getDatabase(): string
     {
@@ -57,9 +57,9 @@ final class Schema
     /**
      * Check if a database exists.
      *
-     * @param string $dbName
+     * @param string $dbName The database name
      *
-     * @return bool
+     * @return bool Status
      */
     public function existDatabase(string $dbName): bool
     {
@@ -78,7 +78,7 @@ final class Schema
      *
      * @param string|null $like (optional) e.g. 'information%schema';
      *
-     * @return array
+     * @return array The database names
      */
     public function getDatabases(string $like = null): array
     {
@@ -94,8 +94,8 @@ final class Schema
      * Create a database.
      *
      * @param string $dbName The database name
-     * @param string $characterSet
-     * @param string $collate
+     * @param string $characterSet The character set
+     * @param string $collate The collation
      *
      * @return bool Success
      */
@@ -134,9 +134,9 @@ final class Schema
     /**
      * Return all Tables from Database.
      *
-     * @param string $like (optional) e.g. 'information%'
+     * @param string $like A like expression, (optional) e.g. 'information%'
      *
-     * @return array
+     * @return array The tables
      */
     public function getTables($like = null): array
     {
@@ -157,9 +157,9 @@ final class Schema
     /**
      * Check if table exist.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
-     * @return bool
+     * @return bool Status
      */
     public function existTable(string $tableName): bool
     {
@@ -177,11 +177,11 @@ final class Schema
     }
 
     /**
-     * Split table into dbname and table name.
+     * Split table into database name and table name.
      *
-     * @param string $tableName table
+     * @param string $tableName The table name
      *
-     * @return array
+     * @return array The database name and table name
      */
     protected function parseTableName(string $tableName): array
     {
@@ -200,7 +200,7 @@ final class Schema
     /**
      * Delete a table.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
      * @return bool Success
      */
@@ -215,7 +215,7 @@ final class Schema
      * Truncate (drop and re-create) a table
      * Any AUTO_INCREMENT value is reset to its start value.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
      * @return bool Success
      */
@@ -246,8 +246,8 @@ final class Schema
     /**
      * Copy an existing table to a new table.
      *
-     * @param string $tableNameSource source table name
-     * @param string $tableNameDestination new table name
+     * @param string $tableNameSource Source table name
+     * @param string $tableNameDestination New table name
      *
      * @return bool Success
      */
@@ -263,9 +263,9 @@ final class Schema
     /**
      * Returns the column names of a table as an array.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
-     * @return array
+     * @return array The column names
      */
     public function getColumnNames(string $tableName): array
     {
@@ -281,9 +281,9 @@ final class Schema
     /**
      * Returns all columns in a table.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
-     * @return array
+     * @return array The column name
      */
     public function getColumns(string $tableName): array
     {
@@ -318,8 +318,8 @@ final class Schema
     /**
      * Compare two tables and returns true if the table schema match.
      *
-     * @param string $tableName1
-     * @param string $tableName2
+     * @param string $tableName1 The table name 1
+     * @param string $tableName2 The table name 2
      *
      * @return bool Status
      */
@@ -335,9 +335,9 @@ final class Schema
      * Calculate a hash key (SHA1) using a table schema
      * Used to quickly compare table structures or schema versions.
      *
-     * @param string $tableName
+     * @param string $tableName The table name
      *
-     * @return string
+     * @return string The table schema hash
      */
     public function getTableSchemaId(string $tableName): string
     {

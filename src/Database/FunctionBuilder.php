@@ -14,7 +14,7 @@ final class FunctionBuilder
      *
      * @var Connection
      */
-    protected $db;
+    private $db;
 
     /**
      * Constructor.

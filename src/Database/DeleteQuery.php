@@ -5,7 +5,7 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class DeleteQuery.
+ * Delete Query.
  *
  * @see https://dev.mysql.com/doc/refman/5.7/en/delete.html
  */
@@ -252,9 +252,9 @@ final class DeleteQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @return string
+     * @return string The sql
      */
-    public function getTruncateSql()
+    private function getTruncateSql(): string
     {
         return 'TRUNCATE TABLE ' . $this->quoter->quoteName($this->table) . ';';
     }
@@ -262,11 +262,11 @@ final class DeleteQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    public function getDeleteSql(array $sql)
+    private function getDeleteSql(array $sql): array
     {
         $delete = 'DELETE';
         if (!empty($this->priority)) {
@@ -286,11 +286,11 @@ final class DeleteQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
-    protected function getOrderBySql(array $sql): array
+    private function getOrderBySql(array $sql): array
     {
         if (empty($this->orderBy)) {
             return $sql;
@@ -307,7 +307,7 @@ final class DeleteQuery implements QueryInterface
      *
      * @return array
      */
-    protected function getLimitSql(array $sql): array
+    private function getLimitSql(array $sql): array
     {
         if (!isset($this->limit)) {
             return $sql;

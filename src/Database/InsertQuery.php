@@ -5,7 +5,7 @@ namespace Odan\Database;
 use PDOStatement;
 
 /**
- * Class InsertQuery.
+ * Insert Query.
  *
  * https://dev.mysql.com/doc/refman/5.7/en/insert.html
  */
@@ -53,7 +53,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Constructor.
      *
-     * @param Connection $pdo
+     * @param Connection $pdo The pdo connection
      */
     public function __construct(Connection $pdo)
     {
@@ -66,7 +66,7 @@ final class InsertQuery implements QueryInterface
      *
      * @param string $table Table name
      *
-     * @return self
+     * @return self The self instance
      */
     public function into(string $table): self
     {
@@ -78,7 +78,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Priority modifier.
      *
-     * @return self
+     * @return self The self instance
      */
     public function lowPriority(): self
     {
@@ -90,7 +90,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Priority modifier.
      *
-     * @return self
+     * @return self The self instance
      */
     public function delayed(): self
     {
@@ -102,7 +102,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Priority modifier.
      *
-     * @return self
+     * @return self The self instance
      */
     public function highPriority(): self
     {
@@ -114,7 +114,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Ignore errors modifier.
      *
-     * @return self
+     * @return self The self instance
      */
     public function ignore(): self
     {
@@ -128,7 +128,7 @@ final class InsertQuery implements QueryInterface
      *
      * @param array $values Value list
      *
-     * @return self
+     * @return self The self instance
      */
     public function onDuplicateKeyUpdate(array $values): self
     {
@@ -140,7 +140,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Execute.
      *
-     * @return bool Status
+     * @return bool Success
      */
     public function execute(): bool
     {
@@ -150,9 +150,9 @@ final class InsertQuery implements QueryInterface
     /**
      * Prepare statement.
      *
-     * @return PDOStatement
+     * @return PDOStatement The pdo statement
      */
-    public function prepare()
+    public function prepare(): PDOStatement
     {
         return $this->pdo->prepare($this->build());
     }
@@ -160,7 +160,7 @@ final class InsertQuery implements QueryInterface
     /**
      * Build a SQL string.
      *
-     * @return string SQL string
+     * @return string The SQL string
      */
     public function build(): string
     {
@@ -226,7 +226,7 @@ final class InsertQuery implements QueryInterface
      *
      * @param array $values Value list
      *
-     * @return self
+     * @return self The self instance
      */
     public function set(array $values): self
     {

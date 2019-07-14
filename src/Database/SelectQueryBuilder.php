@@ -53,15 +53,54 @@ abstract class SelectQueryBuilder implements QueryInterface
      */
     protected $condition;
 
+    /**
+     * @var array
+     */
     protected $orderBy = [];
+
+    /**
+     * @var array
+     */
     protected $groupBy = [];
+
+    /**
+     * @var int
+     */
     protected $limit;
+
+    /**
+     * @var int|null
+     */
     protected $offset;
+
+    /**
+     * @var string
+     */
     protected $distinct = '';
+
+    /**
+     * @var string
+     */
     protected $calcFoundRows = '';
+
+    /**
+     * @var string
+     */
     protected $bufferResult = '';
+
+    /**
+     * @var string
+     */
     protected $resultSize = '';
+
+    /**
+     * @var string
+     */
     protected $straightJoin = '';
+
+    /**
+     * @var string
+     */
     protected $highPriority = '';
 
     /**
