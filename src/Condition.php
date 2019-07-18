@@ -111,12 +111,12 @@ final class Condition
      */
     private function getRightFieldValue($rightField, $comparison): array
     {
-        if ($comparison == 'in' || $comparison == 'not in') {
+        if ($comparison === 'in' || $comparison === 'not in') {
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
-        } elseif ($comparison == 'greatest' ||
-            $comparison == 'least' ||
-            $comparison == 'coalesce' ||
-            $comparison == 'interval' ||
+        } elseif ($comparison === 'greatest' ||
+            $comparison === 'least' ||
+            $comparison === 'coalesce' ||
+            $comparison === 'interval' ||
             $comparison === 'strcmp') {
             $comparison = '= ' . $comparison;
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';

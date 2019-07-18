@@ -6,7 +6,6 @@ namespace Odan\Database\Test;
 
 use Odan\Database\Connection;
 use PDO;
-use PDOStatement;
 
 /**
  * @coversDefaultClass \Odan\Database\Connection

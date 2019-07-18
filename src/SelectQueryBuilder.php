@@ -3,7 +3,6 @@
 namespace Odan\Database;
 
 use Closure;
-use PDO;
 
 /**
  * Select Query.

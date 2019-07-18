@@ -33,11 +33,6 @@ final class UpdateQuery implements QueryInterface
     private $values;
 
     /**
-     * @var array Assignment list
-     */
-    private $duplicateValues;
-
-    /**
      * @var string Priority modifier
      */
     private $priority;
@@ -63,16 +58,6 @@ final class UpdateQuery implements QueryInterface
      * @var int Limit
      */
     private $limit;
-
-    /**
-     * @var array Increment
-     */
-    private $increment = [];
-
-    /**
-     * @var array Decrement
-     */
-    private $decrement = [];
 
     /**
      * Constructor.
@@ -261,9 +246,8 @@ final class UpdateQuery implements QueryInterface
         $sql = $this->condition->getWhereSql($sql);
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
-        $result = trim(implode(' ', $sql)) . ';';
 
-        return $result;
+        return trim(implode(' ', $sql)) . ';';
     }
 
     /**
@@ -331,7 +315,7 @@ final class UpdateQuery implements QueryInterface
         if (!isset($this->limit)) {
             return $sql;
         }
-        $sql[] = sprintf('LIMIT %s', (int)$this->limit);
+        $sql[] = sprintf('LIMIT %s', $this->limit);
 
         return $sql;
     }

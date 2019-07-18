@@ -6,7 +6,6 @@ namespace Odan\Database\Test;
 
 use Odan\Database\Quoter;
 use Odan\Database\RawExp;
-use PDO;
 
 /**
  * @coversDefaultClass \Odan\Database\Quoter

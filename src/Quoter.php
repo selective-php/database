@@ -152,7 +152,7 @@ final class Quoter
     public function quoteIdentifier(string $name): string
     {
         $name = trim($name);
-        if ($name == '*') {
+        if ($name === '*') {
             return $name;
         }
 

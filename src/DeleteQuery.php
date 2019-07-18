@@ -243,9 +243,8 @@ final class DeleteQuery implements QueryInterface
         $sql = $this->condition->getWhereSql($sql);
         $sql = $this->getOrderBySql($sql);
         $sql = $this->getLimitSql($sql);
-        $result = trim(implode(' ', $sql)) . ';';
 
-        return $result;
+        return trim(implode(' ', $sql)) . ';';
     }
 
     /**
@@ -311,7 +310,7 @@ final class DeleteQuery implements QueryInterface
         if (!isset($this->limit)) {
             return $sql;
         }
-        $sql[] = sprintf('LIMIT %s', (int)$this->limit);
+        $sql[] = sprintf('LIMIT %s', $this->limit);
 
         return $sql;
     }

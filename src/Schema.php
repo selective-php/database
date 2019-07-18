@@ -51,7 +51,7 @@ final class Schema
      */
     public function getDatabase(): string
     {
-        return $this->pdo->query('SELECT database() AS dbname;')->fetchColumn(0);
+        return $this->pdo->query('SELECT database() AS dbname;')->fetchColumn();
     }
 
     /**

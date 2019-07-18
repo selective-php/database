@@ -3,7 +3,6 @@
 namespace Odan\Database\Test;
 
 use Odan\Database\DeleteQuery;
-use PDOStatement;
 
 /**
  * @coversDefaultClass \Odan\Database\DeleteQuery
