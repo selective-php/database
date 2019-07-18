@@ -13,7 +13,7 @@
     "license": "MIT",
     "require-dev": {
         "overtrue/phplint": "^1.1",
-        "phpunit/phpunit": "^6",
+        "phpunit/phpunit": "^6|^7",
         "phpstan/phpstan-shim": "^0.11",
         "squizlabs/php_codesniffer": "^3.4"
     },
@@ -40,12 +40,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Odan\\Database\\": "src/Database/"
+            "Odan\\Database\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Odan\\Database\\Test\\": "tests/"
+            "Odan\\Database\\Test\\": "tests"
         }
     },
     "config": {
