@@ -19,7 +19,8 @@
     },
     "require": {
         "php": ">=7.1",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-json": "*"
     },
     "scripts": {
         "test": "phpunit --configuration phpunit.xml",
