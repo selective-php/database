@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Odan\Database\Test;
 
@@ -87,8 +87,10 @@ class QuoterTest extends BaseTest
         $this->assertSame('`dbname`.`tablename`', $quoter->quoteName('dbname.tablename'));
         $this->assertSame('`dbname`.`tablename`.`field`', $quoter->quoteName('dbname.tablename.field'));
         // Alias.field AS thing
-        $this->assertSame('`dbname`.`tablename`.`field` AS `thing`',
-            $quoter->quoteName('dbname.tablename.field AS thing'));
+        $this->assertSame(
+            '`dbname`.`tablename`.`field` AS `thing`',
+            $quoter->quoteName('dbname.tablename.field AS thing')
+        );
 
         $this->assertSame('`.`', $quoter->quoteName('.'));
         $this->assertSame('`?`', $quoter->quoteName('?'));
@@ -148,5 +150,4 @@ class QuoterTest extends BaseTest
         $row = ['ÿ', "\0", "'", '"'];
         $this->assertSame(['`ÿ`', '``', "`'`", '`"`'], $quoter->quoteByFields($row));
     }
-
 }
