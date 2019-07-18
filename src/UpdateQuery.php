@@ -4,6 +4,7 @@ namespace Odan\Database;
 
 use PDO;
 use PDOStatement;
+use RuntimeException;
 
 /**
  * Update Query.
@@ -226,11 +227,19 @@ final class UpdateQuery implements QueryInterface
     /**
      * Prepares a statement for execution and returns a statement object.
      *
+     * @throws RuntimeException
+     *
      * @return PDOStatement The PDOStatement
      */
     public function prepare(): PDOStatement
     {
-        return $this->pdo->prepare($this->build());
+        $statement = $this->pdo->prepare($this->build());
+
+        if (!$statement instanceof PDOStatement) {
+            throw new RuntimeException('The database statement could not be prepared.');
+        }
+
+        return $statement;
     }
 
     /**

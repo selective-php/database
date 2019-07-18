@@ -29,11 +29,11 @@ final class FunctionExpression extends RawExp
     /**
      * Alias.
      *
-     * @param string|null $alias Alias
+     * @param string $alias Alias
      *
      * @return $this The self instance
      */
-    public function alias(string $alias = null): self
+    public function alias(string $alias): self
     {
         $clone = clone $this;
         $clone->value = sprintf('%s AS %s', $clone->value, $this->quoter->quoteName($alias));

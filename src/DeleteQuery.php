@@ -4,6 +4,7 @@ namespace Odan\Database;
 
 use PDO;
 use PDOStatement;
+use RuntimeException;
 
 /**
  * Delete Query.
@@ -221,11 +222,19 @@ final class DeleteQuery implements QueryInterface
     /**
      * Prepares a statement for execution and returns a statement object.
      *
+     * @throws RuntimeException
+     *
      * @return PDOStatement
      */
     public function prepare(): PDOStatement
     {
-        return $this->pdo->prepare($this->build());
+        $statement = $this->pdo->prepare($this->build());
+
+        if (!$statement instanceof PDOStatement) {
+            throw new RuntimeException('The database statement could not be prepared.');
+        }
+
+        return $statement;
     }
 
     /**

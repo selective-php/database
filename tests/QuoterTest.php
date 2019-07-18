@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Odan\Database\Test;
 
@@ -87,7 +87,8 @@ class QuoterTest extends BaseTest
         $this->assertSame('`dbname`.`tablename`', $quoter->quoteName('dbname.tablename'));
         $this->assertSame('`dbname`.`tablename`.`field`', $quoter->quoteName('dbname.tablename.field'));
         // Alias.field AS thing
-        $this->assertSame('`dbname`.`tablename`.`field` AS `thing`', $quoter->quoteName('dbname.tablename.field AS thing'));
+        $this->assertSame('`dbname`.`tablename`.`field` AS `thing`',
+            $quoter->quoteName('dbname.tablename.field AS thing'));
 
         $this->assertSame('`.`', $quoter->quoteName('.'));
         $this->assertSame('`?`', $quoter->quoteName('?'));
@@ -130,4 +131,22 @@ class QuoterTest extends BaseTest
         $row = ['a', 'a.b', 'a.b.c', new RawExp('a.z')];
         $this->assertSame(['`a`', '`a`.`b`', '`a`.`b`.`c`', 'a.z'], $quoter->quoteNames($row));
     }
+
+    /**
+     * Test.
+     *
+     * @return void
+     */
+    public function testQuoteByFields()
+    {
+        $quoter = $this->getConnection()->getQuoter();
+        $this->assertSame([], $quoter->quoteByFields([]));
+
+        $row = ['a', 'a.b', 'a.b.c', new RawExp('a.z')];
+        $this->assertSame(['`a`', '`a`.`b`', '`a`.`b`.`c`', 'a.z'], $quoter->quoteByFields($row));
+
+        $row = ['ÿ', "\0", "'", '"'];
+        $this->assertSame(['`ÿ`', '``', "`'`", '`"`'], $quoter->quoteByFields($row));
+    }
+
 }
