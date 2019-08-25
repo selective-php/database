@@ -5,7 +5,8 @@ Create a select query object with the connection object.
 ```php
 use Odan\Database\Connection;
 
-$connection = new Connection($dsn, $username, $password, $options);
+$connection = new Connection($pdo);
+
 $query = $connection->select();
 ```
 
@@ -14,7 +15,8 @@ Creating a SelectQuery object manually:
 ```php
 use Odan\Database\Connection;
 
-$connection = new Connection($dsn, $username, $password, $options);
+$connection = new Connection($pdo);
+
 $query = new \Odan\Database\SelectQuery($connection);
 ```
 
