@@ -165,61 +165,6 @@ $rows = $query->columns('last_name', 'email')
 SELECT `first_name`,`last_name`,`email` FROM `users`;
 ```
 
-#### Raw Expressions
-
-Sometimes you may need to use a raw expression in a query. 
-These expressions will be injected into the query as strings, 
-so be careful not to create any SQL injection points! 
-
-To create a raw expression, you can use the `raw` method:
-
-```php
-$query = $connection->select()->from('payments');
-
-$query->columns($query->raw('count(*) AS user_count'), 'status');
-
-$query->where('status', '<>', 1);
-$query->groupBy('status');
-    
-$rows = $query->execute()->fetchAll() ?: [];
-```
-
-```sql
-SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
-```
-
-Another example using the a raw expression:
-
-```php
-$query = $connection->select()->from('payments');
-$query->columns($query->raw('count(*) AS user_count'), 'status');
-
-$rows = $query->execute()->fetchAll() ?: [];
-```
-
-```sql
-SELECT count(*) AS user_count,`status` FROM `payments`;
-```
-
-#### Aggregates
-
-The query builder also provides a raw expression for aggregate methods 
-such as count, max, min, avg, and sum.
-
-You may call any of these methods after constructing your query:
-
-```php
-$query = $connection->select()->from('payments');
-
-$query = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
-    
-$rows = $query->execute()->fetchAll() ?: [];
-```
-
-```sql
-SELECT MAX(amount), MIN(amount) FROM `payments`;
-```
-
 #### Sub Selects
 
 If you want to SELECT FROM a subselect, do so by passing a callback
@@ -717,7 +662,9 @@ $rows = $connection->select()
 
 ### Using SQL Functions
 
-A number of commonly used functions can be created with the func() method:
+A number of commonly used functions can be created with the `func()` method.
+
+You may call any of these methods after constructing your query:
 
 * sum() Calculate a sum. The arguments will be treated as literal values.
 * avg() Calculate an average. The arguments will be treated as literal values.
@@ -737,6 +684,72 @@ $rows = $query->execute()->fetchAll() ?: [];
 
 ```sql
 SELECT SUM(`amount`) AS `sum_amount` FROM `payments`;
+```
+
+#### Using custom SQL Functions
+
+:construction: *This feature is under construction* :construction:
+
+Whenever you're missing support for some vendor specific function, 
+please use plain SQL templating:
+
+```php
+$query->func()->custom('substring_index({%s}, {%s}, {%s})", $string, $delimiter, $number);
+```
+
+### Raw Expressions
+
+Sometimes you may need to use a raw expression in a query. 
+
+> These expressions will be injected into the query as strings, 
+so be careful not to create any SQL injection! 
+
+To create a raw expression, you can use the `raw` method:
+
+```php
+$query = $connection->select()->from('payments');
+
+$query->columns($query->raw('count(*) AS user_count'), 'status');
+
+$query->where('status', '<>', 1);
+$query->groupBy('status');
+    
+$rows = $query->execute()->fetchAll() ?: [];
+```
+Output:
+```sql
+SELECT count(*) AS user_count, `status` FROM `payments` WHERE `status` <> 1 GROUP BY `status`;
+```
+
+Example 2:
+
+```php
+$query = $connection->select()->from('payments');
+$query->columns($query->raw('count(*) AS user_count'), 'status');
+
+$rows = $query->execute()->fetchAll() ?: [];
+```
+
+Output:
+
+```sql
+SELECT count(*) AS user_count,`status` FROM `payments`;
+```
+
+Example 3:
+
+```php
+$query = $connection->select()->from('payments');
+
+$query = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
+    
+$rows = $query->execute()->fetchAll() ?: [];
+```
+
+Output:
+
+```sql
+SELECT MAX(amount), MIN(amount) FROM `payments`;
 ```
 
 **Next page:** [Inserts](inserts.md)
