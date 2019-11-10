@@ -695,9 +695,11 @@ SELECT SUM(`amount`) AS `sum_amount` FROM `payments`;
 Whenever you're missing support for some vendor specific function, 
 please use plain SQL templating:
 
+{% raw %}
 ```php
 $query->func()->custom('substring_index({%s}, {%s}, {%s})", $string, $delimiter, $number);
 ```
+{% endraw %}
 
 ### Raw Expressions
 
