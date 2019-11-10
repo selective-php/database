@@ -697,7 +697,7 @@ please use plain SQL templating:
 
 {% raw %}
 ```php
-$query->func()->custom('substring_index({%s}, {%s}, {%s})', $string, $delimiter, $number);
+$query->func()->custom('substring_index(%s, %s, %s)', $string, $delimiter, $number);
 ```
 {% endraw %}
 
