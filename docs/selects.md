@@ -690,7 +690,7 @@ SELECT SUM(`amount`) AS `sum_amount` FROM `payments`;
 
 #### Using custom SQL Functions
 
-:construction: *This feature is under construction* :construction:
+*This new feature is under construction*
 
 Whenever you're missing support for some vendor specific function, 
 please use plain SQL templating:
