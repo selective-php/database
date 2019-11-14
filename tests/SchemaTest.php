@@ -186,13 +186,13 @@ class SchemaTest extends BaseTest
         $result = $db->select()->from('test')->columns('id', 'keyvalue')->execute()->fetchAll();
         $this->assertSame([
             0 => [
-                    'id' => '1',
-                    'keyvalue' => '123',
-                ],
+                'id' => '1',
+                'keyvalue' => '123',
+            ],
             1 => [
-                    'id' => '2',
-                    'keyvalue' => '1234',
-                ],
+                'id' => '2',
+                'keyvalue' => '1234',
+            ],
         ], $result);
 
         $db->delete()->from('test')->execute();
