@@ -23,7 +23,7 @@ composer require selective/database
 ## Requirements
 
 * PHP >= 7.1
-* MySQL, MariaDB
+* MySQL 5.7+, MariaDB
 
 ## Documentation
 
