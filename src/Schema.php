@@ -20,7 +20,7 @@ final class Schema
     private $quoter;
 
     /**
-     * Constructor.
+     * The constructor.
      *
      * @param Connection $connection The connection
      */
@@ -35,13 +35,11 @@ final class Schema
      *
      * @param string $dbName The database name
      *
-     * @return bool Success
+     * @return void
      */
-    public function setDatabase(string $dbName): bool
+    public function setDatabase(string $dbName): void
     {
         $this->pdo->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
-
-        return true;
     }
 
     /**
@@ -104,13 +102,13 @@ final class Schema
      * @param string $characterSet The character set
      * @param string $collate The collation
      *
-     * @return bool Success
+     * @return void
      */
     public function createDatabase(
         string $dbName,
         string $characterSet = 'utf8mb4',
         string $collate = 'utf8mb4_unicode_ci'
-    ): bool {
+    ): void {
         $sql = 'CREATE DATABASE %s CHARACTER SET %s COLLATE %s;';
         $sql = vsprintf($sql, [
             $this->quoter->quoteName($dbName),
@@ -119,8 +117,6 @@ final class Schema
         ]);
 
         $this->pdo->exec($sql);
-
-        return true;
     }
 
     /**
@@ -133,9 +129,8 @@ final class Schema
     public function useDatabase(string $dbName): bool
     {
         $sql = sprintf('USE %s;', $this->quoter->quoteName($dbName));
-        $result = $this->pdo->exec($sql);
 
-        return (bool)$result;
+        return (bool)$this->pdo->exec($sql);
     }
 
     /**
@@ -148,14 +143,14 @@ final class Schema
     public function getTables($like = null): array
     {
         if ($like === null) {
-            $sql = 'SELECT table_name
-                FROM information_schema.tables
-                WHERE table_schema = database()';
+            $sql = 'SELECT TABLE_NAME
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = database()';
         } else {
-            $sql = sprintf('SELECT table_name
-                FROM information_schema.tables
-                WHERE table_schema = database()
-                AND table_name LIKE %s;', $this->quoter->quoteValue($like));
+            $sql = sprintf('SELECT TABLE_NAME
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = database()
+                AND TABLE_NAME LIKE %s;', $this->quoter->quoteValue($like));
         }
 
         $statement = $this->pdo->query($sql);
@@ -180,9 +175,9 @@ final class Schema
         [$dbName, $tableName] = $this->parseTableName($tableName);
 
         $sql = 'SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = %s
-            AND table_name = %s;';
+            FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = %s
+            AND TABLE_NAME = %s;';
 
         $sql = sprintf($sql, $dbName, $tableName);
         $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
@@ -302,26 +297,26 @@ final class Schema
     public function getColumns(string $tableName): array
     {
         $sql = 'SELECT
-            column_name,
-            ordinal_position,
-            column_default,
-            is_nullable,
-            data_type,
-            character_maximum_length,
-            character_octet_length,
-            numeric_precision,
-            numeric_scale,
-            character_set_name,
-            collation_name,
-            column_type,
-            column_key,
-            extra,
-            `privileges`,
-            column_comment
-            FROM information_schema.columns
-            WHERE table_schema = %s
-            AND table_name = %s;
-            ORDER BY ordinal_position';
+            COLUMN_NAME,
+            ORDINAL_POSITION,
+            COLUMN_DEFAULT,
+            IS_NULLABLE,
+            DATA_TYPE,
+            CHARACTER_MAXIMUM_LENGTH,
+            CHARACTER_OCTET_LENGTH,
+            NUMERIC_PRECISION,
+            NUMERIC_SCALE,
+            CHARACTER_SET_NAME,
+            COLLATION_NAME,
+            COLUMN_TYPE,
+            COLUMN_KEY,
+            EXTRA,
+            PRIVILEGES,
+            COLUMN_COMMENT
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = %s
+            AND TABLE_NAME = %s;
+            ORDER BY ORDINAL_POSITION';
 
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
