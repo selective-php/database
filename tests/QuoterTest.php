@@ -17,7 +17,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $connection = $this->getConnection()->getQuoter();
         $this->assertInstanceOf(Quoter::class, $connection);
@@ -28,7 +28,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testEsc()
+    public function testEsc(): void
     {
         $quoter = $this->getConnection()->getQuoter();
         $this->assertSame('NULL', $quoter->quoteValue(null));
@@ -66,7 +66,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testQuoteName()
+    public function testQuoteName(): void
     {
         $quoter = $this->getConnection()->getQuoter();
 
@@ -107,7 +107,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testQuoteArray()
+    public function testQuoteArray(): void
     {
         $quoter = $this->getConnection()->getQuoter();
         $this->assertSame([], $quoter->quoteArray([]));
@@ -124,7 +124,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testQuoteNames()
+    public function testQuoteNames(): void
     {
         $quoter = $this->getConnection()->getQuoter();
         $this->assertSame([], $quoter->quoteNames([]));
@@ -138,7 +138,7 @@ class QuoterTest extends BaseTest
      *
      * @return void
      */
-    public function testQuoteByFields()
+    public function testQuoteByFields(): void
     {
         $quoter = $this->getConnection()->getQuoter();
         $this->assertSame([], $quoter->quoteByFields([]));

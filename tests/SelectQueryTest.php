@@ -13,9 +13,20 @@ use Selective\Database\SelectQuery;
 class SelectQueryTest extends BaseTest
 {
     /**
+     * Set Up.
+     *
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->createTestTable();
+    }
+
+    /**
      * Test create object.
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $this->assertInstanceOf(SelectQuery::class, $this->select());
     }
@@ -23,7 +34,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testDistinct()
+    public function testDistinct(): void
     {
         $select = $this->select()->distinct()->columns(['id'])->from('test');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -37,7 +48,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testStraightJoin()
+    public function testStraightJoin(): void
     {
         $select = $this->select()->straightJoin()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -47,7 +58,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testHighPriority()
+    public function testHighPriority(): void
     {
         $select = $this->select()->highPriority()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -57,7 +68,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testSmallResult()
+    public function testSmallResult(): void
     {
         $select = $this->select()->smallResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -67,7 +78,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testBigResult()
+    public function testBigResult(): void
     {
         $select = $this->select()->bigResult()->from('users');
         $this->assertInstanceOf(PDOStatement::class, $select->prepare());
@@ -77,7 +88,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testBufferResult()
+    public function testBufferResult(): void
     {
         $select = $this->select()->bufferResult()->from('users');
         $this->assertSame('SELECT SQL_BUFFER_RESULT * FROM `users`;', $select->build());
@@ -86,7 +97,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testCalcFoundRows()
+    public function testCalcFoundRows(): void
     {
         $select = $this->select()->calcFoundRows()->from('users');
         $this->assertSame('SELECT SQL_CALC_FOUND_ROWS * FROM `users`;', $select->build());
@@ -95,7 +106,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testColumns()
+    public function testColumns(): void
     {
         $select = $this->select()->from('users');
         $this->assertSame('SELECT * FROM `users`;', $select->build());
@@ -117,7 +128,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testColumnsArray()
+    public function testColumnsArray(): void
     {
         $query = $this->select()->from('test');
 
@@ -137,7 +148,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testMultipleColumns()
+    public function testMultipleColumns(): void
     {
         $select = $this->select()->columns(['id', 'username', ['firstName' => 'first_name']])->from('test');
         $select = $select->columns([['username2' => 'username'], 'id2', 'table.fieldname2']);
@@ -152,7 +163,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testSubselect()
+    public function testSubselect(): void
     {
         // Raw
         $select = $this->select()
@@ -165,11 +176,14 @@ class SelectQueryTest extends BaseTest
 
         // With a sub query object
         $select = $this->select()
-            ->columns(['id', function (SelectQuery $subSelect) {
-                $subSelect->columns([new RawExp('MAX(payments.amount)')])
-                    ->from('payments')
-                    ->alias('max_amount'); // AS max_amount
-            }])
+            ->columns([
+                'id',
+                function (SelectQuery $subSelect) {
+                    $subSelect->columns([new RawExp('MAX(payments.amount)')])
+                        ->from('payments')
+                        ->alias('max_amount'); // AS max_amount
+                }
+            ])
             ->from('test');
 
         $this->assertSame(
@@ -181,7 +195,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testUnion()
+    public function testUnion(): void
     {
         $select = $this->select()->columns(['id'])->from('table1');
         $select2 = $this->select()->columns(['id'])->from('table2');
@@ -202,7 +216,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testFrom()
+    public function testFrom(): void
     {
         $select = $this->select()->columns(['id'])->from('test');
         $this->assertSame('SELECT `id` FROM `test`;', $select->build());
@@ -217,7 +231,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhere()
+    public function testWhere(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where('id', '=', 1);
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` = '1';", $select->build());
@@ -262,7 +276,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereIn()
+    public function testWhereIn(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where('id', 'in', [1, 'a', "'b", null]);
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` IN ('1', 'a', '\'b', NULL);", $select->build());
@@ -274,7 +288,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereFunction()
+    public function testWhereFunction(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where('id', 'greatest', [1, '2', "'b", null]);
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` = GREATEST ('1', '2', '\'b', NULL);", $select->build());
@@ -289,7 +303,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereBetween()
+    public function testWhereBetween(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where('id', 'between', [1, 100]);
         $this->assertSame("SELECT `id` FROM `test` WHERE `id` BETWEEN '1' AND '100';", $select->build());
@@ -298,7 +312,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test Simple pattern matching.
      */
-    public function testWhereLike()
+    public function testWhereLike(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where('first_name', 'like', '%max%');
         $this->assertSame("SELECT `id` FROM `test` WHERE `first_name` LIKE '%max%';", $select->build());
@@ -313,7 +327,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test Simple pattern matching.
      */
-    public function testWhereRegexp()
+    public function testWhereRegexp(): void
     {
         $select = $this->select()->from('users')->where('username', Operator::REGEXP, '^[a-d]');
         $this->assertSame("SELECT * FROM `users` WHERE `username` REGEXP '^[a-d]';", $select->build());
@@ -325,7 +339,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereRawExp()
+    public function testWhereRawExp(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->where(new RawExp("STRCMP('text', 'text2')"));
         $this->assertSame("SELECT `id` FROM `test` WHERE STRCMP('text', 'text2');", $select->build());
@@ -337,7 +351,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereRaw()
+    public function testWhereRaw(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -349,7 +363,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrWhereRaw()
+    public function testOrWhereRaw(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -362,7 +376,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrWhereRawClosure()
+    public function testOrWhereRawClosure(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -378,7 +392,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrWhereRawClosure2()
+    public function testOrWhereRawClosure2(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -396,7 +410,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrWhereRawClosure3()
+    public function testOrWhereRawClosure3(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -414,7 +428,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereColumn()
+    public function testWhereColumn(): void
     {
         $select = $this->select()->from('users')->whereColumn('first_name', '=', 'last_name');
         $this->assertSame('SELECT * FROM `users` WHERE `first_name` = `last_name`;', $select->build());
@@ -440,7 +454,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhereClosure()
+    public function testWhereClosure(): void
     {
         $select = $this->select()
             ->distinct()
@@ -504,7 +518,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testHavingRaw()
+    public function testHavingRaw(): void
     {
         $query = $this->select();
         $query->columns(['state_id', $query->func()->count('*')]);
@@ -521,7 +535,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrHavingRaw()
+    public function testOrHavingRaw(): void
     {
         $query = $this->select();
         $query->columns(['state_id', $query->func()->count('*')]);
@@ -539,7 +553,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testJoin()
+    public function testJoin(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -559,7 +573,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testJoinRaw()
+    public function testJoinRaw(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -575,7 +589,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testLeftJoinRaw()
+    public function testLeftJoinRaw(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -591,7 +605,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testLeftJoin()
+    public function testLeftJoin(): void
     {
         $select = $this->select()
             ->columns(['id'])
@@ -611,7 +625,7 @@ class SelectQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testLimit()
+    public function testLimit(): void
     {
         $select = $this->select()->columns(['id'])->from('test')->limit(10);
         $this->assertSame('SELECT `id` FROM `test` LIMIT 10;', $select->build());
@@ -622,7 +636,7 @@ class SelectQueryTest extends BaseTest
      *
      * @return void
      */
-    public function testRaw()
+    public function testRaw(): void
     {
         $query = $this->getConnection()->select();
 
@@ -635,14 +649,4 @@ class SelectQueryTest extends BaseTest
         $this->assertEquals('SELECT count(*) AS user_count,`status` FROM `payments`;', $query->build());
     }
 
-    /**
-     * Set Up.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
 }

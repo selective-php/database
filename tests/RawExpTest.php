@@ -11,8 +11,10 @@ class RawExpTest extends BaseTest
 {
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testGetValue()
+    public function testGetValue(): void
     {
         $exp = new RawExp('123');
         $this->assertSame('123', $exp->getValue());
@@ -20,8 +22,10 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testToString()
+    public function testToString(): void
     {
         $exp = new RawExp('abc');
         $this->assertSame('abc', $exp->__toString());
@@ -29,8 +33,10 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testColumnsRaw()
+    public function testColumnsRaw(): void
     {
         $select = $this->select()
             ->columns([
@@ -46,8 +52,10 @@ class RawExpTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testColumnsRaw2()
+    public function testColumnsRaw2(): void
     {
         $select = $this->select()
             ->columns([

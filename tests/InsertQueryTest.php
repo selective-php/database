@@ -10,27 +10,42 @@ use Selective\Database\InsertQuery;
 class InsertQueryTest extends BaseTest
 {
     /**
+     * Set up.
+     *
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->createTestTable();
+    }
+
+    /**
      * Test create object.
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $this->assertInstanceOf(InsertQuery::class, $this->insert());
     }
 
     /**
-     * @return InsertQuery
+     * Create insert.
+     *
+     * @return InsertQuery The query
      */
-    protected function insert()
+    protected function insert(): InsertQuery
     {
         return new InsertQuery($this->getConnection());
     }
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testInto()
+    public function testInto(): void
     {
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
         $this->assertSame("INSERT INTO `test` SET `keyname`='admin-007';", $insert->build());
@@ -42,8 +57,10 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testLastInsertId()
+    public function testLastInsertId(): void
     {
         $insert = $this->insert()->into('test')->set(['keyname' => 'admin-007']);
         $insert->execute();
@@ -52,8 +69,10 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testInsertGetId()
+    public function testInsertGetId(): void
     {
         $insertGetId = $this->insert()->into('test')->insertGetId(['keyname' => 'admin-007']);
         $this->assertSame('1', $insertGetId);
@@ -61,8 +80,10 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testPriority()
+    public function testPriority(): void
     {
         $insert = $this->insert()->lowPriority()->into('test')->set(['username' => 'admin']);
         $this->assertSame("INSERT LOW_PRIORITY INTO `test` SET `username`='admin';", $insert->build());
@@ -73,8 +94,10 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testIgnore()
+    public function testIgnore(): void
     {
         $insert = $this->insert()->ignore()->into('test')->set(['username' => 'admin']);
         $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin';", $insert->build());
@@ -85,8 +108,10 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testDelayed()
+    public function testDelayed(): void
     {
         $insert = $this->insert()->delayed()->into('test')->set(['username' => 'admin']);
         $this->assertSame("INSERT DELAYED INTO `test` SET `username`='admin';", $insert->build());
@@ -94,17 +119,14 @@ class InsertQueryTest extends BaseTest
 
     /**
      * Test.
+     *
+     * @return void
      */
-    public function testOnDuplicateKeyUpdate()
+    public function testOnDuplicateKeyUpdate(): void
     {
         $insert = $this->insert()->ignore()->into('test')->set(['username' => 'admin']);
         $insert->onDuplicateKeyUpdate(['username' => 'admin-01']);
         $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin' ON DUPLICATE KEY UPDATE `username`='admin-01';", $insert->build());
     }
 
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
-    }
 }

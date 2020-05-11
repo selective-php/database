@@ -18,7 +18,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $func = $this->getConnection()->select()->func();
         $this->assertInstanceOf(FunctionBuilder::class, $func);
@@ -46,7 +46,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testAvg()
+    public function testAvg(): void
     {
         $func = $this->getConnection()->select()->func();
 
@@ -59,7 +59,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testMin()
+    public function testMin(): void
     {
         $func = $this->getConnection()->select()->func();
 
@@ -72,7 +72,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testMax()
+    public function testMax(): void
     {
         $func = $this->getConnection()->select()->func();
 
@@ -85,7 +85,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testCount()
+    public function testCount(): void
     {
         $func = $this->getConnection()->select()->func();
 
@@ -103,7 +103,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testNow()
+    public function testNow(): void
     {
         $func = $this->getConnection()->select()->func();
 
@@ -117,7 +117,7 @@ class FunctionBuilderTest extends BaseTest
      *
      * @return void
      */
-    public function testCustom()
+    public function testCustom(): void
     {
         $query = $this->getConnection()->select();
         $func = $query->func();

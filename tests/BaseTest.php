@@ -33,7 +33,7 @@ abstract class BaseTest extends TestCase
      *
      * @return void
      */
-    protected function createTestTable()
+    protected function createTestTable(): void
     {
         $db = $this->getConnection();
         $schema = $this->getSchema();
@@ -67,7 +67,9 @@ abstract class BaseTest extends TestCase
     }
 
     /**
-     * @return PDO
+     * Get PDO.
+     *
+     * @return PDO The connection
      */
     protected function getPdo(): PDO
     {
@@ -100,7 +102,7 @@ abstract class BaseTest extends TestCase
     /**
      * @return Schema
      */
-    protected function getSchema()
+    protected function getSchema(): Schema
     {
         if ($this->schema === null) {
             $this->schema = new Schema($this->getConnection());

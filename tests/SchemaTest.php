@@ -11,11 +11,22 @@ use Selective\Database\Schema;
 class SchemaTest extends BaseTest
 {
     /**
+     * Set up.
+     *
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->createTestTable();
+    }
+
+    /**
      * Test create object.
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $schema = $this->getSchema();
         $this->assertInstanceOf(Schema::class, $schema);
@@ -26,7 +37,7 @@ class SchemaTest extends BaseTest
      *
      * @return void
      */
-    public function testSetDbName()
+    public function testSetDbName(): void
     {
         $schema = $this->getSchema();
         $dbName = $schema->getDatabase();
@@ -52,7 +63,7 @@ class SchemaTest extends BaseTest
      *
      * @return void
      */
-    public function testTables()
+    public function testTables(): void
     {
         $db = $this->getConnection();
         $schema = $this->getSchema();
@@ -248,7 +259,7 @@ class SchemaTest extends BaseTest
      *
      * @return void
      */
-    public function testGetColumnNames()
+    public function testGetColumnNames(): void
     {
         $schema = $this->getSchema();
         $result = $schema->getColumnNames('test');
@@ -261,7 +272,7 @@ class SchemaTest extends BaseTest
      *
      * @return void
      */
-    public function testRenameTable()
+    public function testRenameTable(): void
     {
         $schema = $this->getSchema();
         $schema->renameTable('test', 'test_copy');
@@ -274,17 +285,11 @@ class SchemaTest extends BaseTest
      *
      * @return void
      */
-    public function testCopyTable()
+    public function testCopyTable(): void
     {
         $schema = $this->getSchema();
         $schema->copyTable('test', 'test_copy');
         $this->assertTrue($schema->existTable('test_copy'));
         $this->assertTrue($schema->existTable('test'));
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->createTestTable();
     }
 }

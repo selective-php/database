@@ -14,7 +14,7 @@ class DeleteQueryTest extends BaseTest
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $this->assertInstanceOf(DeleteQuery::class, $this->delete());
     }
@@ -22,7 +22,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * @return DeleteQuery
      */
-    protected function delete()
+    protected function delete(): DeleteQuery
     {
         return new DeleteQuery($this->getConnection());
     }
@@ -30,7 +30,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testFrom()
+    public function testFrom(): void
     {
         $delete = $this->delete()->from('test');
         $this->assertSame('DELETE FROM `test`;', $delete->build());
@@ -40,7 +40,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testLowPriority()
+    public function testLowPriority(): void
     {
         $delete = $this->delete()->lowPriority()->from('test');
         $this->assertSame('DELETE LOW_PRIORITY FROM `test`;', $delete->build());
@@ -49,7 +49,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testIgnore()
+    public function testIgnore(): void
     {
         $delete = $this->delete()->ignore()->from('test')->where('id', '=', '1');
         $this->assertSame("DELETE IGNORE FROM `test` WHERE `id` = '1';", $delete->build());
@@ -61,7 +61,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testQuick()
+    public function testQuick(): void
     {
         $delete = $this->delete()->quick()->from('test')->where('id', '=', '1');
         $this->assertSame("DELETE QUICK FROM `test` WHERE `id` = '1';", $delete->build());
@@ -70,7 +70,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testOrderBy()
+    public function testOrderBy(): void
     {
         $delete = $this->delete()->from('test')->where('id', '=', '1')->orderBy('id');
         $this->assertSame("DELETE FROM `test` WHERE `id` = '1' ORDER BY `id`;", $delete->build());
@@ -88,7 +88,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testLimit()
+    public function testLimit(): void
     {
         $delete = $this->delete()->from('test')->where('id', '>', '1')->limit(10);
         $this->assertSame("DELETE FROM `test` WHERE `id` > '1' LIMIT 10;", $delete->build());
@@ -97,7 +97,7 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testWhere()
+    public function testWhere(): void
     {
         $delete = $this->delete()->from('test')->where('id', '=', '1')
             ->where('test.id', '=', 1)
@@ -108,13 +108,13 @@ class DeleteQueryTest extends BaseTest
     /**
      * Test.
      */
-    public function testTruncate()
+    public function testTruncate(): void
     {
         $delete = $this->delete()->from('test')->truncate();
         $this->assertSame('TRUNCATE TABLE `test`;', $delete->build());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->createTestTable();

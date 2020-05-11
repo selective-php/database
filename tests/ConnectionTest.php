@@ -17,7 +17,7 @@ class ConnectionTest extends BaseTest
      *
      * @return void
      */
-    public function testInstance()
+    public function testInstance(): void
     {
         $connection = $this->getConnection();
         $this->assertInstanceOf(Connection::class, $connection);
@@ -26,7 +26,7 @@ class ConnectionTest extends BaseTest
     /**
      * Test.
      */
-    public function testPrepareQuery()
+    public function testPrepareQuery(): void
     {
         $select = $this->select();
         $select->columns(['TABLE_NAME'])
