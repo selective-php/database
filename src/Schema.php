@@ -3,7 +3,6 @@
 namespace Selective\Database;
 
 use PDO;
-use UnexpectedValueException;
 
 /**
  * Schema.
@@ -327,38 +326,7 @@ final class Schema
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
 
-        $result = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-        return $result ?: [];
-    }
-
-    /**
-     * Get table id.
-     *
-     * @param string $tableName The table name
-     *
-     * @throws UnexpectedValueException
-     *
-     * @return int The tabl id
-     */
-    private function getTableId(string $tableName): int
-    {
-        $sql = "SELECT
-            TABLE_ID
-            FROM INFORMATION_SCHEMA.INNODB_TABLES WHERE NAME = CONCAT('%s', '/', '%s')
-            WHERE table_schema = %s
-            AND table_name = %s;";
-
-        [$dbName, $tableName] = $this->parseTableName($tableName);
-        $sql = sprintf($sql, $dbName, $tableName);
-
-        $result = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-        if (!isset($result['TABLE_ID'])) {
-            throw new UnexpectedValueException(sprintf('Table ID not found: %s', $tableName));
-        }
-
-        return (int)$result['TABLE_ID'];
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
