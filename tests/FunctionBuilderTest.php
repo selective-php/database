@@ -37,7 +37,7 @@ class FunctionBuilderTest extends BaseTest
         $this->assertEquals('SUM(`table`.`field`)', $func->sum('table.field'));
 
         $query = $this->getConnection()->select()->from('payments');
-        $query->columns($query->func()->count('amount'));
+        $query->columns([$query->func()->count('amount')]);
         $this->assertEquals('SELECT COUNT(`amount`) FROM `payments`;', $query->build());
     }
 
@@ -94,7 +94,7 @@ class FunctionBuilderTest extends BaseTest
         $this->assertEquals('COUNT(`field`) AS `alias_field`', $func->count('field')->alias('alias_field'));
 
         $query = $this->getConnection()->select()->from('users');
-        $query->columns($query->func()->count());
+        $query->columns([$query->func()->count()]);
         $this->assertEquals('SELECT COUNT(*) FROM `users`;', $query->build());
     }
 
@@ -136,7 +136,7 @@ class FunctionBuilderTest extends BaseTest
         $this->assertEquals("IFNULL(`users`.`email`, 'test')", $function->getValue());
 
         // Full query
-        $query->columns($func->call('concat', $func->field('users.first_name'), '-', $func->field('users.last_name')));
+        $query->columns([$func->call('concat', $func->field('users.first_name'), '-', $func->field('users.last_name'))]);
         $query->from('users');
 
         $this->assertEquals("SELECT CONCAT(`users`.`first_name`, '-', `users`.`last_name`) FROM `users`;", $query->build());
@@ -145,7 +145,7 @@ class FunctionBuilderTest extends BaseTest
         $query = $this->getConnection()->select();
         $func = $query->func();
 
-        $query->columns($func->call('length', $func->call('compress', "a'b"))->alias('l'));
+        $query->columns([$func->call('length', $func->call('compress', "a'b"))->alias('l')]);
         $this->assertEquals("SELECT LENGTH(COMPRESS('a\'b')) AS `l`;", $query->build());
     }
 }

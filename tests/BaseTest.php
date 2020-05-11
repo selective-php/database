@@ -112,7 +112,7 @@ abstract class BaseTest extends TestCase
     /**
      * @return SelectQuery
      */
-    protected function select()
+    protected function select(): SelectQuery
     {
         return new SelectQuery($this->getConnection());
     }

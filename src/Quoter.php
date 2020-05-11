@@ -96,16 +96,27 @@ final class Quoter
     /**
      * Escape identifier (column, table) with backticks.
      *
-     * @see: http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
+     * @see: http://dev.mysql.com/doc/refman/8.0/en/identifiers.html
      *
-     * @param string $identifier Identifier name
+     * @param string|array $identifier Identifier name
      *
      * @return string Quoted identifier
      */
-    public function quoteName(string $identifier): string
+    public function quoteName($identifier): string
     {
+        if (is_array($identifier)) {
+            $key = \array_key_first($identifier);
+            $value = $identifier[$key];
+
+            if ($value instanceof RawExp) {
+                return sprintf('%s AS %s', $value->getValue(), $this->quoteIdentifier($key));
+            }
+
+            return sprintf('%s AS %s', $this->quoteName($identifier[$key]), $this->quoteIdentifier($key));
+        }
+
         $identifier = trim($identifier);
-        $separators = [' AS ', ' ', '.'];
+        $separators = ['.'];
         foreach ($separators as $sep) {
             $pos = strripos($identifier, $sep);
             if ($pos) {

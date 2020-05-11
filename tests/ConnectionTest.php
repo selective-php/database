@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Selective\Database\Test;
 
-use Selective\Database\Connection;
 use PDO;
+use Selective\Database\Connection;
 
 /**
  * @coversDefaultClass \Selective\Database\Connection
@@ -29,7 +29,7 @@ class ConnectionTest extends BaseTest
     public function testPrepareQuery()
     {
         $select = $this->select();
-        $select->columns('TABLE_NAME')
+        $select->columns(['TABLE_NAME'])
             ->from('information_schema.TABLES')
             ->where('TABLE_NAME', '=', 'TABLES');
 

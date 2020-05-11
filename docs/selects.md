@@ -31,7 +31,7 @@ $query = new \Odan\Database\SelectQuery($connection);
 Getting the generated SQL string:
 
 ```php
-echo $connection->select()->from('users AS user')->build();
+echo $connection->select()->from(['user' => 'users'])->build();
 ```
 Output:
 
@@ -50,7 +50,7 @@ the query and then finally get the results using the get method:
 
 ```php
 $query = $connection->select()->from('users');
-$query->columns('id', 'username', 'email');
+$query->columns(['id', 'username', 'email']);
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -86,7 +86,7 @@ The distinct method allows you to force the query to return distinct results:
 ```php
 $query = $connection->select()->from('users')->distinct();
 
-$query->columns('id');
+$query->columns(['id']);
 
 $rows = $query->execute()->fetchAll();
 ```
@@ -98,7 +98,7 @@ Select columns by name:
 ```php
 $query = $connection->select()->from('users');
 
-$query->columns('id', 'username', 'first_name AS firstName');
+$query->columns(['id', 'username', ['first_name' => 'firstName']]);
 
 $rows = $query->execute()->fetchAll();
 ```
@@ -122,11 +122,11 @@ Select columns with alias:
 ```php
 $query = $connection->select()->from('test');
 
-$query->columns(
-    'first_name AS firstName',
-    'last_name AS lastName',
-    'tablename.fieldname as fieldName'
-);
+$query->columns([
+    'firstName' => 'first_name',
+    'lastName' => 'last_name',
+    'fieldName' => 'tablename.fieldname'
+]);
 
 $rows = $query->execute()->fetchAll();
 ```
@@ -153,7 +153,7 @@ SELECT
   `first_name` AS `firstName`,
   `test`.`last_name` AS `last_name`,
   `database`.`test`.`email` AS `email`,
-  `CONCAT("1","2")` AS `value`
+  CONCAT("1","2") AS `value`
 FROM
   `test`;
 ```
@@ -161,10 +161,10 @@ Add fields one after another:
 
 ```php
 $query = $connection->select()
-    ->columns('first_name')
+    ->columns(['first_name'])
     ->from('users');
 
-$rows = $query->columns('last_name', 'email')
+$rows = $query->columns(['last_name', 'email'])
     ->execute()
     ->fetchAll();
 ```
@@ -181,11 +181,14 @@ function and define an alias for the subselect:
 ```php
 $query = $connection->select()->from('test');
 
-$query->columns('id', function (SelectQuery $subSelect) {
-    $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
-        ->from('payments')
-        ->alias('max_amount');
-});
+$query->columns([
+    'id',
+    function (SelectQuery $subSelect) {
+        $subSelect->columns($subSelect->raw('MAX(payments.amount)'))
+           ->from('payments')
+           ->alias('max_amount');
+    }
+]);
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -209,9 +212,9 @@ multiple tables in a single query:
 ```php
 $query = $connection->select()->from('users');
 
-$query->columns('users.*', 'contacts.phone', 'orders.price')
+$query->columns(['users.*', 'contacts.phone', 'orders.price']);
 
-$query->join('contacts', 'users.id', '=', 'contacts.user_id')
+$query->join('contacts', 'users.id', '=', 'contacts.user_id');
 $query->join('orders', 'users.id', '=', 'orders.user_id');
 
 $rows = $query->execute()->fetchAll() ?: [];
@@ -261,9 +264,9 @@ To get started, pass a (raw) string as the second argument into
 the `joinRaw` and `leftJoinRaw` method.
 
 ```php
-$query = $connection->select()->from('users AS u');
+$query = $connection->select()->from(['u' => 'users']);
 
-$query->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL');
+$query->joinRaw(['p' => 'posts'], 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL');
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -282,11 +285,11 @@ For example, you may create an initial query and use the
 ```php
 $select = $connection->select()
     ->from('table1')
-    ->columns('id');
+    ->columns(['id']);
 
 $select2 = $connection->select()
     ->from('table2')
-    ->columns('id');
+    ->columns(['id']);
 
 $select->union($select2);
 ```
@@ -685,7 +688,7 @@ Example:
 
 ```php
 $query = $connection->select()->from('payments');
-$query->columns($query->func()->sum('amount')->alias('sum_amount'));
+$query->columns([$query->func()->sum('amount')->alias('sum_amount')]);
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -719,7 +722,7 @@ To create a raw expression, you can use the `raw` method:
 ```php
 $query = $connection->select()->from('payments');
 
-$query->columns($query->raw('count(*) AS user_count'), 'status');
+$query->columns([$query->raw('count(*) AS user_count'), 'status']);
 
 $query->where('status', '<>', 1);
 $query->groupBy('status');
@@ -735,7 +738,7 @@ Example 2:
 
 ```php
 $query = $connection->select()->from('payments');
-$query->columns($query->raw('count(*) AS user_count'), 'status');
+$query->columns([$query->raw('count(*) AS user_count'), 'status']);
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
@@ -751,7 +754,7 @@ Example 3:
 ```php
 $query = $connection->select()->from('payments');
 
-$query = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
+$query = $query->columns([$query->raw('MAX(amount)'), $query->raw('MIN(amount)')]);
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```

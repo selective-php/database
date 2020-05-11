@@ -70,7 +70,8 @@ final class SelectQueryBuilder implements QueryInterface
             }
 
             if (!is_int($key)) {
-                $column = sprintf('%s AS %s', (string)$column, $key);
+                // Column with alias as array
+                $column = [$key => $column];
             }
 
             $columns[] = $column;
@@ -83,12 +84,12 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param string $from
+     * @param array $sql The sql
+     * @param string|array $from The table
      *
-     * @return array
+     * @return array The sql
      */
-    public function getFromSql(array $sql, string $from): array
+    public function getFromSql(array $sql, $from): array
     {
         if (!empty($from)) {
             $sql[] = 'FROM ' . $this->quoter->quoteName($from);

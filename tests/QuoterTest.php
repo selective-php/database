@@ -80,8 +80,7 @@ class QuoterTest extends BaseTest
         $this->assertSame('`table`.*', $quoter->quoteName('table.*'));
 
         // Table with alias
-        $this->assertSame('`users` `u`', $quoter->quoteName('users u'));
-        $this->assertSame('`users` AS `u`', $quoter->quoteName('users AS u'));
+        $this->assertSame('`users` AS `u`', $quoter->quoteName(['u' => 'users']));
 
         // With database name
         $this->assertSame('`dbname`.`tablename`', $quoter->quoteName('dbname.tablename'));
@@ -89,7 +88,7 @@ class QuoterTest extends BaseTest
         // Alias.field AS thing
         $this->assertSame(
             '`dbname`.`tablename`.`field` AS `thing`',
-            $quoter->quoteName('dbname.tablename.field AS thing')
+            $quoter->quoteName(['thing' => 'dbname.tablename.field'])
         );
 
         $this->assertSame('`.`', $quoter->quoteName('.'));

@@ -33,10 +33,10 @@ class RawExpTest extends BaseTest
     public function testColumnsRaw()
     {
         $select = $this->select()
-            ->columns(
+            ->columns([
                 new RawExp('COUNT(*) AS user_count'),
-                'status'
-            )
+                'status',
+            ])
             ->from('payments')
             ->where('status', '<>', 1)
             ->groupBy('status')
@@ -50,10 +50,10 @@ class RawExpTest extends BaseTest
     public function testColumnsRaw2()
     {
         $select = $this->select()
-            ->columns(
+            ->columns([
                 new RawExp('MAX(amount)'),
-                new RawExp('MIN(amount)')
-            )
+                new RawExp('MIN(amount)'),
+            ])
             ->from('payments')
             ->build();
         $this->assertSame('SELECT MAX(amount),MIN(amount) FROM `payments`;', $select);

@@ -2,8 +2,8 @@
 
 namespace Selective\Database\Test;
 
-use Selective\Database\Schema;
 use PDO;
+use Selective\Database\Schema;
 
 /**
  * @coversDefaultClass \Selective\Database\Schema
@@ -145,11 +145,11 @@ class SchemaTest extends BaseTest
         $this->assertSame([0 => ['count' => '1']], $result);
 
         $query = $db->select()->from('test');
-        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
+        $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchColumn();
         $this->assertSame('1', $result);
 
         $query = $db->select()->from('test');
-        $result = $query->columns('id')->where('id', '=', 9999999)->execute()->fetchColumn() ?: null;
+        $result = $query->columns(['id'])->where('id', '=', 9999999)->execute()->fetchColumn() ?: null;
         $this->assertNull($result);
 
         $rows = [
@@ -164,20 +164,20 @@ class SchemaTest extends BaseTest
         $this->assertSame('2', $result);
 
         $query = $db->select()->from('test');
-        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
+        $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchColumn();
         $this->assertSame('3', $result);
 
         $schema->truncateTable('test');
 
         $query = $db->select()->from('test');
-        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
+        $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchColumn();
         $this->assertSame('0', $result);
 
         $result = $db->insert()->into('test')->set($rows)->prepare();
         $result->execute();
         $this->assertSame(2, $result->rowCount());
 
-        $result = $db->select()->from('test')->columns('id', 'keyvalue')->execute()->fetchAll();
+        $result = $db->select()->from('test')->columns(['id', 'keyvalue'])->execute()->fetchAll();
         $this->assertSame([
             0 => [
                 'id' => '1',
@@ -192,7 +192,7 @@ class SchemaTest extends BaseTest
         $db->delete()->from('test')->execute();
 
         $query = $db->select()->from('test');
-        $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
+        $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchColumn();
         $this->assertSame('0', $result);
 
         $result = $db->getPdo()->query("SHOW TABLE STATUS FROM `database_test` LIKE 'test';")->fetch();

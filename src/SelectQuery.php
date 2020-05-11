@@ -37,7 +37,7 @@ final class SelectQuery implements QueryInterface
     private $alias;
 
     /**
-     * @var string
+     * @var string|array
      */
     private $from = '';
 
@@ -226,20 +226,18 @@ final class SelectQuery implements QueryInterface
      *
      * This method will append any passed argument to the list of fields to be selected.
      *
-     * @param array ...$columns field1, field2, field3, ...
+     * @param array $columns The columns as array
      *
      * @return self
      */
-    public function columns(...$columns): self
+    public function columns(array $columns): self
     {
-        if (isset($columns[0]) && is_array($columns[0])) {
-            $columns = $columns[0];
-        }
-
         if (empty($this->columns)) {
             $this->columns = $columns;
         } else {
-            $this->columns = array_keys(array_replace(array_flip($this->columns), array_flip($columns)));
+            foreach ($columns as $column) {
+                $this->columns[] = $column;
+            }
         }
 
         return $this;
@@ -262,11 +260,11 @@ final class SelectQuery implements QueryInterface
     /**
      * From.
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      *
      * @return self
      */
-    public function from(string $table): self
+    public function from($table): self
     {
         $this->from = $table;
 
@@ -321,14 +319,14 @@ final class SelectQuery implements QueryInterface
     /**
      * Join.
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
      * @param mixed $rightField Value of the right field
      *
      * @return self
      */
-    public function join(string $table, string $leftField, string $comparison, $rightField): self
+    public function join($table, string $leftField, string $comparison, $rightField): self
     {
         $this->join[] = ['inner', $table, $leftField, $comparison, $rightField];
 
@@ -338,14 +336,14 @@ final class SelectQuery implements QueryInterface
     /**
      * Inner Join (alias).
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
      * @param mixed $rightField Value of the right field
      *
      * @return self
      */
-    public function innerJoin(string $table, string $leftField, string $comparison, $rightField): self
+    public function innerJoin($table, string $leftField, string $comparison, $rightField): self
     {
         return $this->join($table, $leftField, $comparison, $rightField);
     }
@@ -353,14 +351,14 @@ final class SelectQuery implements QueryInterface
     /**
      * Left Join.
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      * @param string $leftField Name of the left field
      * @param string $comparison Comparison (=,<,>,<=,>=,<>,in, not in, between, not between)
      * @param mixed $rightField Value of the right field
      *
      * @return self
      */
-    public function leftJoin(string $table, string $leftField, string $comparison, $rightField): self
+    public function leftJoin($table, string $leftField, string $comparison, $rightField): self
     {
         $this->join[] = ['left', $table, $leftField, $comparison, $rightField];
 
@@ -370,12 +368,12 @@ final class SelectQuery implements QueryInterface
     /**
      * Join with complex conditions.
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
      *
      * @return self
      */
-    public function joinRaw(string $table, string $conditions): self
+    public function joinRaw($table, string $conditions): self
     {
         $this->join[] = ['inner', $table, new RawExp($conditions), null, null, null];
 
@@ -385,12 +383,12 @@ final class SelectQuery implements QueryInterface
     /**
      * Left join with complex conditions.
      *
-     * @param string $table Table name
+     * @param string|array $table Table name
      * @param string $conditions The ON conditions e.g. 'user.id = article.user_id'
      *
      * @return self
      */
-    public function leftJoinRaw(string $table, string $conditions): self
+    public function leftJoinRaw($table, string $conditions): self
     {
         $this->join[] = ['left', $table, new RawExp($conditions), null, null, null];
 
