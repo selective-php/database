@@ -1,9 +1,15 @@
+---
+layout: default
+title: Selects
+nav_order: 2
+---
+
 ## Selects
 
 Create a select query object with the connection object.
 
 ```php
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 
 $connection = new Connection($pdo);
 
@@ -13,7 +19,7 @@ $query = $connection->select();
 Creating a SelectQuery object manually:
 
 ```php
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 
 $connection = new Connection($pdo);
 
@@ -37,20 +43,20 @@ SELECT * FROM `users` as `user`;
 
 #### Retrieving All Rows From A Table
 
-You may use the `select()` method of the `Connection` object to begin a query. 
-The table method returns a fluent query builder instance for 
-the given table, allowing you to chain more constraints onto 
+You may use the `select()` method of the `Connection` object to begin a query.
+The table method returns a fluent query builder instance for
+the given table, allowing you to chain more constraints onto
 the query and then finally get the results using the get method:
 
 ```php
 $query = $connection->select()->from('users');
 $query->columns('id', 'username', 'email');
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 
-The PDO `fetch()` method returns an row containing the results 
-where each result is an instance of the Array or PHP `stdClass` object. 
+The PDO `fetch()` method returns an row containing the results
+where each result is an instance of the Array or PHP `stdClass` object.
 You may access each column's value by accessing the column as a property of the object:
 
 ```php
@@ -180,7 +186,7 @@ $query->columns('id', function (SelectQuery $subSelect) {
         ->from('payments')
         ->alias('max_amount');
 });
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 
@@ -192,12 +198,12 @@ SELECT `id`,(SELECT MAX(payments.amount) FROM `payments`) AS `max_amount` FROM `
 
 #### Inner Join Clause
 
-The query builder may also be used to write join statements. 
-To perform a basic "inner join", you may use the join method 
-on a query builder instance. The first argument passed to 
-the join method is the name of the table you need to join to, 
-while the remaining arguments specify the column constraints 
-for the join. Of course, as you can see, you can join to 
+The query builder may also be used to write join statements.
+To perform a basic "inner join", you may use the join method
+on a query builder instance. The first argument passed to
+the join method is the name of the table you need to join to,
+while the remaining arguments specify the column constraints
+for the join. Of course, as you can see, you can join to
 multiple tables in a single query:
 
 ```php
@@ -207,12 +213,12 @@ $query->columns('users.*', 'contacts.phone', 'orders.price')
 
 $query->join('contacts', 'users.id', '=', 'contacts.user_id')
 $query->join('orders', 'users.id', '=', 'orders.user_id');
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
-SELECT `users`.*, `contacts`.`phone`, `orders`.`price` 
+SELECT `users`.*, `contacts`.`phone`, `orders`.`price`
 FROM `users`
 INNER JOIN `contacts` ON `users`.`id` = `contacts`.`user_id`
 INNER JOIN `orders` ON `users`.`id` = `orders`.`user_id`;
@@ -220,14 +226,14 @@ INNER JOIN `orders` ON `users`.`id` = `orders`.`user_id`;
 
 #### Left Join Clause
 
-If you would like to perform a "left join" instead of an "inner join", 
+If you would like to perform a "left join" instead of an "inner join",
 use the leftJoin method. The  leftJoin method has the same signature as the join method:
 
 ```php
 $query = $connection->select()->from('users');
-    
+
 $query->leftJoin('posts', 'users.id', '=', 'posts.user_id');
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 
@@ -241,7 +247,7 @@ LEFT JOIN `posts` ON `users`.`id` = `posts`.`user_id`;
 
 From the [MySQL JOIN](https://dev.mysql.com/doc/refman/5.7/en/nested-join-optimization.html) docs:
 
-> In MySQL, CROSS JOIN is syntactically equivalent to INNER JOIN; they can replace each other. 
+> In MySQL, CROSS JOIN is syntactically equivalent to INNER JOIN; they can replace each other.
 > In standard SQL, they are not equivalent. INNER JOIN is used with an ON clause; CROSS JOIN is used otherwise.
 
 In MySQL Inner Join and Cross Join yielding the same result.
@@ -250,34 +256,34 @@ Please use the [join](#inner-join-clause) method.
 
 #### Advanced Join Clauses
 
-You may also specify more advanced join clauses. 
-To get started, pass a (raw) string as the second argument into 
+You may also specify more advanced join clauses.
+To get started, pass a (raw) string as the second argument into
 the `joinRaw` and `leftJoinRaw` method.
 
 ```php
 $query = $connection->select()->from('users AS u');
-    
+
 $query->joinRaw('posts AS p', 'p.user_id=u.id AND u.enabled=1 OR p.published IS NULL');
 
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 
 ```sql
-SELECT `id` FROM `users` AS `u` 
+SELECT `id` FROM `users` AS `u`
 INNER JOIN `posts` AS `p` ON (p.user_id=u.id AND u.enabled=1 OR p.published IS NULL);
 ```
 
 ### Unions
 
-The query builder also provides a quick way to "union" two queries together. 
-For example, you may create an initial query and use the 
+The query builder also provides a quick way to "union" two queries together.
+For example, you may create an initial query and use the
 `union()`, `unionAll()` and `unionDistinct() `method to union it with a second query:
 
 ```php
 $select = $connection->select()
     ->from('table1')
     ->columns('id');
-    
+
 $select2 = $connection->select()
     ->from('table2')
     ->columns('id');
@@ -293,15 +299,15 @@ SELECT `id` FROM `table1` UNION SELECT `id` FROM `table2`;
 
 Simple Where Clauses
 
-You may use the where method on a query builder instance 
-to add where clauses to the query. The most basic call 
-to where requires three arguments. The first argument is 
-the name of the column. The second argument is an operator, 
-which can be any of the database's supported operators. 
+You may use the where method on a query builder instance
+to add where clauses to the query. The most basic call
+to where requires three arguments. The first argument is
+the name of the column. The second argument is an operator,
+which can be any of the database's supported operators.
 
 Finally, the third argument is the value to evaluate against the column.
 
-For example, here is a query that verifies the value 
+For example, here is a query that verifies the value
 of the "votes" column is equal to 100:
 
 ```php
@@ -324,13 +330,13 @@ $rows = $connection->select()
     ->where('votes', '>=', 100)
     ->execute()
     ->fetchAll();
-    
+
 $rows = $connection->select()
     ->from('users')
     ->where('votes', '<>', 100)
     ->execute()
     ->fetchAll();
-    
+
 $rows = $connection->select()
     ->from('users')
     ->where('name', 'like', 'D%')
@@ -355,7 +361,7 @@ SELECT * FROM `users` WHERE `status` = '1' AND `subscribed` <> '1';
 
 #### Or Statements
 
-ou may chain where constraints together as well as add OR clauses to the query. 
+ou may chain where constraints together as well as add OR clauses to the query.
 The orWhere method accepts the same arguments as the where method:
 
 ```php
@@ -386,7 +392,7 @@ $rows = $connection->select()
 ```sql
 SELECT * FROM `users` WHERE `votes` BETWEEN '1' AND '100';
 ```
- 
+
 
 ```php
 $rows = $connection->select()
@@ -483,7 +489,7 @@ $rows = $connection->select()
 SELECT * FROM `users` WHERE `users`.`id` = `posts`.`user_id`;
 ```
 
-The whereColumn method can also be called multiple times to add multiple conditions. 
+The whereColumn method can also be called multiple times to add multiple conditions.
 These conditions will be joined using the and operator:
 
 ```php
@@ -496,8 +502,8 @@ $rows = $connection->select()
 ```
 
 ```sql
-SELECT * 
-FROM `users` 
+SELECT *
+FROM `users`
 WHERE `first_name` = `last_name`
 AND `updated_at` = `created_at`;
 ```
@@ -544,7 +550,7 @@ $query = $connection->select()
     ->columns('id', 'username')
     ->from('users')
     ->whereRaw('status <> 1');
-    
+
 $rows = $query->execute()->fetchAll();
 ```
 
@@ -608,7 +614,7 @@ $rows = $connection->select()
 SELECT * FROM `users` LIMIT 10;
 ```
 
- 
+
 
 ```php
 $rows = $connection->select()
@@ -635,8 +641,8 @@ $rows = $connection->select()
 ```
 
 ```sql
-SELECT * 
-FROM `users` 
+SELECT *
+FROM `users`
 GROUP BY `id`, `username` ASC
 HAVING `username` = 'admin';
 ```
@@ -692,7 +698,7 @@ SELECT SUM(`amount`) AS `sum_amount` FROM `payments`;
 
 *This new feature is under construction*
 
-Whenever you're missing support for some vendor specific function, 
+Whenever you're missing support for some vendor specific function,
 please use plain SQL templating:
 
 {% raw %}
@@ -703,10 +709,10 @@ $query->func()->custom('substring_index(%s, %s, %s)', $string, $delimiter, $numb
 
 ### Raw Expressions
 
-Sometimes you may need to use a raw expression in a query. 
+Sometimes you may need to use a raw expression in a query.
 
-> These expressions will be injected into the query as strings, 
-so be careful not to create any SQL injection! 
+> These expressions will be injected into the query as strings,
+so be careful not to create any SQL injection!
 
 To create a raw expression, you can use the `raw` method:
 
@@ -717,7 +723,7 @@ $query->columns($query->raw('count(*) AS user_count'), 'status');
 
 $query->where('status', '<>', 1);
 $query->groupBy('status');
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 Output:
@@ -746,7 +752,7 @@ Example 3:
 $query = $connection->select()->from('payments');
 
 $query = $query->columns($query->raw('MAX(amount)'), $query->raw('MIN(amount)'))
-    
+
 $rows = $query->execute()->fetchAll() ?: [];
 ```
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\Connection;
-use Odan\Database\Schema;
-use Odan\Database\SelectQuery;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use Selective\Database\Connection;
+use Selective\Database\Schema;
+use Selective\Database\SelectQuery;
 
 /**
  * ConnectionTest.
@@ -75,7 +75,7 @@ abstract class BaseTest extends TestCase
     {
         $host = '127.0.0.1';
         $username = 'root';
-        $password = '';
+        $password = isset($_SERVER['GITHUB_ACTIONS']) ? 'root' : '';
         $charset = 'utf8';
         $collate = 'utf8_unicode_ci';
 

@@ -1,1 +1,13 @@
-theme: jekyll-theme-cayman
+plugins:
+  - jekyll-include-cache
+
+remote_theme: "pmarsceill/just-the-docs"
+
+# Name of your site (displayed in the header)
+name: Database
+
+# Name of website (site.title)
+title: Database
+
+# Short description of your site
+description: A SQL query builder

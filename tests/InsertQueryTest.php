@@ -1,11 +1,11 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\InsertQuery;
+use Selective\Database\InsertQuery;
 
 /**
- * @coversDefaultClass \Odan\Database\InsertQuery
+ * @coversDefaultClass \Selective\Database\InsertQuery
  */
 class InsertQueryTest extends BaseTest
 {

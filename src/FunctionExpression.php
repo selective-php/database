@@ -1,6 +1,6 @@
 <?php
 
-namespace Odan\Database;
+namespace Selective\Database;
 
 /**
  * Contains methods related to generating Expression objects

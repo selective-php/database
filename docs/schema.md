@@ -1,9 +1,9 @@
 ## Schema
 
-This class is a utility to modify database and table schemas. 
+This class is a utility to modify database and table schemas.
 
 ```php
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 
 $connection = new Connection($dsn, $username, $password, $options);
 $schema = new \Odan\Database\Schema($connection);
@@ -97,7 +97,7 @@ Copy an existing table to a new table:
 $success = $schema->copyTable('from', 'to');
 ```
 
-### Get all column names of a table 
+### Get all column names of a table
 
 ```php
 $columns = $schema->getColumnNames('my_table');

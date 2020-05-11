@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\FunctionBuilder;
-use Odan\Database\FunctionExpression;
-use Odan\Database\RawExp;
+use Selective\Database\FunctionBuilder;
+use Selective\Database\FunctionExpression;
+use Selective\Database\RawExp;
 
 /**
- * @coversDefaultClass \Odan\Database\FunctionBuilder
+ * @coversDefaultClass \Selective\Database\FunctionBuilder
  */
 class FunctionBuilderTest extends BaseTest
 {

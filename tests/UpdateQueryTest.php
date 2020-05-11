@@ -1,12 +1,12 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\RawExp;
-use Odan\Database\UpdateQuery;
+use Selective\Database\RawExp;
+use Selective\Database\UpdateQuery;
 
 /**
- * @coversDefaultClass \Odan\Database\UpdateQuery
+ * @coversDefaultClass \Selective\Database\UpdateQuery
  */
 class UpdateQueryTest extends BaseTest
 {

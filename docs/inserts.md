@@ -1,9 +1,15 @@
+---
+layout: default
+title: Inserts
+nav_order: 3
+---
+
 ## Inserts
 
 Create an insert object:
 
 ```php
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 
 $connection = new Connection($dsn, $username, $password, $options);
 $query = $connection->insert();
@@ -11,8 +17,8 @@ $query = $connection->insert();
 
 ### Insert A Single Row
 
-The query builder also provides an insert method for inserting 
-records into the database table. 
+The query builder also provides an insert method for inserting
+records into the database table.
 
 The insert method accepts an array of column names and values:
 
@@ -23,8 +29,8 @@ $connection->insert()
     ->execute();
 ```
 
-You may even insert several records into the table with a single call 
-to insert by passing an array of arrays. Each array represents a 
+You may even insert several records into the table with a single call
+to insert by passing an array of arrays. Each array represents a
 row to be inserted into the table:
 
 ```php
@@ -37,7 +43,7 @@ $connection->insert()
 
 ### Auto-Incrementing IDs
 
-If the table has an auto-incrementing id, 
+If the table has an auto-incrementing id,
 use the insertGetId method to insert a record and then retrieve the ID:
 
 ```php
@@ -53,7 +59,7 @@ $connection->insert()
     ->into('users')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->execute();
-    
+
 $userId = $connection->lastInsertId();
 ```
 
@@ -67,7 +73,7 @@ $stmt = $connection->insert()
     ->into('users')
     ->set(['email' => 'john@example.com', 'votes' => 0])
     ->prepare();
-    
+
 $stmt->execute();
 $rowCount = $stmt->rowCount(); // 1
 ```

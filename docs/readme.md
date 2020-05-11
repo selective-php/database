@@ -1,3 +1,10 @@
+---
+layout: default
+title: Home
+nav_order: 1
+description: "Database"
+---
+
 # Documentation
 
 * [Connection](#connection)
@@ -9,7 +16,7 @@
 
 ## Introduction
 
-The database query builder provides a convenient, fluent interface for creating and executing database queries. 
+The database query builder provides a convenient, fluent interface for creating and executing database queries.
 It can be used to perform most database operations in your application and works on all supported database systems (MySql).
 
 The query builder uses quoting to protect your application against SQL injection attacks.
@@ -21,7 +28,7 @@ Create a new database Connection:
 ```php
 <?php
 
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 use PDO;
 
 $host = '127.0.0.1';

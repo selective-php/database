@@ -1,11 +1,11 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\RawExp;
+use Selective\Database\RawExp;
 
 /**
- * @coversDefaultClass \Odan\Database\RawExp
+ * @coversDefaultClass \Selective\Database\RawExp
  */
 class RawExpTest extends BaseTest
 {

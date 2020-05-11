@@ -1,5 +1,5 @@
 {
-    "name": "odan/database",
+    "name": "selective/database",
     "type": "library",
     "description": "A sql query builder",
     "keywords": [
@@ -9,7 +9,7 @@
         "builder",
         "database"
     ],
-    "homepage": "https://github.com/odan/database",
+    "homepage": "https://github.com/selective-php/database",
     "license": "MIT",
     "require-dev": {
         "overtrue/phplint": "^1.1",
@@ -41,12 +41,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Odan\\Database\\": "src"
+            "Selective\\Database\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Odan\\Database\\Test\\": "tests"
+            "Selective\\Database\\Test\\": "tests"
         }
     },
     "config": {

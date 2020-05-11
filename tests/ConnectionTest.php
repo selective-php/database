@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 use PDO;
 
 /**
- * @coversDefaultClass \Odan\Database\Connection
+ * @coversDefaultClass \Selective\Database\Connection
  */
 class ConnectionTest extends BaseTest
 {

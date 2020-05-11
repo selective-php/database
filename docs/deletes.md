@@ -1,16 +1,23 @@
+---
+layout: default
+title: Deletes
+nav_order: 5
+---
+
+
 ## Deletes
 
 Create a delete object:
 
 ```php
-use Odan\Database\Connection;
+use Selective\Database\Connection;
 
 $connection = new Connection($dsn, $username, $password, $options);
 $delete = $connection->delete();
 ```
 
-The query builder may also be used to delete records from the 
-table via the delete method. You may constrain delete 
+The query builder may also be used to delete records from the
+table via the delete method. You may constrain delete
 statements by adding where clauses before calling the delete method:
 
 
@@ -22,8 +29,8 @@ $connection->delete()->from('users')->execute();
 $connection->delete()->from('users')->where('votes', '>', 100)->execute();
 ```
 
-If you wish to truncate the entire table, which will remove 
-all rows and reset the auto-incrementing ID to zero, 
+If you wish to truncate the entire table, which will remove
+all rows and reset the auto-incrementing ID to zero,
 you may use the truncate method:
 
 ```php
@@ -31,19 +38,19 @@ you may use the truncate method:
 $connection->delete()
     ->from('users')
     ->truncate()
-    ->execute(); 
+    ->execute();
 ```
 
 ### Order of Deletion
 
-If the DELETE statement includes an ORDER BY clause, rows are deleted in the 
-order specified by the clause. This is useful primarily in conjunction with LIMIT. 
+If the DELETE statement includes an ORDER BY clause, rows are deleted in the
+order specified by the clause. This is useful primarily in conjunction with LIMIT.
 
 ```php
 $connection->delete()
     ->from('some_logs')
     ->where('username', '=', 'jcole')
-    ->orderBy('created_at') 
+    ->orderBy('created_at')
     ->limit(1)
     ->execute();
 ```
@@ -52,7 +59,7 @@ ORDER BY also helps to delete rows in an order required to avoid referential int
 
 ### Delete Limit
 
-The LIMIT clause places a limit on the number of rows that can be deleted. 
+The LIMIT clause places a limit on the number of rows that can be deleted.
 
 ```php
 $connection->delete()
@@ -63,10 +70,10 @@ $connection->delete()
 
 ### Delete Low Priority
 
-If you specify `LOW_PRIORITY`, the server delays execution of the 
-DELETE until no other clients are reading from the table. 
+If you specify `LOW_PRIORITY`, the server delays execution of the
+DELETE until no other clients are reading from the table.
 
-This affects only storage engines that use only table-level 
+This affects only storage engines that use only table-level
 locking (such as MyISAM, MEMORY, and MERGE).
 
 ```php
@@ -78,9 +85,9 @@ $connection->delete()
 
 ### Delete and ignore errors
 
-The `IGNORE` modifier causes MySQL to ignore errors during the process of deleting rows. 
+The `IGNORE` modifier causes MySQL to ignore errors during the process of deleting rows.
 
-(Errors encountered during the parsing stage are processed in the usual manner.) 
+(Errors encountered during the parsing stage are processed in the usual manner.)
 
 Errors that are ignored due to the use of IGNORE are returned as warnings.
 
@@ -93,7 +100,7 @@ $connection->delete()
 
 ### Delete Quick modifier
 
-For MyISAM tables, if you use the QUICK modifier, the storage engine 
+For MyISAM tables, if you use the QUICK modifier, the storage engine
 does not merge index leaves during delete, which may speed up some kinds of delete operations.
 
 ```php

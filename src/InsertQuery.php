@@ -1,6 +1,6 @@
 <?php
 
-namespace Odan\Database;
+namespace Selective\Database;
 
 use PDO;
 use PDOStatement;

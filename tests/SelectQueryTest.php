@@ -1,14 +1,14 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\Operator;
-use Odan\Database\RawExp;
-use Odan\Database\SelectQuery;
+use Selective\Database\Operator;
+use Selective\Database\RawExp;
+use Selective\Database\SelectQuery;
 use PDOStatement;
 
 /**
- * @coversDefaultClass \Odan\Database\SelectQuery
+ * @coversDefaultClass \Selective\Database\SelectQuery
  */
 class SelectQueryTest extends BaseTest
 {

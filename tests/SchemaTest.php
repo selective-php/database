@@ -1,12 +1,12 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\Schema;
+use Selective\Database\Schema;
 use PDO;
 
 /**
- * @coversDefaultClass \Odan\Database\Schema
+ * @coversDefaultClass \Selective\Database\Schema
  */
 class SchemaTest extends BaseTest
 {

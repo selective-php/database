@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\Quoter;
-use Odan\Database\RawExp;
+use Selective\Database\Quoter;
+use Selective\Database\RawExp;
 
 /**
- * @coversDefaultClass \Odan\Database\Quoter
+ * @coversDefaultClass \Selective\Database\Quoter
  */
 class QuoterTest extends BaseTest
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Odan\Database\Test;
+namespace Selective\Database\Test;
 
-use Odan\Database\DeleteQuery;
+use Selective\Database\DeleteQuery;
 
 /**
- * @coversDefaultClass \Odan\Database\DeleteQuery
+ * @coversDefaultClass \Selective\Database\DeleteQuery
  */
 class DeleteQueryTest extends BaseTest
 {
