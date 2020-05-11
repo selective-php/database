@@ -174,7 +174,7 @@ final class Schema
     {
         [$dbName, $tableName] = $this->parseTableName($tableName);
 
-        $sql = 'SELECT table_name
+        $sql = 'SELECT TABLE_NAME
             FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = %s
             AND TABLE_NAME = %s;';

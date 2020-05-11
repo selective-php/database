@@ -31,7 +31,7 @@ abstract class BaseTest extends TestCase
     /**
      * Create test table.
      *
-     * @return int
+     * @return void
      */
     protected function createTestTable()
     {
@@ -48,7 +48,7 @@ abstract class BaseTest extends TestCase
             $schema->dropTable($table);
         }
 
-        $result = $db->getPdo()->exec('CREATE TABLE `test` (
+        $db->getPdo()->exec('CREATE TABLE `test` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `keyname` VARCHAR(255) COLLATE utf8_unicode_ci,
             `keyvalue` VARCHAR(255) COLLATE utf8_unicode_ci,
@@ -64,8 +64,6 @@ abstract class BaseTest extends TestCase
             KEY `updated_user_id` (`updated_user_id`),
             KEY `deleted_user_id` (`deleted_user_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;');
-
-        return $result;
     }
 
     /**

@@ -70,14 +70,10 @@ class SchemaTest extends BaseTest
         $result = $schema->existTable('notexistingdb.noexistingtable');
         $this->assertFalse($result);
 
-        $result = $this->createTestTable();
-        $this->assertSame(0, $result);
-
-        $result = $schema->existTable('database_test.test');
-        $this->assertTrue($result);
-
-        $result = $schema->existTable('notexistingdb.noexistingtable');
-        $this->assertFalse($result);
+        $this->createTestTable();
+        $this->assertTrue($schema->existTable('test'));
+        $this->assertTrue($schema->existTable('database_test.test'));
+        $this->assertFalse($schema->existTable('notexistingdb.noexistingtable'));
 
         $result = $schema->getTableSchemaId('test');
         $this->assertSame('567e34247e52e1ebec081130b34020384b0b7bbd', $result);
