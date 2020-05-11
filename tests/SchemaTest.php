@@ -107,10 +107,10 @@ class SchemaTest extends BaseTest
         $columns = $schema->getColumns('test');
         $this->assertNotEmpty($columns);
         $this->assertCount(10, $columns);
-        $this->assertSame('id', $columns[0]['column_name']);
-        $this->assertSame('keyname', $columns[1]['column_name']);
-        $this->assertSame('keyvalue', $columns[2]['column_name']);
-        $this->assertSame('boolvalue', $columns[3]['column_name']);
+        $this->assertSame('id', $columns[0]['COLUMN_NAME']);
+        $this->assertSame('keyname', $columns[1]['COLUMN_NAME']);
+        $this->assertSame('keyvalue', $columns[2]['COLUMN_NAME']);
+        $this->assertSame('boolvalue', $columns[3]['COLUMN_NAME']);
 
         $columns = $schema->getColumns('database_test.test');
         $this->assertNotEmpty($columns);

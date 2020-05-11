@@ -3,6 +3,7 @@
 namespace Selective\Database;
 
 use PDO;
+use UnexpectedValueException;
 
 /**
  * Schema.
@@ -162,7 +163,7 @@ final class Schema
 
         $result = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row['table_name'];
+            $result[] = $row['TABLE_NAME'];
         }
 
         return $result;
@@ -187,7 +188,7 @@ final class Schema
         $sql = sprintf($sql, $dbName, $tableName);
         $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
 
-        return isset($row['table_name']);
+        return isset($row['TABLE_NAME']);
     }
 
     /**
@@ -285,7 +286,7 @@ final class Schema
     {
         $result = [];
         foreach ($this->getColumns($tableName) as $value) {
-            $field = $value['column_name'];
+            $field = $value['COLUMN_NAME'];
             $result[$field] = $field;
         }
 
@@ -303,6 +304,7 @@ final class Schema
     {
         $sql = 'SELECT
             column_name,
+            ordinal_position,
             column_default,
             is_nullable,
             data_type,
@@ -319,7 +321,8 @@ final class Schema
             column_comment
             FROM information_schema.columns
             WHERE table_schema = %s
-            AND table_name = %s;';
+            AND table_name = %s;
+            ORDER BY ordinal_position';
 
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
@@ -327,6 +330,35 @@ final class Schema
         $result = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return $result ?: [];
+    }
+
+    /**
+     * Get table id.
+     *
+     * @param string $tableName The table name
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return int The tabl id
+     */
+    private function getTableId(string $tableName): int
+    {
+        $sql = "SELECT
+            TABLE_ID
+            FROM INFORMATION_SCHEMA.INNODB_TABLES WHERE NAME = CONCAT('%s', '/', '%s')
+            WHERE table_schema = %s
+            AND table_name = %s;";
+
+        [$dbName, $tableName] = $this->parseTableName($tableName);
+        $sql = sprintf($sql, $dbName, $tableName);
+
+        $result = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!isset($result['TABLE_ID'])) {
+            throw new UnexpectedValueException(sprintf('Table ID not found: %s', $tableName));
+        }
+
+        return (int)$result['TABLE_ID'];
     }
 
     /**
