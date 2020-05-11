@@ -211,13 +211,11 @@ final class Schema
      *
      * @param string $tableName The table name
      *
-     * @return bool Success
+     * @return void
      */
-    public function dropTable(string $tableName): bool
+    public function dropTable(string $tableName): void
     {
         $this->pdo->exec(sprintf('DROP TABLE IF EXISTS %s;', $this->quoter->quoteName($tableName)));
-
-        return true;
     }
 
     /**
@@ -226,13 +224,11 @@ final class Schema
      *
      * @param string $tableName The table name
      *
-     * @return bool Success
+     * @return void
      */
-    public function truncateTable(string $tableName): bool
+    public function truncateTable(string $tableName): void
     {
         $this->pdo->exec(sprintf('TRUNCATE TABLE %s;', $this->quoter->quoteName($tableName)));
-
-        return true;
     }
 
     /**
@@ -241,15 +237,13 @@ final class Schema
      * @param string $from Old table name
      * @param string $to New table name
      *
-     * @return bool Success
+     * @return void
      */
-    public function renameTable(string $from, string $to): bool
+    public function renameTable(string $from, string $to): void
     {
         $from = $this->quoter->quoteName($from);
         $to = $this->quoter->quoteName($to);
         $this->pdo->exec(sprintf('RENAME TABLE %s TO %s;', $from, $to));
-
-        return true;
     }
 
     /**
@@ -258,15 +252,13 @@ final class Schema
      * @param string $tableNameSource Source table name
      * @param string $tableNameDestination New table name
      *
-     * @return bool Success
+     * @return void
      */
-    public function copyTable(string $tableNameSource, string $tableNameDestination): bool
+    public function copyTable(string $tableNameSource, string $tableNameDestination): void
     {
         $tableNameSource = $this->quoter->quoteName($tableNameSource);
         $tableNameDestination = $this->quoter->quoteName($tableNameDestination);
         $this->pdo->exec(sprintf('CREATE TABLE %s LIKE %s;', $tableNameDestination, $tableNameSource));
-
-        return true;
     }
 
     /**

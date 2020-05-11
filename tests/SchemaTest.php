@@ -58,8 +58,7 @@ class SchemaTest extends BaseTest
         $schema = $this->getSchema();
 
         if ($schema->existTable('test')) {
-            $result = $schema->dropTable('test');
-            $this->assertTrue($result);
+            $schema->dropTable('test');
         }
 
         $result = $schema->existTable('test');
@@ -172,8 +171,7 @@ class SchemaTest extends BaseTest
         $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
         $this->assertSame('3', $result);
 
-        $result = $schema->truncateTable('test');
-        $this->assertTrue($result);
+        $schema->truncateTable('test');
 
         $query = $db->select()->from('test');
         $result = $query->columns($query->func()->count()->alias('count'))->execute()->fetchColumn();
@@ -231,26 +229,20 @@ class SchemaTest extends BaseTest
         $stmt->execute();
         $this->assertSame(0, $stmt->rowCount());
 
-        $result = $schema->renameTable('test', 'temp');
-        $this->assertTrue($result);
+        $schema->renameTable('test', 'temp');
+        $this->assertTrue($schema->existTable('temp'));
 
-        $result = $schema->renameTable('temp', 'test');
-        $this->assertTrue($result);
+        $schema->renameTable('temp', 'test');
+        $this->assertTrue($schema->existTable('test'));
 
-        $result = $schema->copyTable('test', 'test_copy');
-        $this->assertTrue($result);
-
-        $result = $schema->existTable('test_copy');
-        $this->assertTrue($result);
+        $schema->copyTable('test', 'test_copy');
+        $this->assertTrue($schema->existTable('test_copy'));
 
         $schema->dropTable('test_copy');
 
         // With data
-        $result = $schema->copyTable('test', 'test_copy');
-        $this->assertTrue($result);
-
-        $result = $schema->existTable('test_copy');
-        $this->assertTrue($result);
+        $schema->copyTable('test', 'test_copy');
+        $this->assertTrue($schema->existTable('test_copy'));
 
         $schema->dropTable('test_copy');
     }
@@ -276,7 +268,7 @@ class SchemaTest extends BaseTest
     public function testRenameTable()
     {
         $schema = $this->getSchema();
-        $this->assertTrue($schema->renameTable('test', 'test_copy'));
+        $schema->renameTable('test', 'test_copy');
         $this->assertTrue($schema->existTable('test_copy'));
         $this->assertFalse($schema->existTable('test'));
     }
@@ -289,7 +281,7 @@ class SchemaTest extends BaseTest
     public function testCopyTable()
     {
         $schema = $this->getSchema();
-        $this->assertTrue($schema->copyTable('test', 'test_copy'));
+        $schema->copyTable('test', 'test_copy');
         $this->assertTrue($schema->existTable('test_copy'));
         $this->assertTrue($schema->existTable('test'));
     }
