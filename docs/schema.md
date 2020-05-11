@@ -1,3 +1,9 @@
+---
+layout: default
+title: Schema
+nav_order: 6
+---
+
 ## Schema
 
 This class is a utility to modify database and table schemas.
