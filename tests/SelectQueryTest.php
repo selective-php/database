@@ -182,7 +182,7 @@ class SelectQueryTest extends BaseTest
                     $subSelect->columns([new RawExp('MAX(payments.amount)')])
                         ->from('payments')
                         ->alias('max_amount'); // AS max_amount
-                }
+                },
             ])
             ->from('test');
 
@@ -648,5 +648,4 @@ class SelectQueryTest extends BaseTest
 
         $this->assertEquals('SELECT count(*) AS user_count,`status` FROM `payments`;', $query->build());
     }
-
 }

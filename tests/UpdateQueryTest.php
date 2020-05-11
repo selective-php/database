@@ -107,8 +107,10 @@ class UpdateQueryTest extends BaseTest
         $update = $this->update()->table('test')->set(['username' => 'admin'])
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
-        $this->assertSame("UPDATE `test` SET `username`='admin' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
-            $update->build());
+        $this->assertSame(
+            "UPDATE `test` SET `username`='admin' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
+            $update->build()
+        );
     }
 
     /**
@@ -122,14 +124,18 @@ class UpdateQueryTest extends BaseTest
         $update = $this->update()->table('users')->increment('voted', 1)
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
-        $this->assertSame("UPDATE `users` SET `voted`=`voted`+'1' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
-            $update->build());
+        $this->assertSame(
+            "UPDATE `users` SET `voted`=`voted`+'1' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
+            $update->build()
+        );
 
         $update = $this->update()->table('users')->decrement('voted', 10)
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
-        $this->assertSame("UPDATE `users` SET `voted`=`voted`-'10' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
-            $update->build());
+        $this->assertSame(
+            "UPDATE `users` SET `voted`=`voted`-'10' WHERE `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
+            $update->build()
+        );
 
         $update = $this->update()->table('users')->set(['votes' => new RawExp('votes+1')])->where('id', '=', '1');
         $this->assertSame("UPDATE `users` SET `votes`=votes+1 WHERE `id` = '1';", $update->build());

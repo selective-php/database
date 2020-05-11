@@ -128,5 +128,4 @@ class InsertQueryTest extends BaseTest
         $insert->onDuplicateKeyUpdate(['username' => 'admin-01']);
         $this->assertSame("INSERT IGNORE INTO `test` SET `username`='admin' ON DUPLICATE KEY UPDATE `username`='admin-01';", $insert->build());
     }
-
 }
