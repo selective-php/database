@@ -107,7 +107,7 @@ $rows = $query->execute()->fetchAll();
 SELECT `id`,`username`,`first_name` AS `firstName` FROM `users`;
 ```
 
-Select columns by array:
+Select columns with an array:
 
 ```php
 $query = $connection->select()->from('test');
