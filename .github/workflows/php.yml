@@ -45,7 +45,7 @@ jobs:
         run: sudo systemctl start mysql
 
       - name: Create database
-        run: mysql -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
+        run: mysql -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS database_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
 
       - name: Validate composer.json and composer.lock
         run: composer validate
