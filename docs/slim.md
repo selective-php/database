@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Selects
+title: Slim 4 integration
 nav_order: 7
 ---
 
