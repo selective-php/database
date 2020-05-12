@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Slim 4 integration
-nav_order: 7
+nav_order: 8
 ---
 
 # Slim 4 integration
