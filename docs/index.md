@@ -7,13 +7,6 @@ description: "Database"
 
 # Documentation
 
-* [Connection](#connection)
-* [Select](selects.md)
-* [Insert](inserts.md)
-* [Update](updates.md)
-* [Delete](deletes.md)
-* [Schema](schema.md)
-
 ## Introduction
 
 The database query builder provides a convenient, fluent interface for creating and executing database queries.
