@@ -21,34 +21,20 @@ It can be used to perform most database operations in your application and works
 
 The query builder uses quoting to protect your application against SQL injection attacks.
 
-## Connection
+## Installation
 
-Create a new database Connection:
+Install the component with Composer:
 
-```php
-<?php
-
-use Selective\Database\Connection;
-use PDO;
-
-$host = '127.0.0.1';
-$database = 'test';
-$username = 'root';
-$password = '';
-$charset = 'utf8';
-$collate = 'utf8_unicode_ci';
-$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
-
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_PERSISTENT => false,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate"
-];
-
-$pdo = new PDO($dsn, $username, $password, $options);
-
-$connection = new Connection($pdo);
+```shell
+composer require selective/database
 ```
 
-**Next page:** [Select](selects.md)
+## What's next
+
+* Read about how to create an [Connection](connection.md) object to build queries with it.
+
+## Framework integration
+
+* [Slim 4](slim.md)
+
+**Next page:** [Connection](connection.md)
