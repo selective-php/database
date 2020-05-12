@@ -108,7 +108,7 @@ use Selective\Database\Connection;
 class UserCreatorRepository
 {
     /**
-     * @var Connection The database connection and query builder factory
+     * @var Connection The database connection
      */
     private $connection;
 
