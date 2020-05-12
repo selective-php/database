@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Selects
+title: Connection
 nav_order: 2
 ---
 
