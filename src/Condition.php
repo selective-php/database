@@ -206,7 +206,7 @@ final class Condition
 
         // Append an opening parenthesis to the prior set of conditions,
         // with AND/OR as needed ...
-        if ($set) {
+        if (!empty($set)) {
             $set[] = new RawExp(strtoupper($andor) . ' (');
         } else {
             $set[] = new RawExp('(');
