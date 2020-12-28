@@ -14,12 +14,12 @@ final class FunctionBuilder
      *
      * @var Connection
      */
-    private $db;
+    private Connection $db;
 
     /**
      * Constructor.
      *
-     * @param Connection $db
+     * @param Connection $db The connection
      */
     public function __construct(Connection $db)
     {

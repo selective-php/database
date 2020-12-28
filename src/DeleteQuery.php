@@ -16,59 +16,59 @@ final class DeleteQuery implements QueryInterface
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * @var string Table name
      */
-    private $table;
+    private string $table;
 
     /**
      * @var string Priority modifier
      */
-    private $priority;
+    private string $priority;
 
     /**
      * Errors that occur while executing the DELETE statement are ignored.
      *
      * @var string Ignore modifier
      */
-    private $ignore;
+    private string $ignore;
 
     /**
      * @var string Ignore modifier
      */
-    private $quick;
+    private string $quick;
 
     /**
      * @var Condition Where conditions
      */
-    private $condition;
+    private Condition $condition;
 
     /**
      * @var array Order by
      */
-    private $orderBy = [];
+    private array $orderBy = [];
 
     /**
      * @var int Row count
      */
-    private $limit;
+    private int $limit;
 
     /**
      * @var bool Truncate
      */
-    private $truncate;
+    private bool $truncate = false;
 
     /**
      * Constructor.
      *
-     * @param Connection $connection
+     * @param Connection $connection The connection
      */
     public function __construct(Connection $connection)
     {
@@ -140,7 +140,7 @@ final class DeleteQuery implements QueryInterface
     /**
      * Where AND condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The condition (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -156,7 +156,7 @@ final class DeleteQuery implements QueryInterface
     /**
      * Where OR condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -310,9 +310,9 @@ final class DeleteQuery implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
     private function getLimitSql(array $sql): array
     {

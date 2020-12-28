@@ -127,7 +127,7 @@ final class UpdateQuery implements QueryInterface
     /**
      * Where AND condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -143,7 +143,7 @@ final class UpdateQuery implements QueryInterface
     /**
      * Where OR condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -188,13 +188,17 @@ final class UpdateQuery implements QueryInterface
      * Incrementing or decrementing the value of a given column.
      *
      * @param string $column The column to modify
-     * @param int $amount [optional] The amount by which the column should be incremented
+     * @param int $amount The amount by which the column should be incremented [optional]
      *
      * @return self
      */
     public function increment(string $column, int $amount = 1): self
     {
-        $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '+' . $this->quoter->quoteValue($amount));
+        $this->values[$column] = new RawExp(
+            $this->quoter->quoteName($column) .
+            '+' .
+            $this->quoter->quoteValue($amount)
+        );
 
         return $this;
     }
@@ -203,13 +207,15 @@ final class UpdateQuery implements QueryInterface
      * Decrementing the value of a given column.
      *
      * @param string $column The column to modify
-     * @param int $amount [optional] The amount by which the column should be decrement
+     * @param int $amount The amount by which the column should be decrement [optional]
      *
      * @return self
      */
     public function decrement(string $column, int $amount = 1): self
     {
-        $this->values[$column] = new RawExp($this->quoter->quoteName($column) . '-' . $this->quoter->quoteValue($amount));
+        $this->values[$column] = new RawExp(
+            $this->quoter->quoteName($column) . '-' . $this->quoter->quoteValue($amount)
+        );
 
         return $this;
     }

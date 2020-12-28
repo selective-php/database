@@ -47,7 +47,8 @@ class RawExpTest extends BaseTest
             ->where('status', '<>', 1)
             ->groupBy('status')
             ->build();
-        $this->assertSame("SELECT COUNT(*) AS user_count,`status` FROM `payments` WHERE `status` <> '1' GROUP BY `status`;", $select);
+        $this->assertSame('SELECT COUNT(*) AS user_count,`status` ' .
+            "FROM `payments` WHERE `status` <> '1' GROUP BY `status`;", $select);
     }
 
     /**

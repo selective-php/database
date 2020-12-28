@@ -8,11 +8,11 @@ nav_order: 8
 
 ## Requirements
 
-* PHP 7.2+
+* PHP 7.4+
 * MySQL 5.7+
 * Composer
 * [A Slim 4 application](https://odan.github.io/2019/11/05/slim4-tutorial.html)
-* A PSR-11 implementation, e.g. PHP-DI
+* A DI container (PSR-11), e.g. PHP-DI
 
 ## Installation
 
@@ -105,12 +105,12 @@ use Selective\Database\Connection;
 /**
  * Repository.
  */
-class UserCreatorRepository
+final class UserCreatorRepository
 {
     /**
      * @var Connection The database connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * The constructor.

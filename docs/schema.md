@@ -23,6 +23,8 @@ $databaseName = $schema->getDatabase();
 
 ### Change database
 
+**Deprecated**: Use `useDatabase` instead.
+
 ```php
 $schema->setDatabase('my_database');
 ```
@@ -132,4 +134,4 @@ Used to quickly compare table structures or schema versions.
 $hash = $schema->getTableSchemaId('my_table1', 'my_table2');
 ```
 
-**Next page:** [Index](readme.md)
+**Next page:** [Index](index.md)

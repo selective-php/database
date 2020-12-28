@@ -12,17 +12,17 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * Constructor.
      *
-     * @param Connection $connection
+     * @param Connection $connection The connection
      */
     public function __construct(Connection $connection)
     {
@@ -33,10 +33,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array $options
+     * @param array $sql The sql
+     * @param array $options The options
      *
-     * @return array
+     * @return array The sql
      */
     public function getSelectSql(array $sql, array $options = []): array
     {
@@ -48,10 +48,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array $inputColumns
+     * @param array $sql The sql
+     * @param array $inputColumns The input columns
      *
-     * @return array
+     * @return array The sql
      */
     public function getColumnsSql(array $sql, array $inputColumns): array
     {
@@ -101,10 +101,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array|null $join
+     * @param array $sql The sql
+     * @param array|null $join The join
      *
-     * @return array
+     * @return array The sql
      */
     public function getJoinSql(array $sql, array $join = null): array
     {
@@ -130,10 +130,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array $groupBy
+     * @param array $sql The sql
+     * @param array $groupBy The group by
      *
-     * @return array
+     * @return array The sql
      */
     public function getGroupBySql(array $sql, array $groupBy): array
     {
@@ -148,10 +148,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array $orderBy
+     * @param array $sql The sql
+     * @param array|null $orderBy The order
      *
-     * @return array
+     * @return array The sql
      */
     public function getOrderBySql(array $sql, array $orderBy = null): array
     {
@@ -166,11 +166,11 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param array $sql The sql
+     * @param int|null $limit The limit
+     * @param int|null $offset The offset
      *
-     * @return array
+     * @return array The sql
      */
     public function getLimitSql(array $sql, int $limit = null, int $offset = null): array
     {
@@ -189,10 +189,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array|null $unions
+     * @param array $sql The sql
+     * @param array|null $unions The unions
      *
-     * @return array
+     * @return array The sql
      */
     public function getUnionSql(array $sql, array $unions = null): array
     {
@@ -209,10 +209,10 @@ final class SelectQueryBuilder implements QueryInterface
     /**
      * Get sql.
      *
-     * @param string $sql
-     * @param string|null $alias
+     * @param string $sql The sql
+     * @param string|null $alias The alias
      *
-     * @return string $sql
+     * @return string $sql The sql
      */
     public function getAliasSql(string $sql, string $alias = null): string
     {

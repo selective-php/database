@@ -9,24 +9,19 @@ use Selective\Database\Schema;
 use Selective\Database\SelectQuery;
 
 /**
- * ConnectionTest.
+ * Test.
  */
 abstract class BaseTest extends TestCase
 {
     /**
-     * @var PDO
+     * @var Connection|null
      */
-    protected $pdo;
+    protected ?Connection $connection = null;
 
     /**
-     * @var Connection
+     * @var ?Schema
      */
-    protected $connection;
-
-    /**
-     * @var Schema
-     */
-    protected $schema;
+    protected ?Schema $schema = null;
 
     /**
      * Create test table.
@@ -48,7 +43,8 @@ abstract class BaseTest extends TestCase
             $schema->dropTable($table);
         }
 
-        $db->getPdo()->exec('CREATE TABLE `test` (
+        $db->getPdo()->exec(
+            'CREATE TABLE `test` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `keyname` VARCHAR(255) COLLATE utf8_unicode_ci,
             `keyvalue` VARCHAR(255) COLLATE utf8_unicode_ci,
@@ -63,7 +59,8 @@ abstract class BaseTest extends TestCase
             KEY `created_user_id` (`created_user_id`),
             KEY `updated_user_id` (`updated_user_id`),
             KEY `deleted_user_id` (`deleted_user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;');
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+        );
     }
 
     /**
@@ -78,17 +75,20 @@ abstract class BaseTest extends TestCase
         $password = isset($_SERVER['GITHUB_ACTIONS']) ? 'root' : '';
         $charset = 'utf8';
         $collate = 'utf8_unicode_ci';
-
-        return new PDO("mysql:host=$host;charset=$charset", $username, $password, [
+        $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_PERSISTENT => false,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset COLLATE $collate",
-        ]);
+        ];
+
+        return new PDO("mysql:host=$host;charset=$charset", $username, $password, $options);
     }
 
     /**
-     * @return Connection
+     * Get connection.
+     *
+     * @return Connection The connection
      */
     protected function getConnection(): Connection
     {

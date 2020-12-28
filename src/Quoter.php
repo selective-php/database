@@ -4,6 +4,7 @@ namespace Selective\Database;
 
 use PDO;
 use RuntimeException;
+use function array_key_first;
 
 /**
  * Quoter.
@@ -13,10 +14,10 @@ final class Quoter
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
-     * Constructor.
+     * The constructor.
      *
      * @param Connection $connection The connection instance
      */
@@ -28,9 +29,9 @@ final class Quoter
     /**
      * Quote array values.
      *
-     * @param array $array
+     * @param array $array The values
      *
-     * @return array
+     * @return array The quoted values
      */
     public function quoteArray(array $array): array
     {
@@ -105,7 +106,7 @@ final class Quoter
     public function quoteName($identifier): string
     {
         if (is_array($identifier)) {
-            $key = \array_key_first($identifier);
+            $key = (string)array_key_first($identifier);
             $value = $identifier[$key];
 
             if ($value instanceof RawExp) {

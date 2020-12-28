@@ -102,7 +102,10 @@ class DeleteQueryTest extends BaseTest
         $delete = $this->delete()->from('test')->where('id', '=', '1')
             ->where('test.id', '=', 1)
             ->orWhere('db.test.id', '>', 2);
-        $this->assertSame("DELETE FROM `test` WHERE `id` = '1' AND `test`.`id` = '1' OR `db`.`test`.`id` > '2';", $delete->build());
+        $this->assertSame(
+            "DELETE FROM `test` WHERE `id` = '1' AND `test`.`id` = '1' OR `db`.`test`.`id` > '2';",
+            $delete->build()
+        );
     }
 
     /**
@@ -114,6 +117,9 @@ class DeleteQueryTest extends BaseTest
         $this->assertSame('TRUNCATE TABLE `test`;', $delete->build());
     }
 
+    /**
+     * Setup.
+     */
     protected function setUp(): void
     {
         parent::setUp();

@@ -136,10 +136,22 @@ class FunctionBuilderTest extends BaseTest
         $this->assertEquals("IFNULL(`users`.`email`, 'test')", $function->getValue());
 
         // Full query
-        $query->columns([$func->call('concat', $func->field('users.first_name'), '-', $func->field('users.last_name'))]);
+        $query->columns(
+            [
+                $func->call(
+                    'concat',
+                    $func->field('users.first_name'),
+                    '-',
+                    $func->field('users.last_name')
+                ),
+            ]
+        );
         $query->from('users');
 
-        $this->assertEquals("SELECT CONCAT(`users`.`first_name`, '-', `users`.`last_name`) FROM `users`;", $query->build());
+        $this->assertEquals(
+            "SELECT CONCAT(`users`.`first_name`, '-', `users`.`last_name`) FROM `users`;",
+            $query->build()
+        );
 
         // nested functions
         $query = $this->getConnection()->select();

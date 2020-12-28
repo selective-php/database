@@ -10,8 +10,16 @@
     <file>./tests</file>
 
     <rule ref="PSR2"></rule>
-    <!-- <rule ref="PSR12"></rule> -->
+    <rule ref="PSR12"></rule>
 
+    <rule ref="PSR2">
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+    </rule>
+    <rule ref="PSR12">
+        <exclude name="PSR12.Files.DeclareStatement.SpaceFoundAfterDirective"/>
+        <exclude name="PSR12.Files.DeclareStatement.SpaceFoundBeforeDirectiveValue"/>
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+    </rule>
     <rule ref="Squiz.Commenting.ClassComment">
         <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed"/>
         <type>warning</type>

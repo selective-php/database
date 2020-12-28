@@ -4,17 +4,20 @@ namespace Selective\Database;
 
 use PDO;
 
+/**
+ * Database connection.
+ */
 final class Connection
 {
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * The constructor.

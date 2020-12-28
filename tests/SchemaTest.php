@@ -122,10 +122,12 @@ class SchemaTest extends BaseTest
         $this->assertNotEmpty($columns);
         $this->assertCount(10, $columns);
 
-        $insert = $this->getConnection()->insert()->into('test')->set([
-            'keyname' => 'test',
-            'keyvalue' => '123',
-        ]);
+        $insert = $this->getConnection()->insert()->into('test')->set(
+            [
+                'keyname' => 'test',
+                'keyvalue' => '123',
+            ]
+        );
         $stmt = $insert->prepare();
         $stmt->execute();
         $this->assertTrue($stmt->rowCount() > 0);
@@ -133,17 +135,21 @@ class SchemaTest extends BaseTest
         // With ON DUPLICATE KEY UPDATE, the affected-rows value per row
         // is 1 if the row is inserted as a new row, and 2 if an existing row is updated.
         // http://dev.mysql.com/doc/refman/5.0/en/insert-on-duplicate.html
-        $insert = $db->insert()->into('test')->set([
-            'id' => 1,
-            'keyname' => 'test',
-            'keyvalue' => '123',
-            'boolvalue' => 1,
-        ])->onDuplicateKeyUpdate([
-            'id' => 1,
-            'keyname' => 'testx',
-            'keyvalue' => '123',
-            'boolvalue' => 1,
-        ]);
+        $insert = $db->insert()->into('test')->set(
+            [
+                'id' => 1,
+                'keyname' => 'test',
+                'keyvalue' => '123',
+                'boolvalue' => 1,
+            ]
+        )->onDuplicateKeyUpdate(
+            [
+                'id' => 1,
+                'keyname' => 'testx',
+                'keyvalue' => '123',
+                'boolvalue' => 1,
+            ]
+        );
         $stmt = $insert->prepare();
         $stmt->execute();
         $result = $stmt->rowCount();
@@ -152,7 +158,8 @@ class SchemaTest extends BaseTest
         $result = $db->getPdo()->lastInsertId();
         $this->assertSame('1', $result);
 
-        $result = $db->getPdo()->query('SELECT COUNT(*) AS count FROM `test`')->fetchAll(PDO::FETCH_ASSOC);
+        $query = $db->select()->from('test');
+        $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchAll();
         $this->assertSame([0 => ['count' => '1']], $result);
 
         $query = $db->select()->from('test');
@@ -189,16 +196,19 @@ class SchemaTest extends BaseTest
         $this->assertSame(2, $result->rowCount());
 
         $result = $db->select()->from('test')->columns(['id', 'keyvalue'])->execute()->fetchAll();
-        $this->assertSame([
-            0 => [
-                'id' => '1',
-                'keyvalue' => '123',
+        $this->assertSame(
+            [
+                0 => [
+                    'id' => '1',
+                    'keyvalue' => '123',
+                ],
+                1 => [
+                    'id' => '2',
+                    'keyvalue' => '1234',
+                ],
             ],
-            1 => [
-                'id' => '2',
-                'keyvalue' => '1234',
-            ],
-        ], $result);
+            $result
+        );
 
         $db->delete()->from('test')->execute();
 
@@ -206,7 +216,8 @@ class SchemaTest extends BaseTest
         $result = $query->columns([$query->func()->count()->alias('count')])->execute()->fetchColumn();
         $this->assertSame('0', $result);
 
-        $result = $db->getPdo()->query("SHOW TABLE STATUS FROM `database_test` LIKE 'test';")->fetch();
+        $statement = $db->getPdo()->query("SHOW TABLE STATUS FROM `database_test` LIKE 'test';");
+        $result = $statement ? $statement->fetch() : null;
         $this->assertSame('3', $result['Auto_increment']);
 
         $rows = [];
@@ -217,7 +228,8 @@ class SchemaTest extends BaseTest
         $result->execute();
         $this->assertSame(100, $result->rowCount());
 
-        $result = $db->getPdo()->query('SELECT keyname,keyvalue FROM test;')->fetchAll(PDO::FETCH_ASSOC);
+        $statement = $db->getPdo()->query('SELECT keyname,keyvalue FROM test;');
+        $result = $statement ? $statement->fetchAll(PDO::FETCH_ASSOC) : null;
         $this->assertEquals($rows, $result);
 
         $fields = [

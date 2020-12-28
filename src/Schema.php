@@ -2,7 +2,10 @@
 
 namespace Selective\Database;
 
+use JsonException;
 use PDO;
+use PDOStatement;
+use RuntimeException;
 
 /**
  * Schema.
@@ -12,12 +15,12 @@ final class Schema
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * The constructor.
@@ -36,6 +39,8 @@ final class Schema
      * @param string $dbName The database name
      *
      * @return void
+     *
+     * @deprecated Use useDatabase instead
      */
     public function setDatabase(string $dbName): void
     {
@@ -49,7 +54,7 @@ final class Schema
      */
     public function getDatabase(): string
     {
-        return $this->pdo->query('SELECT database() AS dbname;')->fetchColumn();
+        return (string)$this->createStatement('SELECT database() AS dbname;')->fetchColumn();
     }
 
     /**
@@ -66,7 +71,7 @@ final class Schema
             WHERE SCHEMA_NAME = %s;';
 
         $sql = sprintf($sql, $this->quoter->quoteValue($dbName));
-        $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $row = $this->createStatement($sql)->fetch(PDO::FETCH_ASSOC);
 
         return !empty($row['SCHEMA_NAME']);
     }
@@ -74,7 +79,7 @@ final class Schema
     /**
      * Returns all databases.
      *
-     * @param string|null $like (optional) e.g. 'information%schema';
+     * @param string|null $like The optional like expression e.g. 'information%schema';
      *
      * @return array The database names
      */
@@ -85,7 +90,7 @@ final class Schema
             $sql = sprintf('SHOW DATABASES WHERE `database` LIKE %s;', $this->quoter->quoteValue($like));
         }
 
-        $statement = $this->pdo->query($sql);
+        $statement = $this->createStatement($sql);
 
         $result = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -110,11 +115,14 @@ final class Schema
         string $collate = 'utf8mb4_unicode_ci'
     ): void {
         $sql = 'CREATE DATABASE %s CHARACTER SET %s COLLATE %s;';
-        $sql = vsprintf($sql, [
-            $this->quoter->quoteName($dbName),
-            $this->quoter->quoteValue($characterSet),
-            $this->quoter->quoteValue($collate),
-        ]);
+        $sql = vsprintf(
+            $sql,
+            [
+                $this->quoter->quoteName($dbName),
+                $this->quoter->quoteValue($characterSet),
+                $this->quoter->quoteValue($collate),
+            ]
+        );
 
         $this->pdo->exec($sql);
     }
@@ -147,13 +155,16 @@ final class Schema
                 FROM INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_SCHEMA = database()';
         } else {
-            $sql = sprintf('SELECT TABLE_NAME
+            $sql = sprintf(
+                'SELECT TABLE_NAME
                 FROM INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_SCHEMA = database()
-                AND TABLE_NAME LIKE %s;', $this->quoter->quoteValue($like));
+                AND TABLE_NAME LIKE %s;',
+                $this->quoter->quoteValue($like)
+            );
         }
 
-        $statement = $this->pdo->query($sql);
+        $statement = $this->createStatement($sql);
 
         $result = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -180,7 +191,7 @@ final class Schema
             AND TABLE_NAME = %s;';
 
         $sql = sprintf($sql, $dbName, $tableName);
-        $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $row = $this->createStatement($sql)->fetch(PDO::FETCH_ASSOC);
 
         return isset($row['TABLE_NAME']);
     }
@@ -313,7 +324,7 @@ final class Schema
         [$dbName, $tableName] = $this->parseTableName($tableName);
         $sql = sprintf($sql, $dbName, $tableName);
 
-        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return (array)$this->createStatement($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -338,13 +349,37 @@ final class Schema
      *
      * @param string $tableName The table name
      *
+     * @throws JsonException
+     *
      * @return string The table schema hash
+     *
+     * @deprecated
      */
     public function getTableSchemaId(string $tableName): string
     {
         $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
-        $rows = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $this->createStatement($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-        return sha1(json_encode($rows));
+        return sha1((string)json_encode($rows, JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Create pdo statement.
+     *
+     * @param string $sql The sql
+     *
+     * @throws RuntimeException
+     *
+     * @return PDOStatement The statement
+     */
+    private function createStatement(string $sql): PDOStatement
+    {
+        $statement = $this->pdo->query($sql);
+
+        if (!$statement) {
+            throw new RuntimeException('Query could not be created');
+        }
+
+        return $statement;
     }
 }

@@ -14,27 +14,27 @@ final class SelectQuery implements QueryInterface
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * @var array
      */
-    private $columns = [];
+    private array $columns = [];
 
     /**
      * @var string|null
      */
-    private $alias;
+    private ?string $alias = null;
 
     /**
      * @var string|array
@@ -44,72 +44,72 @@ final class SelectQuery implements QueryInterface
     /**
      * @var array
      */
-    private $join = [];
+    private array $join = [];
 
     /**
      * @var array
      */
-    private $union = [];
+    private array $union = [];
 
     /**
      * @var Condition Where conditions
      */
-    private $condition;
+    private Condition $condition;
 
     /**
      * @var array
      */
-    private $orderBy = [];
+    private array $orderBy = [];
 
     /**
      * @var array
      */
-    private $groupBy = [];
+    private array $groupBy = [];
 
     /**
      * @var int|null
      */
-    private $limit;
+    private ?int $limit = null;
 
     /**
      * @var int|null
      */
-    private $offset;
+    private ?int $offset = null;
 
     /**
      * @var string
      */
-    private $distinct = '';
+    private string $distinct = '';
 
     /**
      * @var string
      */
-    private $calcFoundRows = '';
+    private string $calcFoundRows = '';
 
     /**
      * @var string
      */
-    private $bufferResult = '';
+    private string $bufferResult = '';
 
     /**
      * @var string
      */
-    private $resultSize = '';
+    private string $resultSize = '';
 
     /**
      * @var string
      */
-    private $straightJoin = '';
+    private string $straightJoin = '';
 
     /**
      * @var string
      */
-    private $highPriority = '';
+    private string $highPriority = '';
 
     /**
-     * Constructor.
+     * The constructor.
      *
-     * @param Connection $connection
+     * @param Connection $connection The connection
      */
     public function __construct(Connection $connection)
     {
@@ -246,7 +246,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Alias for sub selects.
      *
-     * @param string $alias
+     * @param string $alias The alias
      *
      * @return self
      */
@@ -398,7 +398,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Where AND condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -428,7 +428,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Where OR condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -459,7 +459,7 @@ final class SelectQuery implements QueryInterface
      * The whereColumn method may be used to verify that two columns are equal.
      *
      * @param string $column Name of the first column
-     * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
+     * @param string $comparison The comparison type (=,>=,<=,<>,is,is not, ....)
      * @param string $secondColumn Name of the second column
      *
      * @return self
@@ -476,7 +476,7 @@ final class SelectQuery implements QueryInterface
      * The whereColumn method may be used to verify that two columns are equal.
      *
      * @param string $column Name of the first column
-     * @param string $comparison comparison (=,>=,<=,<>,is,is not, ....)
+     * @param string $comparison The comparison (=,>=,<=,<>,is,is not, ....)
      * @param string $secondColumn Name of the second column
      *
      * @return self
@@ -506,7 +506,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Group by.
      *
-     * @param array ...$fields
+     * @param array ...$fields The fields
      *
      * @return self
      */
@@ -520,7 +520,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Add AND having condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -536,7 +536,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Add OR having condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array ...$conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
@@ -620,11 +620,19 @@ final class SelectQuery implements QueryInterface
     /**
      * Executes an SQL statement, returning a result set as a PDOStatement object.
      *
+     * @throws RuntimeException
+     *
      * @return PDOStatement The pdo statement
      */
     public function execute(): PDOStatement
     {
-        return $this->pdo->query($this->build());
+        $statement = $this->pdo->query($this->build());
+
+        if (!$statement instanceof PDOStatement) {
+            throw new RuntimeException('Query could not be created');
+        }
+
+        return $statement;
     }
 
     /**
@@ -658,7 +666,7 @@ final class SelectQuery implements QueryInterface
     /**
      * Build a SQL string.
      *
-     * @param bool $complete
+     * @param bool $complete The complete
      *
      * @return string SQL string
      */
@@ -667,14 +675,17 @@ final class SelectQuery implements QueryInterface
         $builder = new SelectQueryBuilder($this->connection);
 
         $sql = [];
-        $sql = $builder->getSelectSql($sql, [
-            $this->distinct,
-            $this->highPriority,
-            $this->straightJoin,
-            $this->resultSize,
-            $this->bufferResult,
-            $this->calcFoundRows,
-        ]);
+        $sql = $builder->getSelectSql(
+            $sql,
+            [
+                $this->distinct,
+                $this->highPriority,
+                $this->straightJoin,
+                $this->resultSize,
+                $this->bufferResult,
+                $this->calcFoundRows,
+            ]
+        );
         $sql = $builder->getColumnsSql($sql, $this->columns);
         $sql = $builder->getFromSql($sql, $this->from);
         $sql = $builder->getJoinSql($sql, $this->join);

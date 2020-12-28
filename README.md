@@ -16,14 +16,14 @@ A fluent SQL query builder.
 
 ## Installation
 
-```shell
+```
 composer require selective/database
 ```
 
 ## Requirements
 
-* PHP 7.2+
-* MySQL 5.7+, MariaDB
+* PHP 7.4+ or 8.0+
+* MySQL 5.7+ or MariaDB
 
 ## Documentation
 
@@ -44,4 +44,4 @@ If you discover any security related issues, please email instead of using the i
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

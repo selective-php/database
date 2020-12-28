@@ -155,7 +155,8 @@ class SelectQueryTest extends BaseTest
 
         $sql = $select->build();
         $this->assertSame(
-            'SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS `username2`,`id2`,`table`.`fieldname2` FROM `test`;',
+            'SELECT `id`,`username`,`first_name` AS `firstName`,`username` AS ' .
+            '`username2`,`id2`,`table`.`fieldname2` FROM `test`;',
             $sql
         );
     }
@@ -545,7 +546,8 @@ class SelectQueryTest extends BaseTest
         $query->orHavingRaw('brand LIKE %acme%');
 
         $this->assertSame(
-            'SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` HAVING COUNT(*) > 1 OR brand LIKE %acme%;',
+            'SELECT `state_id`,COUNT(*) FROM `table` GROUP BY `state_id`, `locality` ' .
+            'HAVING COUNT(*) > 1 OR brand LIKE %acme%;',
             $query->build()
         );
     }
@@ -566,7 +568,8 @@ class SelectQueryTest extends BaseTest
         );
 
         $select->innerJoin(['t2' => 'table2'], 't2.id', '=', 'test.user_id');
-        $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
+        $expected = 'SELECT `id` FROM `test` AS `t` INNER JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` ' .
+            'INNER JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
         $this->assertSame($expected, $select->build());
     }
 
@@ -581,7 +584,8 @@ class SelectQueryTest extends BaseTest
             ->joinRaw(['u' => 'users'], 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
 
         $this->assertSame(
-            'SELECT `id` FROM `test` INNER JOIN `users` AS `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            'SELECT `id` FROM `test` INNER JOIN `users` AS `u` ON (t2.a=t1.a AND t3.b=t1.b ' .
+            'AND t4.c=t1.c OR t2.b IS NULL);',
             $select->build()
         );
     }
@@ -597,7 +601,8 @@ class SelectQueryTest extends BaseTest
             ->leftJoinRaw(['u' => 'users'], 't2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL');
 
         $this->assertSame(
-            'SELECT `id` FROM `test` LEFT JOIN `users` AS `u` ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
+            'SELECT `id` FROM `test` LEFT JOIN `users` AS `u` ' .
+            'ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c OR t2.b IS NULL);',
             $select->build()
         );
     }
@@ -618,7 +623,9 @@ class SelectQueryTest extends BaseTest
         );
 
         $select->leftJoin(['t2' => 'table2'], 't2.id', '=', 'test.user_id');
-        $expected = 'SELECT `id` FROM `test` LEFT JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
+        $expected = 'SELECT `id` FROM `test` ' .
+            'LEFT JOIN `users` AS `u` ON `u`.`id` = `test`.`user_id` ' .
+            'LEFT JOIN `table2` AS `t2` ON `t2`.`id` = `test`.`user_id`;';
         $this->assertSame($expected, $select->build());
     }
 

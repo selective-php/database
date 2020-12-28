@@ -4,39 +4,42 @@ namespace Selective\Database;
 
 use Closure;
 
+/**
+ * Condition.
+ */
 final class Condition
 {
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * PDO Connection.
      *
      * @var QueryInterface
      */
-    private $query;
+    private QueryInterface $query;
 
     /**
      * Where clause.
      *
      * @var array
      */
-    private $where = [];
+    private array $where = [];
 
     /**
      * Having clause.
      *
      * @var array
      */
-    private $having = [];
+    private array $having = [];
 
     /**
      * Constructor.
      *
-     * @param Connection $connection
-     * @param QueryInterface $query
+     * @param Connection $connection The connection
+     * @param QueryInterface $query The query
      */
     public function __construct(Connection $connection, QueryInterface $query)
     {
@@ -47,9 +50,9 @@ final class Condition
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The sql
      */
     public function getWhereSql(array $sql): array
     {
@@ -59,11 +62,11 @@ final class Condition
     /**
      * Get sql.
      *
-     * @param array $sql
-     * @param array $where
-     * @param string $conditionType
+     * @param array $sql The sql
+     * @param array $where The where
+     * @param string $conditionType The condition type
      *
-     * @return array
+     * @return array The sql
      */
     public function getConditionSql(array $sql, array $where, string $conditionType): array
     {
@@ -104,20 +107,22 @@ final class Condition
      *
      * https://dev.mysql.com/doc/refman/5.7/en/comparison-operators.html
      *
-     * @param mixed $rightField
-     * @param mixed $comparison
+     * @param mixed $rightField The right field
+     * @param mixed $comparison The comparison
      *
-     * @return array
+     * @return array The value
      */
     private function getRightFieldValue($rightField, $comparison): array
     {
         if ($comparison === 'in' || $comparison === 'not in') {
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
-        } elseif ($comparison === 'greatest' ||
+        } elseif (
+            $comparison === 'greatest' ||
             $comparison === 'least' ||
             $comparison === 'coalesce' ||
             $comparison === 'interval' ||
-            $comparison === 'strcmp') {
+            $comparison === 'strcmp'
+        ) {
             $comparison = '= ' . $comparison;
             $rightField = '(' . implode(', ', $this->quoter->quoteArray((array)$rightField)) . ')';
         } elseif ($comparison === '=' && $rightField === null) {
@@ -142,9 +147,9 @@ final class Condition
     /**
      * Get sql.
      *
-     * @param array $sql
+     * @param array $sql The sql
      *
-     * @return array
+     * @return array The result
      */
     public function getHavingSql(array $sql): array
     {
@@ -154,13 +159,13 @@ final class Condition
     /**
      * Where AND condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array $conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
      * @return self
      */
-    public function where($conditions): self
+    public function where(array $conditions): self
     {
         if ($conditions[0] instanceof Closure) {
             $this->addClauseCondClosure('where', 'AND', $conditions[0]);
@@ -175,17 +180,18 @@ final class Condition
     /**
      * Adds to a clause through a closure, enclosing within parentheses.
      *
-     * @param string $clause the clause to work with, typically 'where' or 'having'
-     * @param string $andor add the condition using this operator, typically 'AND' or 'OR'
-     * @param callable $closure the closure that adds to the clause
+     * @param string $clause The clause to work with, typically 'where' or 'having'
+     * @param string $andor Add the condition using this operator, typically 'AND' or 'OR'
+     * @param callable $closure The closure that adds to the clause
      *
      * @return void
      */
     private function addClauseCondClosure(string $clause, string $andor, callable $closure): void
     {
-        // retain the prior set of conditions, and temporarily reset the clause
+        // Retain the prior set of conditions, and temporarily reset the clause
         // for the closure to work with (otherwise there will be an extraneous
         // opening AND/OR keyword)
+        /** @var array $set */
         $set = $this->$clause;
         $this->$clause = [];
         // invoke the closure, which will re-populate the $this->$clause
@@ -198,7 +204,7 @@ final class Condition
             return;
         }
 
-        // append an opening parenthesis to the prior set of conditions,
+        // Append an opening parenthesis to the prior set of conditions,
         // with AND/OR as needed ...
         if ($set) {
             $set[] = new RawExp(strtoupper($andor) . ' (');
@@ -206,7 +212,7 @@ final class Condition
             $set[] = new RawExp('(');
         }
 
-        // append the new conditions to the set, with indenting
+        // Append the new conditions to the set, with indenting
         $sql = [];
         $sql = $this->getConditionSql($sql, $this->$clause, '');
         foreach ($sql as $cond) {
@@ -221,13 +227,13 @@ final class Condition
     /**
      * Where OR condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array $conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
      * @return self
      */
-    public function orWhere($conditions): self
+    public function orWhere(array $conditions): self
     {
         if ($conditions[0] instanceof Closure) {
             $this->addClauseCondClosure('where', 'OR', $conditions[0]);
@@ -242,13 +248,13 @@ final class Condition
     /**
      * Add AND having condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array $conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
      * @return self
      */
-    public function having($conditions): self
+    public function having(array $conditions): self
     {
         if ($conditions[0] instanceof Closure) {
             $this->addClauseCondClosure('having', 'AND', $conditions[0]);
@@ -263,13 +269,13 @@ final class Condition
     /**
      * Add OR having condition.
      *
-     * @param array ...$conditions (field, comparison, value)
+     * @param array $conditions The conditions (field, comparison, value)
      * or (field, comparison, new RawExp('table.field'))
      * or new RawExp('...')
      *
      * @return self
      */
-    public function orHaving($conditions): self
+    public function orHaving(array $conditions): self
     {
         if ($conditions[0] instanceof Closure) {
             $this->addClauseCondClosure('having', 'OR', $conditions[0]);

@@ -16,44 +16,44 @@ final class InsertQuery implements QueryInterface
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var Quoter
      */
-    private $quoter;
+    private Quoter $quoter;
 
     /**
      * @var string Table name
      */
-    private $table;
+    private string $table;
 
     /**
      * @var array Value list
      */
-    private $values;
+    private array $values;
 
     /**
      * @var array Assignment list
      */
-    private $duplicateValues;
+    private array $duplicateValues = [];
 
     /**
      * @var string Priority modifier
      */
-    private $priority;
+    private string $priority = '';
 
     /**
      * Errors that occur while executing the INSERT statement are ignored.
      *
      * @var string Ignore modifier
      */
-    private $ignore;
+    private string $ignore = '';
 
     /**
-     * Constructor.
+     * The constructor.
      *
-     * @param Connection $connection The pdo connection
+     * @param Connection $connection The database connection
      */
     public function __construct(Connection $connection)
     {
@@ -205,12 +205,16 @@ final class InsertQuery implements QueryInterface
     /**
      * Returns the ID of the last inserted row or sequence value.
      *
-     * @param string $name [optional] Name of the sequence object from which the ID should be returned
+     * @param string|null $name The name of the sequence object from which the ID should be returned. Optional.
      *
      * @return string Last inserted Id
      */
     public function lastInsertId(string $name = null): string
     {
+        if ($name === null) {
+            return $this->pdo->lastInsertId();
+        }
+
         return $this->pdo->lastInsertId($name);
     }
 
