@@ -2,12 +2,12 @@
 
 A fluent SQL query builder.
 
-[![Latest Version on Packagist](https://img.shields.io/github/release/selective-php/database.svg?style=flat-square)](https://packagist.org/packages/selective/database)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Latest Version on Packagist](https://img.shields.io/github/release/selective-php/database.svg)](https://packagist.org/packages/selective/database)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![Build Status](https://github.com/selective-php/database/workflows/build/badge.svg)](https://github.com/selective-php/database/actions)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/selective-php/database.svg?style=flat-square)](https://scrutinizer-ci.com/g/selective-php/database/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/quality/g/selective-php/database.svg?style=flat-square)](https://scrutinizer-ci.com/g/selective-php/database/?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/selective/database.svg?style=flat-square)](https://packagist.org/packages/selective/database/stats)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/selective-php/database.svg)](https://scrutinizer-ci.com/g/selective-php/database/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/quality/g/selective-php/database.svg)](https://scrutinizer-ci.com/g/selective-php/database/?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/selective/database.svg)](https://packagist.org/packages/selective/database/stats)
 
 ## Features
 
