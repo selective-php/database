@@ -117,13 +117,17 @@ final class Schema
      *
      * @param string $dbName The database name
      *
-     * @return bool Success
+     * @throws DatabaseException
+     *
+     * @return void
      */
-    public function useDatabase(string $dbName): bool
+    public function useDatabase(string $dbName)
     {
         $sql = sprintf('USE %s;', $this->quoter->quoteName($dbName));
 
-        return (bool)$this->pdo->exec($sql);
+        if ($this->pdo->exec($sql) === false) {
+            throw new DatabaseException(sprintf('Unknown database: %s', $dbName));
+        }
     }
 
     /**
