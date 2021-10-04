@@ -2,7 +2,6 @@
 
 namespace Selective\Database;
 
-use JsonException;
 use PDO;
 use PDOStatement;
 use RuntimeException;
@@ -325,42 +324,6 @@ final class Schema
         $sql = sprintf($sql, $dbName, $tableName);
 
         return (array)$this->createStatement($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Compare two tables and returns true if the table schema match.
-     *
-     * @param string $tableName1 The table name 1
-     * @param string $tableName2 The table name 2
-     *
-     * @return bool Status
-     */
-    public function compareTableSchema(string $tableName1, string $tableName2): bool
-    {
-        $schema1 = $this->getTableSchemaId($tableName1);
-        $schema2 = $this->getTableSchemaId($tableName2);
-
-        return $schema1 === $schema2;
-    }
-
-    /**
-     * Calculate a hash key (SHA1) using a table schema
-     * Used to quickly compare table structures or schema versions.
-     *
-     * @param string $tableName The table name
-     *
-     * @throws JsonException
-     *
-     * @return string The table schema hash
-     *
-     * @deprecated
-     */
-    public function getTableSchemaId(string $tableName): string
-    {
-        $sql = sprintf('SHOW FULL COLUMNS FROM %s;', $this->quoter->quoteName($tableName));
-        $rows = $this->createStatement($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-        return sha1((string)json_encode($rows, JSON_THROW_ON_ERROR));
     }
 
     /**
