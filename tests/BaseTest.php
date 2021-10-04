@@ -6,6 +6,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use Selective\Database\Connection;
 use Selective\Database\SelectQuery;
+use UnexpectedValueException;
 
 /**
  * Test.
@@ -20,6 +21,8 @@ abstract class BaseTest extends TestCase
     /**
      * Create test table.
      *
+     * @throws UnexpectedValueException
+     *
      * @return void
      */
     protected function createTestTable(): void
@@ -29,6 +32,11 @@ abstract class BaseTest extends TestCase
 
         $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'database_test';";
         $statement = $pdo->query($sql);
+
+        if ($statement === false) {
+            throw new UnexpectedValueException('Query failed');
+        }
+
         $statement->execute();
 
         if (!$statement->fetch(PDO::FETCH_ASSOC)) {
@@ -92,18 +100,6 @@ abstract class BaseTest extends TestCase
         }
 
         return $this->connection;
-    }
-
-    /**
-     * @return Schema
-     */
-    protected function getSchema(): Schema
-    {
-        if ($this->schema === null) {
-            $this->schema = new Schema($this->getConnection());
-        }
-
-        return $this->schema;
     }
 
     /**
