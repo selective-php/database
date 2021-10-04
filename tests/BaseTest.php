@@ -5,8 +5,8 @@ namespace Selective\Database\Test;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Selective\Database\Connection;
-use Selective\Database\Schema;
 use Selective\Database\SelectQuery;
+use UnexpectedValueException;
 
 /**
  * Test.
@@ -19,29 +19,32 @@ abstract class BaseTest extends TestCase
     protected ?Connection $connection = null;
 
     /**
-     * @var ?Schema
-     */
-    protected ?Schema $schema = null;
-
-    /**
      * Create test table.
+     *
+     * @throws UnexpectedValueException
      *
      * @return void
      */
     protected function createTestTable(): void
     {
         $db = $this->getConnection();
-        $schema = $this->getSchema();
+        $pdo = $db->getPdo();
 
-        if (!$schema->existDatabase('database_test')) {
-            $schema->createDatabase('database_test');
+        $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'database_test';";
+        $statement = $pdo->query($sql);
+
+        if ($statement === false) {
+            throw new UnexpectedValueException('Query failed');
         }
 
-        $schema->useDatabase('database_test');
+        $statement->execute();
 
-        foreach ($schema->getTables() as $table) {
-            $schema->dropTable($table);
+        if (!$statement->fetch(PDO::FETCH_ASSOC)) {
+            $pdo->exec('CREATE DATABASE database_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         }
+
+        $pdo->exec('USE database_test');
+        $pdo->exec('DROP TABLE IF EXISTS test;');
 
         $db->getPdo()->exec(
             'CREATE TABLE `test` (
@@ -97,18 +100,6 @@ abstract class BaseTest extends TestCase
         }
 
         return $this->connection;
-    }
-
-    /**
-     * @return Schema
-     */
-    protected function getSchema(): Schema
-    {
-        if ($this->schema === null) {
-            $this->schema = new Schema($this->getConnection());
-        }
-
-        return $this->schema;
     }
 
     /**

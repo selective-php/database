@@ -109,5 +109,3 @@ $connection->delete()
     ->quick()
     ->execute();
 ```
-
-**Next page:** [Schema](schema.md)
