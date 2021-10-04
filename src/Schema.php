@@ -33,20 +33,6 @@ final class Schema
     }
 
     /**
-     * Switch database.
-     *
-     * @param string $dbName The database name
-     *
-     * @return void
-     *
-     * @deprecated Use useDatabase instead
-     */
-    public function setDatabase(string $dbName): void
-    {
-        $this->pdo->exec('USE ' . $this->quoter->quoteName($dbName) . ';');
-    }
-
-    /**
      * Return current database name.
      *
      * @return string The database name
