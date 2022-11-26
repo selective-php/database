@@ -56,9 +56,9 @@ final class UpdateQuery implements QueryInterface
     private $orderBy = [];
 
     /**
-     * @var int Limit
+     * @var int|null Limit
      */
-    private $limit;
+    private $limit = null;
 
     /**
      * Constructor.

@@ -18,7 +18,6 @@ final class Operator
     public const LTE = '<=';
     public const IS = 'is';
     public const IS_NOT = 'is not';
-    //public const IS_NOT_NULL = 'is not null';
     public const LIKE = 'like';
     public const NOT_LIKE = 'not like';
     public const SOUNDS_LIKE = 'sounds like';

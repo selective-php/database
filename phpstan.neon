@@ -2,6 +2,7 @@ parameters:
 	level: max
 	checkGenericClassInNonGenericObjectType: false
 	checkMissingIterableValueType: false
+	treatPhpDocTypesAsCertain: false
 	paths:
 		- src
 		- tests

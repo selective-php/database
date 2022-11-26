@@ -212,10 +212,10 @@ final class InsertQuery implements QueryInterface
     public function lastInsertId(string $name = null): string
     {
         if ($name === null) {
-            return $this->pdo->lastInsertId();
+            return $this->pdo->lastInsertId() ?: '0';
         }
 
-        return $this->pdo->lastInsertId($name);
+        return $this->pdo->lastInsertId($name) ?: '0';
     }
 
     /**
@@ -230,7 +230,7 @@ final class InsertQuery implements QueryInterface
         $stmt = $this->set($values)->prepare();
         $stmt->execute();
 
-        return $this->pdo->lastInsertId();
+        return $this->lastInsertId();
     }
 
     /**

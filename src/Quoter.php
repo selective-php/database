@@ -4,6 +4,8 @@ namespace Selective\Database;
 
 use PDO;
 use RuntimeException;
+use UnexpectedValueException;
+
 use function array_key_first;
 
 /**
@@ -65,10 +67,11 @@ final class Quoter
             return 'NULL';
         }
 
-        $result = $this->pdo->quote($value);
+        // @phpstan-ignore-next-line
+        $result = $this->pdo->quote((string)$value);
 
         if (!is_string($result)) {
-            throw new RuntimeException('The database driver does not support quoting in this way.');
+            throw new UnexpectedValueException('The database driver does not support quoting in this way.');
         }
 
         return $result;

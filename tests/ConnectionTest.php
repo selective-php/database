@@ -36,6 +36,8 @@ class ConnectionTest extends BaseTest
         $statement = $select->prepare();
 
         $statement->execute();
+
+        /** @var array $row */
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         $this->assertNotEmpty($row['TABLE_NAME']);

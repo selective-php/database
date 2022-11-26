@@ -107,8 +107,8 @@ final class Condition
      *
      * https://dev.mysql.com/doc/refman/5.7/en/comparison-operators.html
      *
-     * @param mixed $rightField The right field
-     * @param mixed $comparison The comparison
+     * @param string|array $rightField The right field
+     * @param string|mixed $comparison The comparison
      *
      * @return array The value
      */
@@ -132,6 +132,7 @@ final class Condition
             $comparison = 'IS NOT';
             $rightField = $this->quoter->quoteValue($rightField);
         } elseif ($comparison === 'between' || $comparison === 'not between') {
+            /** @var array $rightField */
             $between1 = $this->quoter->quoteValue($rightField[0]);
             $between2 = $this->quoter->quoteValue($rightField[1]);
             $rightField = sprintf('%s AND %s', $between1, $between2);
@@ -141,6 +142,7 @@ final class Condition
             $rightField = $this->quoter->quoteValue($rightField);
         }
 
+        // @phpstan-ignore-next-line
         return [$rightField, strtoupper($comparison)];
     }
 
