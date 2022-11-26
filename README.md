@@ -35,9 +35,7 @@ For more details how to build queries please read the **[documentation](https://
 
 * [cycle/database](https://cycle-orm.dev/docs/query-builder-basic)
 * [cakephp/database](https://github.com/cakephp/database)
-* [illuminate/database](https://github.com/illuminate/database)
-* [laminas/laminas-db](https://github.com/laminas/laminas-db)
-* [spiral/database](https://github.com/spiral/database)
+* [laminas/laminas-db](https://docs.laminas.dev/laminas-db/)
 
 ## License
 
