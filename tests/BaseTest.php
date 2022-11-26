@@ -56,13 +56,10 @@ abstract class BaseTest extends TestCase
             `created_user_id` INT(11) DEFAULT NULL,
             `updated` DATETIME DEFAULT NULL,
             `updated_user_id` INT(11) DEFAULT NULL,
-            `deleted` DATETIME DEFAULT NULL,
-            `deleted_user_id` INT(11) DEFAULT NULL,
             PRIMARY KEY (`id`),
             KEY `created_user_id` (`created_user_id`),
-            KEY `updated_user_id` (`updated_user_id`),
-            KEY `deleted_user_id` (`deleted_user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+            KEY `updated_user_id` (`updated_user_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
         );
     }
 
@@ -76,8 +73,8 @@ abstract class BaseTest extends TestCase
         $host = '127.0.0.1';
         $username = 'root';
         $password = isset($_SERVER['GITHUB_ACTIONS']) ? 'root' : '';
-        $charset = 'utf8';
-        $collate = 'utf8_unicode_ci';
+        $charset = 'utf8mb4';
+        $collate = 'utf8mb4_unicode_ci';
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_PERSISTENT => false,
