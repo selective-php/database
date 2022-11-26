@@ -1,6 +1,8 @@
 <?php
 
-return (new PhpCsFixer\Config())
+use PhpCsFixer\Config;
+
+return (new Config())
     ->setUsingCache(false)
     ->setRiskyAllowed(true)
     ->setRules(
@@ -35,6 +37,8 @@ return (new PhpCsFixer\Config())
                 'imports_order' => ['class', 'const', 'function']
             ],
             'single_line_throw' => false,
+            'fully_qualified_strict_types' => true,
+            'global_namespace_import' => false,
         ]
     )
     ->setFinder(

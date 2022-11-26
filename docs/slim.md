@@ -8,9 +8,8 @@ nav_order: 8
 
 ## Requirements
 
-* PHP 7.4+
+* PHP 8+
 * MySQL 5.7+
-* Composer
 * [A Slim 4 application](https://odan.github.io/2019/11/05/slim4-tutorial.html)
 * A DI container (PSR-11), e.g. PHP-DI
 
@@ -74,7 +73,7 @@ return [
     },
 
     PDO::class => function (ContainerInterface $container) {
-        $settings = $container->get(Configuration::class)->getArray('db');
+        $settings = $container->get('settings')['db'];
 
         $driver = $settings['driver'];
         $host = $settings['host'];
@@ -102,33 +101,15 @@ namespace App\Domain\User\Repository;
 use DomainException;
 use Selective\Database\Connection;
 
-/**
- * Repository.
- */
-final class UserCreatorRepository
+final class UserReaderRepository
 {
-    /**
-     * @var Connection The database connection
-     */
     private Connection $connection;
 
-    /**
-     * The constructor.
-     *
-     * @param Connection $connection The database connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /**
-     * Get user by id.
-     *
-     * @param int $userId The user id
-     *
-     * @return array The user row
-     */
     public function getUserById(int $userId): array
     {
         $query = $this->connection->select()->from('users');

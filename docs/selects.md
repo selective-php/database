@@ -23,7 +23,7 @@ use Selective\Database\Connection;
 
 $connection = new Connection($pdo);
 
-$query = new \Odan\Database\SelectQuery($connection);
+$query = new \Selective\Database\SelectQuery($connection);
 ```
 
 ## Inspecting The Query

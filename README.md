@@ -22,7 +22,7 @@ composer require selective/database
 
 ## Requirements
 
-* PHP 7.4+ or 8.0+
+* PHP 8.0+
 * MySQL 5.7+ or MariaDB
 
 ## Documentation
@@ -30,10 +30,6 @@ composer require selective/database
 The database query builder provides a convenient, fluent interface for creating and executing database queries. It can be used to perform most database operations in your PHP website and application.
 
 For more details how to build queries please read the **[documentation](https://selective-php.github.io/database/)**.
-
-## Security
-
-If you discover any security related issues, please email instead of using the issue tracker.
 
 ## Similar libraries
 
